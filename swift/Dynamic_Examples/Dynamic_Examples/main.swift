@@ -25,3 +25,6 @@ if true { // Example usage knapsack w
     result = unboundedKnapsack(W: W, weights: weights, values: values, n: n)
     print("Maximum value for unbounded knapsack: \(result)")
 }
+
+// Start DFS from the initial node "A"
+dfs(node: "A")
