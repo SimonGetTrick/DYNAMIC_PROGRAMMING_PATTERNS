@@ -28,3 +28,17 @@ if true { // Example usage knapsack w
 
 // Start DFS from the initial node "A"
 dfs(node: "A")
+
+// Example usage
+var pq = PriorityQueue<Int>()
+pq.enqueue(3)
+pq.enqueue(1)
+pq.enqueue(4)
+pq.enqueue(1)
+pq.enqueue(5)
+
+print("Top element: \(pq.peek() ?? -1)") // Output: 1
+print("Dequeued: \(pq.dequeue() ?? -1)") // Output: 1
+print("Dequeued: \(pq.dequeue() ?? -1)") // Output: 1
+print("Top element: \(pq.peek() ?? -1)") // Output: 3
+print("Queue size: \(pq.count)") // Output: 3
