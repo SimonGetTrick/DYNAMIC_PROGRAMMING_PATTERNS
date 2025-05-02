@@ -27,7 +27,44 @@ if true { // Example usage knapsack w
 }
 
 // Start DFS from the initial node "A"
+
 dfs(node: "A")
+// Create a graph and add edges
+let graph = Graph()
+graph.addEdge(from: "A", to: "B")
+graph.addEdge(from: "A", to: "E")
+graph.addEdge(from: "B", to: "C")
+graph.addEdge(from: "B", to: "D")
+
+// Start DFS and BFS from node A
+print("Depth First Search (DFS):")
+graph.depthFirstSearch(start: "A")
+
+print("\nBreadth First Search (BFS):")
+graph.breadthFirstSearch(start: "A")
+
+// Create a graph with vertices A, B, C, D, E
+let graphMatrix = GraphMatrix(vertices: ["A", "B", "C", "D", "E"])
+
+// Add edges: AB, AE, BC, BD
+//  A B C D E
+//A 0 1 0 0 1
+//B 1 0 1 1 0
+//C 0 1 0 0 0
+//D 0 1 0 0 0
+//E 1 0 0 0 0
+
+graphMatrix.addEdge(from: "A", to: "B")
+graphMatrix.addEdge(from: "A", to: "E")
+graphMatrix.addEdge(from: "B", to: "C")
+graphMatrix.addEdge(from: "B", to: "D")
+
+// Start DFS and BFS from node A
+print("Depth First Search (DFS):")
+graphMatrix.depthFirstSearch(start: "A")
+
+print("\nBreadth First Search (BFS):")
+graphMatrix.breadthFirstSearch(start: "A")
 
 // Example usage
 var pq = PriorityQueue<Int>()

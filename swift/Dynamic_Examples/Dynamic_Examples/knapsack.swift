@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Foundation
 // duplicates are illegal
 func knapsack(W: Int, weights: [Int], values: [Int], n: Int) -> Int {
     var dp = Array(repeating: Array(repeating: 0, count: W + 1), count: n + 1)
