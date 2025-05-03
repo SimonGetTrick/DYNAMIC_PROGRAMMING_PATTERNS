@@ -79,3 +79,30 @@ print("Dequeued: \(pq.dequeue() ?? -1)") // Output: 1
 print("Dequeued: \(pq.dequeue() ?? -1)") // Output: 1
 print("Top element: \(pq.peek() ?? -1)") // Output: 3
 print("Queue size: \(pq.count)") // Output: 3
+
+// Example usage
+
+let tree = BinaryTree()
+
+// Insert values into the binary tree
+tree.insert(value: 50)
+tree.insert(value: 30)
+tree.insert(value: 70)
+tree.insert(value: 20)
+tree.insert(value: 40)
+tree.insert(value: 60)
+tree.insert(value: 80)
+
+// Perform in-order traversal (should print the values in sorted order)
+print("In-order Traversal:")
+tree.inOrderTraversal()
+print()
+
+// Perform pre-order traversal
+print("Pre-order Traversal:")
+tree.preOrderTraversal()
+print()
+
+// Perform post-order traversal
+print("Post-order Traversal:")
+tree.postOrderTraversal()
