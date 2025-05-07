@@ -43,6 +43,14 @@ graph.depthFirstSearch(start: "A")
 print("\nBreadth First Search (BFS):")
 graph.breadthFirstSearch(start: "A")
 
+// Check for cycles starting from node "A"
+graph.addEdge(from: "D", to: "A")
+if graph.hasCycle(start: "A") {
+    print("Graph contains a cycle") // graph.addEdge(from: "D", to: "A")
+} else {
+    print("No cycle detected")  // graph.addEdge(from: "A", to: "D")
+}
+
 // Create a graph with vertices A, B, C, D, E
 let graphMatrix = GraphMatrix(vertices: ["A", "B", "C", "D", "E"])
 
@@ -58,7 +66,6 @@ graphMatrix.addEdge(from: "A", to: "B")
 graphMatrix.addEdge(from: "A", to: "E")
 graphMatrix.addEdge(from: "B", to: "C")
 graphMatrix.addEdge(from: "B", to: "D")
-
 // Start DFS and BFS from node A
 print("Depth First Search (DFS):")
 graphMatrix.depthFirstSearch(start: "A")

@@ -88,6 +88,45 @@ class Graph {
             }
         }
     }
+    // Depth First Search (DFS) method for cycle detection
+    func hasCycle(start: String) -> Bool {
+        var visited = Set<String>()
+        var recStack = Set<String>()
+        
+        // Start DFS from the given node
+        return dfsCycleDetection(node: start, visited: &visited, recStack: &recStack)
+    }
+
+    // Helper method for DFS with cycle detection
+    private func dfsCycleDetection(node: String, visited: inout Set<String>, recStack: inout Set<String>) -> Bool {
+        // If the node is already in the recursion stack, a cycle is detected
+        if recStack.contains(node) {
+            return true
+        }
+        
+        // If the node is already visited, no cycle is possible from here
+        if visited.contains(node) {
+            return false
+        }
+        
+        // Mark the node as visited and add it to the recursion stack
+        visited.insert(node)
+        recStack.insert(node)
+        
+        // Recursively check all the neighbors of the current node
+        if let neighbors = adjList[node] {
+            for neighbor in neighbors {
+                if dfsCycleDetection(node: neighbor, visited: &visited, recStack: &recStack) {
+                    return true
+                }
+            }
+        }
+        
+        // Remove the node from recursion stack as we are done with it
+        recStack.remove(node)
+        
+        return false
+    }
 }
 
 // Graph class with adjacency matrix representation
