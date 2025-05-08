@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		808F8A1B2DC16F26004EA975 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A1A2DC16F26004EA975 /* main.swift */; };
+		808F8A482DCD0136004EA975 /* Strategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A472DCD0136004EA975 /* Strategy.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		808F8A052DC01112004EA975 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -20,6 +25,8 @@
 
 /* Begin PBXFileReference section */
 		808F8A072DC01112004EA975 /* Dynamic_Examples */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Dynamic_Examples; sourceTree = BUILT_PRODUCTS_DIR; };
+		808F8A1A2DC16F26004EA975 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		808F8A472DCD0136004EA975 /* Strategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Strategy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -44,7 +51,9 @@
 		808F89FE2DC01112004EA975 = {
 			isa = PBXGroup;
 			children = (
+				808F8A462DCD00EC004EA975 /* Patterns */,
 				808F8A092DC01112004EA975 /* Dynamic_Examples */,
+				808F8A1A2DC16F26004EA975 /* main.swift */,
 				808F8A082DC01112004EA975 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,6 +64,14 @@
 				808F8A072DC01112004EA975 /* Dynamic_Examples */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		808F8A462DCD00EC004EA975 /* Patterns */ = {
+			isa = PBXGroup;
+			children = (
+				808F8A472DCD0136004EA975 /* Strategy.swift */,
+			);
+			path = Patterns;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -121,6 +138,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				808F8A482DCD0136004EA975 /* Strategy.swift in Sources */,
+				808F8A1B2DC16F26004EA975 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

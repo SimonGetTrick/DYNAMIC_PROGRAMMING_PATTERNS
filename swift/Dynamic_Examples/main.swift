@@ -113,3 +113,6 @@ print()
 // Perform post-order traversal
 print("Post-order Traversal:")
 tree.postOrderTraversal()
+
+//patterns:
+demo_strategy()
