@@ -116,3 +116,4 @@ tree.postOrderTraversal()
 
 //patterns:
 demo_strategy()
+demo_observer()
