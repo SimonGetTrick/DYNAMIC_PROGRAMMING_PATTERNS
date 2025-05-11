@@ -12,6 +12,7 @@
 		808F8A4A2DCDDB69004EA975 /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A492DCDDB69004EA975 /* Observer.swift */; };
 		808F8A4C2DCDDF6B004EA975 /* Decorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A4B2DCDDF6B004EA975 /* Decorator.swift */; };
 		808F8A4E2DCF9AA5004EA975 /* SimpleFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A4D2DCF9AA5004EA975 /* SimpleFactory.swift */; };
+		808F8A522DD0D748004EA975 /* FactoryMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A512DD0D748004EA975 /* FactoryMethod.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,6 +34,8 @@
 		808F8A492DCDDB69004EA975 /* Observer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
 		808F8A4B2DCDDF6B004EA975 /* Decorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Decorator.swift; sourceTree = "<group>"; };
 		808F8A4D2DCF9AA5004EA975 /* SimpleFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleFactory.swift; sourceTree = "<group>"; };
+		808F8A502DD0D6A6004EA975 /* Patterns_ru.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = Patterns_ru.rtf; sourceTree = "<group>"; };
+		808F8A512DD0D748004EA975 /* FactoryMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactoryMethod.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -79,6 +82,8 @@
 				808F8A492DCDDB69004EA975 /* Observer.swift */,
 				808F8A4B2DCDDF6B004EA975 /* Decorator.swift */,
 				808F8A4D2DCF9AA5004EA975 /* SimpleFactory.swift */,
+				808F8A502DD0D6A6004EA975 /* Patterns_ru.rtf */,
+				808F8A512DD0D748004EA975 /* FactoryMethod.swift */,
 			);
 			path = Patterns;
 			sourceTree = "<group>";
@@ -151,6 +156,7 @@
 				808F8A4E2DCF9AA5004EA975 /* SimpleFactory.swift in Sources */,
 				808F8A482DCD0136004EA975 /* Strategy.swift in Sources */,
 				808F8A4C2DCDDF6B004EA975 /* Decorator.swift in Sources */,
+				808F8A522DD0D748004EA975 /* FactoryMethod.swift in Sources */,
 				808F8A1B2DC16F26004EA975 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

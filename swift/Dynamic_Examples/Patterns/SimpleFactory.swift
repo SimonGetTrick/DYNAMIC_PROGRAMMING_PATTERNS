@@ -7,56 +7,54 @@
 
 import Foundation
 
-enum CarType {
-    case huge, fast
+enum AutomobileType {
+    case big, speedy
 }
 
-protocol Car {
-    
+// Protocol for automobile
+protocol Automobile {
     func drive()
 }
 
-class HugeCar: Car {
-    
+// Concrete product: BigAutomobile
+class BigAutomobile: Automobile {
     func drive() {
-        
-        print("you drive huge car")
+        print("You drive a big automobile")
     }
 }
 
-class FastCar: Car {
-    
+// Concrete product: SpeedyAutomobile
+class SpeedyAutomobile: Automobile {
     func drive() {
-        
-        print("you drive fast car")
+        print("You drive a speedy automobile")
     }
 }
 
-
-class CarFactory {
-    
-    static func produceCar(type: CarType) -> Car {
-        var car: Car
+// Factory class to produce automobiles
+class AutomobileFactory {
+    static func produceAutomobile(type: AutomobileType) -> Automobile {
+        var automobile: Automobile
         
         switch type {
-        case .fast: car = FastCar()
-        case .huge: car = HugeCar()
+        case .speedy:
+            automobile = SpeedyAutomobile()
+        case .big:
+            automobile = BigAutomobile()
         }
         
-        return car
+        return automobile
     }
 }
 
+// Demo function to test the factory
 func demo_SimpleFactory() {
-    let hugeCar = HugeCar()
-    hugeCar.drive()
+    let bigAutomobile = BigAutomobile()
+    bigAutomobile.drive()
     
-    let fastCar = FastCar()
-    fastCar.drive()
+    let speedyAutomobile = SpeedyAutomobile()
+    speedyAutomobile.drive()
     
-    let hugeCar1 = CarFactory.produceCar(type: .huge)
-    let fastCar1 = CarFactory.produceCar(type: .fast)
-    print(" \(hugeCar1 is HugeCar) \(fastCar1 is FastCar)")
+    let bigAutomobile1 = AutomobileFactory.produceAutomobile(type: .big)
+    let speedyAutomobile1 = AutomobileFactory.produceAutomobile(type: .speedy)
+    print(" \(bigAutomobile1 is BigAutomobile) \(speedyAutomobile1 is SpeedyAutomobile)")
 }
-
-
