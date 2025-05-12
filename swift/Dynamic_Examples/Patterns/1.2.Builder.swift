@@ -129,7 +129,7 @@ func demo_pattert_1_2_ThemeBuilder() {
     }
     
     // Example with missing properties
-    let invalidTheme = AppThemeBuilder()
+    _ = AppThemeBuilder()
         .setBackgroundColor("Gray")
         .setTextColor("Blue")
         .build() // Will fail due to missing font properties

@@ -123,9 +123,18 @@ FactoryMethod.demo_FactoryMethod()
 demo_PrototypePattern()
 demo_SingletonPattern()
 
-//// Structure's patterns:
+// Structure's patterns:
+demo_AdapterPattern()
+demo_BridgePattern()
+demo_CompositePattern()
 //demo_Decorator()
 //demo_decorator()
+
+demo_FacadePattern()
+demo_FlyweightPattern()
+// Run the demo
+demo_ProxyPattern()
+
 //
 //// Behaviour patterns:
 //demo_observer()

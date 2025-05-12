@@ -7,6 +7,10 @@
 
 import Foundation
 
+// MARK: - Decorator Pattern
+// The Decorator pattern allows behavior to be added to objects dynamically by wrapping them
+// in an object of a decorator class, providing a flexible alternative to subclassing.
+
 protocol Porsche {
     
     func getPrice() -> Double
