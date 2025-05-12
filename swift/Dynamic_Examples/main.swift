@@ -113,6 +113,7 @@ print()
 // Perform post-order traversal
 print("Post-order Traversal:")
 tree.postOrderTraversal()
+demo_SetOperations()
 
 //patterns:
 demo_strategy()
@@ -124,3 +125,5 @@ FactoryMethod.demo_FactoryMethod()
 
 AbstractFactory.demo_pattert_1_1_AbstractFactory()
 demo_pattert_1_2_ThemeBuilder()
+
+
