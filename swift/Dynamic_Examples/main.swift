@@ -120,4 +120,7 @@ demo_observer()
 demo_Decorator()
 demo_decorator()
 demo_SimpleFactory()
-demo_factoryMethode()
+FactoryMethod.demo_FactoryMethod()
+
+AbstractFactory.demo_pattert_1_1_AbstractFactory()
+demo_pattert_1_2_ThemeBuilder()

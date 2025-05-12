@@ -171,7 +171,7 @@ class GraphMatrix {
     func breadthFirstSearch(start: String) {
         var visited = Set<String>()
         var queue = [start]
-        guard let startIndex = vertices.firstIndex(of: start) else { return }
+        guard vertices.firstIndex(of: start) != nil else { return }
 
         visited.insert(start)
         print(start)
