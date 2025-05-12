@@ -115,15 +115,20 @@ print("Post-order Traversal:")
 tree.postOrderTraversal()
 demo_SetOperations()
 
-//patterns:
-demo_strategy()
-demo_observer()
-demo_Decorator()
-demo_decorator()
+// Creation patterns:
 demo_SimpleFactory()
-FactoryMethod.demo_FactoryMethod()
-
 AbstractFactory.demo_pattert_1_1_AbstractFactory()
 demo_pattert_1_2_ThemeBuilder()
+FactoryMethod.demo_FactoryMethod()
+demo_PrototypePattern()
+demo_SingletonPattern()
+
+//// Structure's patterns:
+//demo_Decorator()
+//demo_decorator()
+//
+//// Behaviour patterns:
+//demo_observer()
+//demo_strategy()
 
 
