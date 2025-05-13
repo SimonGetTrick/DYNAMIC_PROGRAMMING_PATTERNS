@@ -127,12 +127,10 @@ demo_SingletonPattern()
 demo_AdapterPattern()
 demo_BridgePattern()
 demo_CompositePattern()
-//demo_Decorator()
-//demo_decorator()
-
+demo_Decorator()
+demo_decorator()
 demo_FacadePattern()
 demo_FlyweightPattern()
-// Run the demo
 demo_ProxyPattern()
 
 //
@@ -141,3 +139,5 @@ demo_ProxyPattern()
 //demo_strategy()
 
 
+// Run the demo
+demo_decompressString()
