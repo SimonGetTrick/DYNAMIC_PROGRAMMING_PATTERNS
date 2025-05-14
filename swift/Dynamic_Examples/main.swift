@@ -135,9 +135,10 @@ demo_ProxyPattern()
 
 //
 //// Behaviour patterns:
+demo_ChainOfResponsibility()
 //demo_observer()
 //demo_strategy()
 
 
 // Run the demo
-demo_decompressString()
+//demo_decompressString()
