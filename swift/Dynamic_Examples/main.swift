@@ -136,8 +136,17 @@ demo_ProxyPattern()
 //
 //// Behaviour patterns:
 demo_ChainOfResponsibility()
-//demo_observer()
-//demo_strategy()
+demo_CommandPattern()
+demo_InterpreterPattern()
+demo_IteratorPattern()
+demo_MediatorPattern()
+demo_MementoPattern()
+demo_observer()
+demo_StatePattern()
+demo_strategy()
+demo_TemplateMethodPattern()
+demo_VisitorPattern() 
+
 
 
 // Run the demo
