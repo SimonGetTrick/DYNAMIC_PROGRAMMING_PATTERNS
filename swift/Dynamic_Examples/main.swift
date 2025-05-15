@@ -150,6 +150,7 @@ demo_VisitorPattern()
 // logic tasks :
 demo_phone_number_words()
 demo_trie_aho_corasick()
-
 demo_blockSerch()
+demo_rectCounter()
+demo_lakeCounter()
 //demo_decompressString()
