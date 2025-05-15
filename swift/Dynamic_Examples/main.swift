@@ -145,9 +145,11 @@ demo_observer()
 demo_StatePattern()
 demo_strategy()
 demo_TemplateMethodPattern()
-demo_VisitorPattern() 
+demo_VisitorPattern()
 
+// logic tasks :
+demo_phone_number_words()
+demo_trie_aho_corasick()
 
-
-// Run the demo
+demo_blockSerch()
 //demo_decompressString()

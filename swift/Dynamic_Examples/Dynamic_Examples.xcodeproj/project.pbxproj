@@ -26,6 +26,14 @@
 		808F8AE52DD28B0E004EA975 /* 2.6.Flyweight.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AE42DD28B0E004EA975 /* 2.6.Flyweight.swift */; };
 		808F8AE72DD28C75004EA975 /* 2.7.Proxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AE62DD28C75004EA975 /* 2.7.Proxy.swift */; };
 		808F8AED2DD4DA40004EA975 /* 3.1.ChainOfResponsibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AEC2DD4DA40004EA975 /* 3.1.ChainOfResponsibility.swift */; };
+		808F8AEF2DD5239F004EA975 /* 3.2.Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AEE2DD5239F004EA975 /* 3.2.Command.swift */; };
+		808F8AF12DD52963004EA975 /* 3.3.Interpter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AF02DD52963004EA975 /* 3.3.Interpter.swift */; };
+		808F8AF32DD52BF2004EA975 /* 3.4Iterator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AF22DD52BF2004EA975 /* 3.4Iterator.swift */; };
+		808F8AF52DD52C8D004EA975 /* 3.5.Mediator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AF42DD52C8D004EA975 /* 3.5.Mediator.swift */; };
+		808F8AF72DD531E2004EA975 /* 3.6.Memento.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AF62DD531E2004EA975 /* 3.6.Memento.swift */; };
+		808F8AF92DD53378004EA975 /* 3.8.State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AF82DD53378004EA975 /* 3.8.State.swift */; };
+		808F8AFB2DD534C3004EA975 /* 3.10.TemplateMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AFA2DD534C3004EA975 /* 3.10.TemplateMethod.swift */; };
+		808F8AFD2DD535A6004EA975 /* 31.1.Visitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AFC2DD535A6004EA975 /* 31.1.Visitor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -63,6 +71,14 @@
 		808F8AE42DD28B0E004EA975 /* 2.6.Flyweight.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 2.6.Flyweight.swift; sourceTree = "<group>"; };
 		808F8AE62DD28C75004EA975 /* 2.7.Proxy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 2.7.Proxy.swift; sourceTree = "<group>"; };
 		808F8AEC2DD4DA40004EA975 /* 3.1.ChainOfResponsibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.1.ChainOfResponsibility.swift; sourceTree = "<group>"; };
+		808F8AEE2DD5239F004EA975 /* 3.2.Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.2.Command.swift; sourceTree = "<group>"; };
+		808F8AF02DD52963004EA975 /* 3.3.Interpter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.3.Interpter.swift; sourceTree = "<group>"; };
+		808F8AF22DD52BF2004EA975 /* 3.4Iterator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.4Iterator.swift; sourceTree = "<group>"; };
+		808F8AF42DD52C8D004EA975 /* 3.5.Mediator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.5.Mediator.swift; sourceTree = "<group>"; };
+		808F8AF62DD531E2004EA975 /* 3.6.Memento.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.6.Memento.swift; sourceTree = "<group>"; };
+		808F8AF82DD53378004EA975 /* 3.8.State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.8.State.swift; sourceTree = "<group>"; };
+		808F8AFA2DD534C3004EA975 /* 3.10.TemplateMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.10.TemplateMethod.swift; sourceTree = "<group>"; };
+		808F8AFC2DD535A6004EA975 /* 31.1.Visitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 31.1.Visitor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -123,8 +139,16 @@
 				808F8AE42DD28B0E004EA975 /* 2.6.Flyweight.swift */,
 				808F8AE62DD28C75004EA975 /* 2.7.Proxy.swift */,
 				808F8AEC2DD4DA40004EA975 /* 3.1.ChainOfResponsibility.swift */,
+				808F8AEE2DD5239F004EA975 /* 3.2.Command.swift */,
+				808F8AF02DD52963004EA975 /* 3.3.Interpter.swift */,
+				808F8AF22DD52BF2004EA975 /* 3.4Iterator.swift */,
+				808F8AF42DD52C8D004EA975 /* 3.5.Mediator.swift */,
+				808F8AF62DD531E2004EA975 /* 3.6.Memento.swift */,
+				808F8AF82DD53378004EA975 /* 3.8.State.swift */,
 				808F8A492DCDDB69004EA975 /* 3.7.Observer.swift */,
 				808F8A472DCD0136004EA975 /* 3.9.Strategy.swift */,
+				808F8AFA2DD534C3004EA975 /* 3.10.TemplateMethod.swift */,
+				808F8AFC2DD535A6004EA975 /* 31.1.Visitor.swift */,
 			);
 			path = Patterns;
 			sourceTree = "<group>";
@@ -193,22 +217,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				808F8AF52DD52C8D004EA975 /* 3.5.Mediator.swift in Sources */,
 				808F8A542DD11323004EA975 /* 1.1.AbstractFactory.swift in Sources */,
 				808F8A4A2DCDDB69004EA975 /* 3.7.Observer.swift in Sources */,
 				808F8AD72DD26CE8004EA975 /* 1.5.Singleton.swift in Sources */,
+				808F8AEF2DD5239F004EA975 /* 3.2.Command.swift in Sources */,
 				808F8A4E2DCF9AA5004EA975 /* 1.1.SimpleFactory.swift in Sources */,
+				808F8AF32DD52BF2004EA975 /* 3.4Iterator.swift in Sources */,
 				808F8AE32DD288EE004EA975 /* 2.5.Facade.swift in Sources */,
 				808F8AE52DD28B0E004EA975 /* 2.6.Flyweight.swift in Sources */,
+				808F8AF72DD531E2004EA975 /* 3.6.Memento.swift in Sources */,
 				808F8AE72DD28C75004EA975 /* 2.7.Proxy.swift in Sources */,
 				808F8A482DCD0136004EA975 /* 3.9.Strategy.swift in Sources */,
 				808F8ADF2DD2870D004EA975 /* 2.2.Bridge.swift in Sources */,
+				808F8AFB2DD534C3004EA975 /* 3.10.TemplateMethod.swift in Sources */,
 				808F8AD92DD28075004EA975 /* 2.1.Adapter.swift in Sources */,
+				808F8AF92DD53378004EA975 /* 3.8.State.swift in Sources */,
 				808F8AE12DD28884004EA975 /* 2.2.BridgeCrossPlathormExample.swift in Sources */,
 				808F8ADB2DD2854C004EA975 /* 2.3.CompositeFileSystemExample.swift in Sources */,
 				808F8A4C2DCDDF6B004EA975 /* 2.4.Decorator.swift in Sources */,
 				808F8AD52DD26AB0004EA975 /* 1.4.Prototype.swift in Sources */,
+				808F8AFD2DD535A6004EA975 /* 31.1.Visitor.swift in Sources */,
 				808F8ADD2DD28662004EA975 /* 2.1.AdapterKmmToNative.swift in Sources */,
 				808F8A562DD11A6D004EA975 /* 1.2.Builder.swift in Sources */,
+				808F8AF12DD52963004EA975 /* 3.3.Interpter.swift in Sources */,
 				808F8A522DD0D748004EA975 /* 1.3.FactoryMethod.swift in Sources */,
 				808F8AED2DD4DA40004EA975 /* 3.1.ChainOfResponsibility.swift in Sources */,
 				808F8A1B2DC16F26004EA975 /* main.swift in Sources */,

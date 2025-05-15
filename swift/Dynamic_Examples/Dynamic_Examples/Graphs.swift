@@ -34,6 +34,21 @@ func dfs(node: String) {
     }
 }
 
+
+/*
+Graph Representation Complexity:
+
+Representation       | Memory Complexity | Neighbor Access       | Edge Addition         | Use Case
+---------------------|-------------------|-----------------------|-----------------------|-------------------------------
+Adjacency List       | O(V + E)          | Fast iteration         | Fast                  | Sparse graphs (Разреженные графы)
+Adjacency Matrix     | O(V²)             | O(1) edge existence    | Requires vertex index | Dense graphs, fast edge lookup (Плотные графы)
+
+Legend:
+V - number of vertices (nodes)
+E - number of edges
+*/
+
+
 // Graph node class
 class Graph {
     // Adjacency list to represent the graph
