@@ -147,10 +147,14 @@ demo_strategy()
 demo_TemplateMethodPattern()
 demo_VisitorPattern()
 
+//MultyTreadins
+demo4_1_ThreadPool()
+
 // logic tasks :
-demo_phone_number_words()
-demo_trie_aho_corasick()
-demo_blockSerch()
-demo_rectCounter()
-demo_lakeCounter()
+//demo_phone_number_words()
+//demo_trie_aho_corasick()
+//demo_blockSerch()
+//demo_rectCounter()
+//demo_lakeCounter()
 //demo_decompressString()
+
