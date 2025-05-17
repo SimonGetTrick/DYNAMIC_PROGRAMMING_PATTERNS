@@ -158,3 +158,11 @@ demo4_1_ThreadPool()
 //demo_lakeCounter()
 //demo_decompressString()
 
+func testObjectiveCDocumentUsage() {
+    let path = "/Users/user/Documents/report.txt"
+    let doc = TwoStageCreation(file: path)
+    print("File path: \(doc.filePath)")
+    print("Contents: \(doc.contents)")
+}
+
+testObjectiveCDocumentUsage()

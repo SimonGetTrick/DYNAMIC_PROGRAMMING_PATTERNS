@@ -34,6 +34,8 @@
 		808F8AF92DD53378004EA975 /* 3.8.State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AF82DD53378004EA975 /* 3.8.State.swift */; };
 		808F8AFB2DD534C3004EA975 /* 3.10.TemplateMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AFA2DD534C3004EA975 /* 3.10.TemplateMethod.swift */; };
 		808F8AFD2DD535A6004EA975 /* 31.1.Visitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AFC2DD535A6004EA975 /* 31.1.Visitor.swift */; };
+		808F8B0E2DD77BA4004EA975 /* 4.1.ThreadPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8B0D2DD77BA4004EA975 /* 4.1.ThreadPool.swift */; };
+		808F8B132DD88674004EA975 /* TwoStageCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 808F8B122DD88674004EA975 /* TwoStageCreation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -79,6 +81,11 @@
 		808F8AF82DD53378004EA975 /* 3.8.State.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.8.State.swift; sourceTree = "<group>"; };
 		808F8AFA2DD534C3004EA975 /* 3.10.TemplateMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.10.TemplateMethod.swift; sourceTree = "<group>"; };
 		808F8AFC2DD535A6004EA975 /* 31.1.Visitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 31.1.Visitor.swift; sourceTree = "<group>"; };
+		808F8B0D2DD77BA4004EA975 /* 4.1.ThreadPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 4.1.ThreadPool.swift; sourceTree = "<group>"; };
+		808F8B102DD88674004EA975 /* Dynamic_Examples-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Dynamic_Examples-Bridging-Header.h"; sourceTree = "<group>"; };
+		808F8B112DD88674004EA975 /* TwoStageCreation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TwoStageCreation.h; sourceTree = "<group>"; };
+		808F8B122DD88674004EA975 /* TwoStageCreation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TwoStageCreation.m; sourceTree = "<group>"; };
+		808F8B142DD88AFA004EA975 /* CoocoaDesignPatterns.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CoocoaDesignPatterns.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -122,6 +129,7 @@
 		808F8A462DCD00EC004EA975 /* Patterns */ = {
 			isa = PBXGroup;
 			children = (
+				808F8B0F2DD885C6004EA975 /* objective-C */,
 				808F8A502DD0D6A6004EA975 /* Patterns_ru.rtf */,
 				808F8A4D2DCF9AA5004EA975 /* 1.1.SimpleFactory.swift */,
 				808F8A532DD11323004EA975 /* 1.1.AbstractFactory.swift */,
@@ -147,10 +155,22 @@
 				808F8AF82DD53378004EA975 /* 3.8.State.swift */,
 				808F8A492DCDDB69004EA975 /* 3.7.Observer.swift */,
 				808F8A472DCD0136004EA975 /* 3.9.Strategy.swift */,
+				808F8B0D2DD77BA4004EA975 /* 4.1.ThreadPool.swift */,
 				808F8AFA2DD534C3004EA975 /* 3.10.TemplateMethod.swift */,
 				808F8AFC2DD535A6004EA975 /* 31.1.Visitor.swift */,
 			);
 			path = Patterns;
+			sourceTree = "<group>";
+		};
+		808F8B0F2DD885C6004EA975 /* objective-C */ = {
+			isa = PBXGroup;
+			children = (
+				808F8B142DD88AFA004EA975 /* CoocoaDesignPatterns.png */,
+				808F8B112DD88674004EA975 /* TwoStageCreation.h */,
+				808F8B122DD88674004EA975 /* TwoStageCreation.m */,
+				808F8B102DD88674004EA975 /* Dynamic_Examples-Bridging-Header.h */,
+			);
+			path = "objective-C";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -190,6 +210,7 @@
 				TargetAttributes = {
 					808F8A062DC01112004EA975 = {
 						CreatedOnToolsVersion = 16.3;
+						LastSwiftMigration = 1630;
 					};
 				};
 			};
@@ -224,12 +245,14 @@
 				808F8AEF2DD5239F004EA975 /* 3.2.Command.swift in Sources */,
 				808F8A4E2DCF9AA5004EA975 /* 1.1.SimpleFactory.swift in Sources */,
 				808F8AF32DD52BF2004EA975 /* 3.4Iterator.swift in Sources */,
+				808F8B132DD88674004EA975 /* TwoStageCreation.m in Sources */,
 				808F8AE32DD288EE004EA975 /* 2.5.Facade.swift in Sources */,
 				808F8AE52DD28B0E004EA975 /* 2.6.Flyweight.swift in Sources */,
 				808F8AF72DD531E2004EA975 /* 3.6.Memento.swift in Sources */,
 				808F8AE72DD28C75004EA975 /* 2.7.Proxy.swift in Sources */,
 				808F8A482DCD0136004EA975 /* 3.9.Strategy.swift in Sources */,
 				808F8ADF2DD2870D004EA975 /* 2.2.Bridge.swift in Sources */,
+				808F8B0E2DD77BA4004EA975 /* 4.1.ThreadPool.swift in Sources */,
 				808F8AFB2DD534C3004EA975 /* 3.10.TemplateMethod.swift in Sources */,
 				808F8AD92DD28075004EA975 /* 2.1.Adapter.swift in Sources */,
 				808F8AF92DD53378004EA975 /* 3.8.State.swift in Sources */,
@@ -373,10 +396,13 @@
 		808F8A0F2DC01112004EA975 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UQ5ENR6258;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Patterns/objective-C/Dynamic_Examples-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -384,10 +410,12 @@
 		808F8A102DC01112004EA975 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = UQ5ENR6258;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "Patterns/objective-C/Dynamic_Examples-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
