@@ -36,6 +36,7 @@
 		808F8AFD2DD535A6004EA975 /* 31.1.Visitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8AFC2DD535A6004EA975 /* 31.1.Visitor.swift */; };
 		808F8B0E2DD77BA4004EA975 /* 4.1.ThreadPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8B0D2DD77BA4004EA975 /* 4.1.ThreadPool.swift */; };
 		808F8B132DD88674004EA975 /* TwoStageCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 808F8B122DD88674004EA975 /* TwoStageCreation.m */; };
+		808F8B172DD9D461004EA975 /* TemplateMethod_DataProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 808F8B162DD9D461004EA975 /* TemplateMethod_DataProcessor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -86,6 +87,8 @@
 		808F8B112DD88674004EA975 /* TwoStageCreation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TwoStageCreation.h; sourceTree = "<group>"; };
 		808F8B122DD88674004EA975 /* TwoStageCreation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TwoStageCreation.m; sourceTree = "<group>"; };
 		808F8B142DD88AFA004EA975 /* CoocoaDesignPatterns.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CoocoaDesignPatterns.png; sourceTree = "<group>"; };
+		808F8B152DD9D461004EA975 /* TemplateMethod_DataProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TemplateMethod_DataProcessor.h; sourceTree = "<group>"; };
+		808F8B162DD9D461004EA975 /* TemplateMethod_DataProcessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TemplateMethod_DataProcessor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -169,6 +172,8 @@
 				808F8B112DD88674004EA975 /* TwoStageCreation.h */,
 				808F8B122DD88674004EA975 /* TwoStageCreation.m */,
 				808F8B102DD88674004EA975 /* Dynamic_Examples-Bridging-Header.h */,
+				808F8B152DD9D461004EA975 /* TemplateMethod_DataProcessor.h */,
+				808F8B162DD9D461004EA975 /* TemplateMethod_DataProcessor.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -254,6 +259,7 @@
 				808F8ADF2DD2870D004EA975 /* 2.2.Bridge.swift in Sources */,
 				808F8B0E2DD77BA4004EA975 /* 4.1.ThreadPool.swift in Sources */,
 				808F8AFB2DD534C3004EA975 /* 3.10.TemplateMethod.swift in Sources */,
+				808F8B172DD9D461004EA975 /* TemplateMethod_DataProcessor.m in Sources */,
 				808F8AD92DD28075004EA975 /* 2.1.Adapter.swift in Sources */,
 				808F8AF92DD53378004EA975 /* 3.8.State.swift in Sources */,
 				808F8AE12DD28884004EA975 /* 2.2.BridgeCrossPlathormExample.swift in Sources */,
