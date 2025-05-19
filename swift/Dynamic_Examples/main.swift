@@ -167,4 +167,6 @@ func testObjectiveCDocumentUsage() {
 }
 testObjectiveCDocumentUsage()
 TemplateTestHelper.runTemplateDemo()
+let dog: Void = DCDynamicAnimalFactory.createAnimal(withName: "DCDog")
+    .speak() // Output: Woof! (DCDog)
 
