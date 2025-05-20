@@ -38,6 +38,7 @@
 		808F8B132DD88674004EA975 /* TwoStageCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 808F8B122DD88674004EA975 /* TwoStageCreation.m */; };
 		808F8B172DD9D461004EA975 /* TemplateMethod_DataProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 808F8B162DD9D461004EA975 /* TemplateMethod_DataProcessor.m */; };
 		808F8B1B2DDB52A0004EA975 /* DynamicCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 808F8B1A2DDB529F004EA975 /* DynamicCreation.m */; };
+		808F8B1E2DDC9188004EA975 /* Category.m in Sources */ = {isa = PBXBuildFile; fileRef = 808F8B1D2DDC9188004EA975 /* Category.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -92,6 +93,8 @@
 		808F8B162DD9D461004EA975 /* TemplateMethod_DataProcessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TemplateMethod_DataProcessor.m; sourceTree = "<group>"; };
 		808F8B192DDB529F004EA975 /* DynamicCreation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DynamicCreation.h; sourceTree = "<group>"; };
 		808F8B1A2DDB529F004EA975 /* DynamicCreation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DynamicCreation.m; sourceTree = "<group>"; };
+		808F8B1C2DDC9188004EA975 /* Category.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Category.h; sourceTree = "<group>"; };
+		808F8B1D2DDC9188004EA975 /* Category.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Category.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -179,6 +182,8 @@
 				808F8B162DD9D461004EA975 /* TemplateMethod_DataProcessor.m */,
 				808F8B192DDB529F004EA975 /* DynamicCreation.h */,
 				808F8B1A2DDB529F004EA975 /* DynamicCreation.m */,
+				808F8B1C2DDC9188004EA975 /* Category.h */,
+				808F8B1D2DDC9188004EA975 /* Category.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -250,6 +255,7 @@
 			files = (
 				808F8AF52DD52C8D004EA975 /* 3.5.Mediator.swift in Sources */,
 				808F8A542DD11323004EA975 /* 1.1.AbstractFactory.swift in Sources */,
+				808F8B1E2DDC9188004EA975 /* Category.m in Sources */,
 				808F8A4A2DCDDB69004EA975 /* 3.7.Observer.swift in Sources */,
 				808F8AD72DD26CE8004EA975 /* 1.5.Singleton.swift in Sources */,
 				808F8AEF2DD5239F004EA975 /* 3.2.Command.swift in Sources */,
