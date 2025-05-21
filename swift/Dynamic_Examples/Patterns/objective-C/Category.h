@@ -15,10 +15,17 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)move;
 @end
 
-#pragma mark - Category Interface
+#pragma mark - Speak Category Interface
 
 @interface CAnimal (Speak)
 - (void)speak;
+@end
+
+#pragma mark - Properties Category Interface
+
+@interface CAnimal (Properties)
+@property (nonatomic, strong) NSString *nickname;
+@property (nonatomic, assign) NSInteger age;
 @end
 
 NS_ASSUME_NONNULL_END

@@ -170,3 +170,15 @@ TemplateTestHelper.runTemplateDemo()
 let dog: Void = DCDynamicAnimalFactory.createAnimal(withName: "DCDog")
     .speak() // Output: Woof! (DCDog)
 
+let animal = CAnimal()
+animal.move() // Prints: "CAnimal moves forward"
+animal.speak() // Prints: "CAnimal says something (extension method)"
+animal.nickname = "Buddy"
+animal.age = 5
+print("Nickname: \(animal.nickname), Age: \(animal.age)")
+let swiftContainer = AnonymousContainer()
+swiftContainer.storeItems("Swift", andItem: 100)
+swiftContainer.processItems()
+// Output:
+// String: Swift
+// Number: 100

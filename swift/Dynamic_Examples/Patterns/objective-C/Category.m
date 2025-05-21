@@ -6,6 +6,7 @@
 //
 
 #import "Category.h"
+#import <objc/runtime.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @end
 
-#pragma mark - Category Implementation
+#pragma mark - Speak Category Implementation
 
 @implementation CAnimal (Speak)
 
@@ -28,4 +29,34 @@ NS_ASSUME_NONNULL_BEGIN
 }
 
 @end
+
+#pragma mark - Associated Object Keys
+
+static const void *kNicknameKey = &kNicknameKey;
+static const void *kAgeKey = &kAgeKey;
+
+#pragma mark - Properties Category Implementation
+
+@implementation CAnimal (Properties)
+
+- (void)setNickname:(NSString *)nickname {
+    objc_setAssociatedObject(self, kNicknameKey, nickname, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSString *)nickname {
+    return objc_getAssociatedObject(self, kNicknameKey);
+}
+
+- (void)setAge:(NSInteger)age {
+    NSNumber *number = @(age);
+    objc_setAssociatedObject(self, kAgeKey, number, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
+
+- (NSInteger)age {
+    NSNumber *number = objc_getAssociatedObject(self, kAgeKey);
+    return number.integerValue;
+}
+
+@end
+
 NS_ASSUME_NONNULL_END
