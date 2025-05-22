@@ -7,3 +7,4 @@
 #import "DynamicCreation.h"
 #import "Category.h"
 #import "AnonymousContainer.h"
+#import "EnumeratorPattern.h"

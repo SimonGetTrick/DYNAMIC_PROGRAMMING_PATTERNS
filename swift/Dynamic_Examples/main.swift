@@ -182,3 +182,12 @@ swiftContainer.processItems()
 // Output:
 // String: Swift
 // Number: 100
+
+// New demo for EnumeratorPattern (Objective-C)
+EnumeratorPattern.demoEnumeratorPattern()
+// Output:
+// Enumerating collection (count: 4):
+// Item: Apple
+// Item: 42
+// Item: Banana
+// Item: 7
