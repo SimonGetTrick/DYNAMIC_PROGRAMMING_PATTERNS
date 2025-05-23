@@ -191,3 +191,4 @@ EnumeratorPattern.demoEnumeratorPattern()
 // Item: 42
 // Item: Banana
 // Item: 7
+PerformSelector.demoPerformSelector()
