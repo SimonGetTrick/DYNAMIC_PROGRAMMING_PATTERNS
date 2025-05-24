@@ -9,3 +9,5 @@
 #import "AnonymousContainer.h"
 #import "EnumeratorPattern.h"
 #import "PerformSelector.h"
+#import "AccessorsPattern.h"
+
