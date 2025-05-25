@@ -188,3 +188,4 @@ EnumeratorPattern.demoEnumeratorPattern()
 
 PerformSelector.demoPerformSelector()
 AccessorsPattern.demoAccessorsPattern()
+ArchivingPattern.demoArchivingUnarchiving()

@@ -43,6 +43,7 @@
 		808F8B242DDF0982004EA975 /* EnumeratorPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 808F8B232DDF0982004EA975 /* EnumeratorPattern.m */; };
 		80A0CA372DE06257003890DF /* PerformSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA362DE06257003890DF /* PerformSelector.m */; };
 		80A0CA3A2DE1ACEC003890DF /* AccessorsPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA392DE1ACEB003890DF /* AccessorsPattern.m */; };
+		80A0CA3D2DE32D22003890DF /* ArchivingPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA3C2DE32D22003890DF /* ArchivingPattern.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -107,6 +108,8 @@
 		80A0CA362DE06257003890DF /* PerformSelector.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PerformSelector.m; sourceTree = "<group>"; };
 		80A0CA382DE1ACEB003890DF /* AccessorsPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AccessorsPattern.h; sourceTree = "<group>"; };
 		80A0CA392DE1ACEB003890DF /* AccessorsPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AccessorsPattern.m; sourceTree = "<group>"; };
+		80A0CA3B2DE32D22003890DF /* ArchivingPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArchivingPattern.h; sourceTree = "<group>"; };
+		80A0CA3C2DE32D22003890DF /* ArchivingPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArchivingPattern.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -204,6 +207,8 @@
 				80A0CA362DE06257003890DF /* PerformSelector.m */,
 				80A0CA382DE1ACEB003890DF /* AccessorsPattern.h */,
 				80A0CA392DE1ACEB003890DF /* AccessorsPattern.m */,
+				80A0CA3B2DE32D22003890DF /* ArchivingPattern.h */,
+				80A0CA3C2DE32D22003890DF /* ArchivingPattern.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -294,6 +299,7 @@
 				808F8B0E2DD77BA4004EA975 /* 4.1.ThreadPool.swift in Sources */,
 				808F8AFB2DD534C3004EA975 /* 3.10.TemplateMethod.swift in Sources */,
 				808F8B172DD9D461004EA975 /* TemplateMethod_DataProcessor.m in Sources */,
+				80A0CA3D2DE32D22003890DF /* ArchivingPattern.m in Sources */,
 				80A0CA3A2DE1ACEC003890DF /* AccessorsPattern.m in Sources */,
 				808F8B1B2DDB52A0004EA975 /* DynamicCreation.m in Sources */,
 				808F8AD92DD28075004EA975 /* 2.1.Adapter.swift in Sources */,
