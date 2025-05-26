@@ -155,7 +155,7 @@ demo4_1_ThreadPool()
 //demo_trie_aho_corasick()
 //demo_blockSerch()
 //demo_rectCounter()
-//demo_lakeCounter()
+demo_lakeCounter()
 //demo_decompressString()
 
 //Objective-C patterns to Swift:
@@ -189,3 +189,4 @@ EnumeratorPattern.demoEnumeratorPattern()
 PerformSelector.demoPerformSelector()
 AccessorsPattern.demoAccessorsPattern()
 ArchivingPattern.demoArchivingUnarchiving()
+CopyingPattern.demoCopyingPattern()

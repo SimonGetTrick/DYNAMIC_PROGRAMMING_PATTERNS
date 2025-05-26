@@ -11,3 +11,4 @@
 #import "PerformSelector.h"
 #import "AccessorsPattern.h"
 #import "ArchivingPattern.h"
+#import "CopyingPattern.h"

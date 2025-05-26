@@ -44,6 +44,7 @@
 		80A0CA372DE06257003890DF /* PerformSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA362DE06257003890DF /* PerformSelector.m */; };
 		80A0CA3A2DE1ACEC003890DF /* AccessorsPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA392DE1ACEB003890DF /* AccessorsPattern.m */; };
 		80A0CA3D2DE32D22003890DF /* ArchivingPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA3C2DE32D22003890DF /* ArchivingPattern.m */; };
+		80A0CA402DE45E5A003890DF /* CopyingPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA3F2DE45E5A003890DF /* CopyingPattern.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -110,6 +111,8 @@
 		80A0CA392DE1ACEB003890DF /* AccessorsPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AccessorsPattern.m; sourceTree = "<group>"; };
 		80A0CA3B2DE32D22003890DF /* ArchivingPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArchivingPattern.h; sourceTree = "<group>"; };
 		80A0CA3C2DE32D22003890DF /* ArchivingPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArchivingPattern.m; sourceTree = "<group>"; };
+		80A0CA3E2DE45E5A003890DF /* CopyingPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CopyingPattern.h; sourceTree = "<group>"; };
+		80A0CA3F2DE45E5A003890DF /* CopyingPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CopyingPattern.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -209,6 +212,8 @@
 				80A0CA392DE1ACEB003890DF /* AccessorsPattern.m */,
 				80A0CA3B2DE32D22003890DF /* ArchivingPattern.h */,
 				80A0CA3C2DE32D22003890DF /* ArchivingPattern.m */,
+				80A0CA3E2DE45E5A003890DF /* CopyingPattern.h */,
+				80A0CA3F2DE45E5A003890DF /* CopyingPattern.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -292,6 +297,7 @@
 				808F8AE52DD28B0E004EA975 /* 2.6.Flyweight.swift in Sources */,
 				808F8AF72DD531E2004EA975 /* 3.6.Memento.swift in Sources */,
 				808F8B242DDF0982004EA975 /* EnumeratorPattern.m in Sources */,
+				80A0CA402DE45E5A003890DF /* CopyingPattern.m in Sources */,
 				808F8AE72DD28C75004EA975 /* 2.7.Proxy.swift in Sources */,
 				80A0CA372DE06257003890DF /* PerformSelector.m in Sources */,
 				808F8A482DCD0136004EA975 /* 3.9.Strategy.swift in Sources */,
