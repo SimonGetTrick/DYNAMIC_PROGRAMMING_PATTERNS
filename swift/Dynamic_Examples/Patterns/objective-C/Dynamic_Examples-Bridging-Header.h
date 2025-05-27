@@ -12,3 +12,4 @@
 #import "AccessorsPattern.h"
 #import "ArchivingPattern.h"
 #import "CopyingPattern.h"
+#import "SingletonPatternObj.h"

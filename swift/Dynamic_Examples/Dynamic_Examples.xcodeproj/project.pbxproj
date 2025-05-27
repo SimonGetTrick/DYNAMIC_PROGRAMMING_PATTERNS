@@ -45,6 +45,7 @@
 		80A0CA3A2DE1ACEC003890DF /* AccessorsPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA392DE1ACEB003890DF /* AccessorsPattern.m */; };
 		80A0CA3D2DE32D22003890DF /* ArchivingPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA3C2DE32D22003890DF /* ArchivingPattern.m */; };
 		80A0CA402DE45E5A003890DF /* CopyingPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA3F2DE45E5A003890DF /* CopyingPattern.m */; };
+		80A0CA462DE5A2F9003890DF /* SingletonPatternObj.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA452DE5A2F9003890DF /* SingletonPatternObj.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -113,6 +114,8 @@
 		80A0CA3C2DE32D22003890DF /* ArchivingPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ArchivingPattern.m; sourceTree = "<group>"; };
 		80A0CA3E2DE45E5A003890DF /* CopyingPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CopyingPattern.h; sourceTree = "<group>"; };
 		80A0CA3F2DE45E5A003890DF /* CopyingPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CopyingPattern.m; sourceTree = "<group>"; };
+		80A0CA442DE5A2F9003890DF /* SingletonPatternObj.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SingletonPatternObj.h; sourceTree = "<group>"; };
+		80A0CA452DE5A2F9003890DF /* SingletonPatternObj.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SingletonPatternObj.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -214,6 +217,8 @@
 				80A0CA3C2DE32D22003890DF /* ArchivingPattern.m */,
 				80A0CA3E2DE45E5A003890DF /* CopyingPattern.h */,
 				80A0CA3F2DE45E5A003890DF /* CopyingPattern.m */,
+				80A0CA442DE5A2F9003890DF /* SingletonPatternObj.h */,
+				80A0CA452DE5A2F9003890DF /* SingletonPatternObj.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -307,6 +312,7 @@
 				808F8B172DD9D461004EA975 /* TemplateMethod_DataProcessor.m in Sources */,
 				80A0CA3D2DE32D22003890DF /* ArchivingPattern.m in Sources */,
 				80A0CA3A2DE1ACEC003890DF /* AccessorsPattern.m in Sources */,
+				80A0CA462DE5A2F9003890DF /* SingletonPatternObj.m in Sources */,
 				808F8B1B2DDB52A0004EA975 /* DynamicCreation.m in Sources */,
 				808F8AD92DD28075004EA975 /* 2.1.Adapter.swift in Sources */,
 				808F8AF92DD53378004EA975 /* 3.8.State.swift in Sources */,

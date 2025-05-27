@@ -190,3 +190,5 @@ PerformSelector.demoPerformSelector()
 AccessorsPattern.demoAccessorsPattern()
 ArchivingPattern.demoArchivingUnarchiving()
 CopyingPattern.demoCopyingPattern()
+//SingletonPatternObj<=>ConfigurationManager
+SingletonPatternObj.demoSingletonPattern()
