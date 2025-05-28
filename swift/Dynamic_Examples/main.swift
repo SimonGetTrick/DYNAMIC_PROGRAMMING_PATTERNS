@@ -192,3 +192,4 @@ ArchivingPattern.demoArchivingUnarchiving()
 CopyingPattern.demoCopyingPattern()
 //SingletonPatternObj<=>ConfigurationManager
 SingletonPatternObj.demoSingletonPattern()
+NotificationsPattern.demoNotificationsPattern()

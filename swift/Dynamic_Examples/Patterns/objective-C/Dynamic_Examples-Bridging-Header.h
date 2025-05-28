@@ -13,3 +13,4 @@
 #import "ArchivingPattern.h"
 #import "CopyingPattern.h"
 #import "SingletonPatternObj.h"
+#import "NotificationsPattern.h"
