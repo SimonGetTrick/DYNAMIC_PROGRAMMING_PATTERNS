@@ -14,3 +14,4 @@
 #import "CopyingPattern.h"
 #import "SingletonPatternObj.h"
 #import "NotificationsPattern.h"
+#import "DelegatePattern.h"

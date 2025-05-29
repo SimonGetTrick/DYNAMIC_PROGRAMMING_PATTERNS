@@ -193,3 +193,4 @@ CopyingPattern.demoCopyingPattern()
 //SingletonPatternObj<=>ConfigurationManager
 SingletonPatternObj.demoSingletonPattern()
 NotificationsPattern.demoNotificationsPattern()
+DelegatePattern.demoDelegatePattern()
