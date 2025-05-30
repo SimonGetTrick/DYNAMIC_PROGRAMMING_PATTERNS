@@ -15,3 +15,4 @@
 #import "SingletonPatternObj.h"
 #import "NotificationsPattern.h"
 #import "DelegatePattern.h"
+#import "HierarchiesPattern.h"
