@@ -16,3 +16,4 @@
 #import "NotificationsPattern.h"
 #import "DelegatePattern.h"
 #import "HierarchiesPattern.h"
+#import "OutletsTargetsActionsPattern.h"
