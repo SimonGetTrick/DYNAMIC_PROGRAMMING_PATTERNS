@@ -50,6 +50,7 @@
 		80A0CA682DE8699F003890DF /* DelegatePattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA672DE8699F003890DF /* DelegatePattern.m */; };
 		80A0CA872DE9C11C003890DF /* HierarchiesPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CA862DE9C11C003890DF /* HierarchiesPattern.m */; };
 		80A0CAA62DEAE74E003890DF /* OutletsTargetsActionsPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAA52DEAE74E003890DF /* OutletsTargetsActionsPattern.m */; };
+		80A0CAA92DEC4783003890DF /* ResponderChainPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAA82DEC4783003890DF /* ResponderChainPattern.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -127,6 +128,8 @@
 		80A0CA862DE9C11C003890DF /* HierarchiesPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HierarchiesPattern.m; sourceTree = "<group>"; };
 		80A0CAA42DEAE74E003890DF /* OutletsTargetsActionsPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OutletsTargetsActionsPattern.h; sourceTree = "<group>"; };
 		80A0CAA52DEAE74E003890DF /* OutletsTargetsActionsPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OutletsTargetsActionsPattern.m; sourceTree = "<group>"; };
+		80A0CAA72DEC4783003890DF /* ResponderChainPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ResponderChainPattern.h; sourceTree = "<group>"; };
+		80A0CAA82DEC4783003890DF /* ResponderChainPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ResponderChainPattern.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -237,6 +240,8 @@
 				80A0CA862DE9C11C003890DF /* HierarchiesPattern.m */,
 				80A0CAA42DEAE74E003890DF /* OutletsTargetsActionsPattern.h */,
 				80A0CAA52DEAE74E003890DF /* OutletsTargetsActionsPattern.m */,
+				80A0CAA72DEC4783003890DF /* ResponderChainPattern.h */,
+				80A0CAA82DEC4783003890DF /* ResponderChainPattern.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -345,6 +350,7 @@
 				808F8AFD2DD535A6004EA975 /* 31.1.Visitor.swift in Sources */,
 				808F8ADD2DD28662004EA975 /* 2.1.AdapterKmmToNative.swift in Sources */,
 				808F8A562DD11A6D004EA975 /* 1.2.Builder.swift in Sources */,
+				80A0CAA92DEC4783003890DF /* ResponderChainPattern.m in Sources */,
 				808F8AF12DD52963004EA975 /* 3.3.Interpter.swift in Sources */,
 				808F8A522DD0D748004EA975 /* 1.3.FactoryMethod.swift in Sources */,
 				808F8AED2DD4DA40004EA975 /* 3.1.ChainOfResponsibility.swift in Sources */,

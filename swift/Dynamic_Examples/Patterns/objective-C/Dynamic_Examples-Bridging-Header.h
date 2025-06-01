@@ -17,3 +17,4 @@
 #import "DelegatePattern.h"
 #import "HierarchiesPattern.h"
 #import "OutletsTargetsActionsPattern.h"
+#import "ResponderChainPattern.h"
