@@ -18,3 +18,4 @@
 #import "HierarchiesPattern.h"
 #import "OutletsTargetsActionsPattern.h"
 #import "ResponderChainPattern.h"
+#import "AssociativeStoragePattern.h"
