@@ -19,3 +19,4 @@
 #import "OutletsTargetsActionsPattern.h"
 #import "ResponderChainPattern.h"
 #import "AssociativeStoragePattern.h"
+#import "InvocationPattern.h"

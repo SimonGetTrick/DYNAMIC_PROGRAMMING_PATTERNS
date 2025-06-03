@@ -52,6 +52,7 @@
 		80A0CAA62DEAE74E003890DF /* OutletsTargetsActionsPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAA52DEAE74E003890DF /* OutletsTargetsActionsPattern.m */; };
 		80A0CAA92DEC4783003890DF /* ResponderChainPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAA82DEC4783003890DF /* ResponderChainPattern.m */; };
 		80A0CAAC2DED9AE6003890DF /* AssociativeStoragePattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAAB2DED9AE6003890DF /* AssociativeStoragePattern.m */; };
+		80A0CACB2DEED9A6003890DF /* InvocationPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CACA2DEED9A6003890DF /* InvocationPattern.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -133,6 +134,8 @@
 		80A0CAA82DEC4783003890DF /* ResponderChainPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ResponderChainPattern.m; sourceTree = "<group>"; };
 		80A0CAAA2DED9AE6003890DF /* AssociativeStoragePattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AssociativeStoragePattern.h; sourceTree = "<group>"; };
 		80A0CAAB2DED9AE6003890DF /* AssociativeStoragePattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AssociativeStoragePattern.m; sourceTree = "<group>"; };
+		80A0CAC92DEED9A6003890DF /* InvocationPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InvocationPattern.h; sourceTree = "<group>"; };
+		80A0CACA2DEED9A6003890DF /* InvocationPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InvocationPattern.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -247,6 +250,8 @@
 				80A0CAA82DEC4783003890DF /* ResponderChainPattern.m */,
 				80A0CAAA2DED9AE6003890DF /* AssociativeStoragePattern.h */,
 				80A0CAAB2DED9AE6003890DF /* AssociativeStoragePattern.m */,
+				80A0CAC92DEED9A6003890DF /* InvocationPattern.h */,
+				80A0CACA2DEED9A6003890DF /* InvocationPattern.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -355,6 +360,7 @@
 				808F8AD52DD26AB0004EA975 /* 1.4.Prototype.swift in Sources */,
 				808F8AFD2DD535A6004EA975 /* 31.1.Visitor.swift in Sources */,
 				808F8ADD2DD28662004EA975 /* 2.1.AdapterKmmToNative.swift in Sources */,
+				80A0CACB2DEED9A6003890DF /* InvocationPattern.m in Sources */,
 				808F8A562DD11A6D004EA975 /* 1.2.Builder.swift in Sources */,
 				80A0CAA92DEC4783003890DF /* ResponderChainPattern.m in Sources */,
 				808F8AF12DD52963004EA975 /* 3.3.Interpter.swift in Sources */,
