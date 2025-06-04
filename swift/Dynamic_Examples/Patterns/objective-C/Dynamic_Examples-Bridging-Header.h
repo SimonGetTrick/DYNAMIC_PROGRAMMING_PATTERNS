@@ -20,3 +20,4 @@
 #import "ResponderChainPattern.h"
 #import "AssociativeStoragePattern.h"
 #import "InvocationPattern.h"
+#import "PrototypePattern.h"
