@@ -21,3 +21,4 @@
 #import "AssociativeStoragePattern.h"
 #import "InvocationPattern.h"
 #import "PrototypePattern.h"
+#import "FlyweightPattern.h"

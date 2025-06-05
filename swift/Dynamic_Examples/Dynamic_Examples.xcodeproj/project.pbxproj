@@ -54,6 +54,7 @@
 		80A0CAAC2DED9AE6003890DF /* AssociativeStoragePattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAAB2DED9AE6003890DF /* AssociativeStoragePattern.m */; };
 		80A0CACB2DEED9A6003890DF /* InvocationPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CACA2DEED9A6003890DF /* InvocationPattern.m */; };
 		80A0CACE2DF06CD8003890DF /* PrototypePattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CACD2DF06CD8003890DF /* PrototypePattern.m */; };
+		80A0CAED2DF17E91003890DF /* FlyweightPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAEC2DF17E91003890DF /* FlyweightPattern.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -139,6 +140,8 @@
 		80A0CACA2DEED9A6003890DF /* InvocationPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = InvocationPattern.m; sourceTree = "<group>"; };
 		80A0CACC2DF06CD8003890DF /* PrototypePattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrototypePattern.h; sourceTree = "<group>"; };
 		80A0CACD2DF06CD8003890DF /* PrototypePattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrototypePattern.m; sourceTree = "<group>"; };
+		80A0CAEB2DF17E91003890DF /* FlyweightPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlyweightPattern.h; sourceTree = "<group>"; };
+		80A0CAEC2DF17E91003890DF /* FlyweightPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlyweightPattern.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -257,6 +260,8 @@
 				80A0CACA2DEED9A6003890DF /* InvocationPattern.m */,
 				80A0CACC2DF06CD8003890DF /* PrototypePattern.h */,
 				80A0CACD2DF06CD8003890DF /* PrototypePattern.m */,
+				80A0CAEB2DF17E91003890DF /* FlyweightPattern.h */,
+				80A0CAEC2DF17E91003890DF /* FlyweightPattern.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -344,6 +349,7 @@
 				808F8AF72DD531E2004EA975 /* 3.6.Memento.swift in Sources */,
 				808F8B242DDF0982004EA975 /* EnumeratorPattern.m in Sources */,
 				80A0CA402DE45E5A003890DF /* CopyingPattern.m in Sources */,
+				80A0CAED2DF17E91003890DF /* FlyweightPattern.m in Sources */,
 				80A0CA872DE9C11C003890DF /* HierarchiesPattern.m in Sources */,
 				808F8AE72DD28C75004EA975 /* 2.7.Proxy.swift in Sources */,
 				80A0CA372DE06257003890DF /* PerformSelector.m in Sources */,
