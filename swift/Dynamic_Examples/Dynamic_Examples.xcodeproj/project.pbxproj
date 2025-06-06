@@ -55,6 +55,7 @@
 		80A0CACB2DEED9A6003890DF /* InvocationPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CACA2DEED9A6003890DF /* InvocationPattern.m */; };
 		80A0CACE2DF06CD8003890DF /* PrototypePattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CACD2DF06CD8003890DF /* PrototypePattern.m */; };
 		80A0CAED2DF17E91003890DF /* FlyweightPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAEC2DF17E91003890DF /* FlyweightPattern.m */; };
+		80A0CAF02DF3292F003890DF /* DecoratorPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAEF2DF3292F003890DF /* DecoratorPattern.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -142,6 +143,8 @@
 		80A0CACD2DF06CD8003890DF /* PrototypePattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PrototypePattern.m; sourceTree = "<group>"; };
 		80A0CAEB2DF17E91003890DF /* FlyweightPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FlyweightPattern.h; sourceTree = "<group>"; };
 		80A0CAEC2DF17E91003890DF /* FlyweightPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlyweightPattern.m; sourceTree = "<group>"; };
+		80A0CAEE2DF3292F003890DF /* DecoratorPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DecoratorPattern.h; sourceTree = "<group>"; };
+		80A0CAEF2DF3292F003890DF /* DecoratorPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DecoratorPattern.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -262,6 +265,8 @@
 				80A0CACD2DF06CD8003890DF /* PrototypePattern.m */,
 				80A0CAEB2DF17E91003890DF /* FlyweightPattern.h */,
 				80A0CAEC2DF17E91003890DF /* FlyweightPattern.m */,
+				80A0CAEE2DF3292F003890DF /* DecoratorPattern.h */,
+				80A0CAEF2DF3292F003890DF /* DecoratorPattern.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -369,6 +374,7 @@
 				80A0CA682DE8699F003890DF /* DelegatePattern.m in Sources */,
 				808F8A4C2DCDDF6B004EA975 /* 2.4.Decorator.swift in Sources */,
 				80A0CAA62DEAE74E003890DF /* OutletsTargetsActionsPattern.m in Sources */,
+				80A0CAF02DF3292F003890DF /* DecoratorPattern.m in Sources */,
 				808F8AD52DD26AB0004EA975 /* 1.4.Prototype.swift in Sources */,
 				808F8AFD2DD535A6004EA975 /* 31.1.Visitor.swift in Sources */,
 				808F8ADD2DD28662004EA975 /* 2.1.AdapterKmmToNative.swift in Sources */,
