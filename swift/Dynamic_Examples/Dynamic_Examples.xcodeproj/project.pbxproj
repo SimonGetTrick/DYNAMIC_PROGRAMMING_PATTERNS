@@ -56,6 +56,7 @@
 		80A0CACE2DF06CD8003890DF /* PrototypePattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CACD2DF06CD8003890DF /* PrototypePattern.m */; };
 		80A0CAED2DF17E91003890DF /* FlyweightPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAEC2DF17E91003890DF /* FlyweightPattern.m */; };
 		80A0CAF02DF3292F003890DF /* DecoratorPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAEF2DF3292F003890DF /* DecoratorPattern.m */; };
+		80A0CB0F2DF45EBB003890DF /* BundlePattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CB0E2DF45EBB003890DF /* BundlePattern.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -145,6 +146,8 @@
 		80A0CAEC2DF17E91003890DF /* FlyweightPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlyweightPattern.m; sourceTree = "<group>"; };
 		80A0CAEE2DF3292F003890DF /* DecoratorPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DecoratorPattern.h; sourceTree = "<group>"; };
 		80A0CAEF2DF3292F003890DF /* DecoratorPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DecoratorPattern.m; sourceTree = "<group>"; };
+		80A0CB0D2DF45EBB003890DF /* BundlePattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BundlePattern.h; sourceTree = "<group>"; };
+		80A0CB0E2DF45EBB003890DF /* BundlePattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BundlePattern.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -267,6 +270,8 @@
 				80A0CAEC2DF17E91003890DF /* FlyweightPattern.m */,
 				80A0CAEE2DF3292F003890DF /* DecoratorPattern.h */,
 				80A0CAEF2DF3292F003890DF /* DecoratorPattern.m */,
+				80A0CB0D2DF45EBB003890DF /* BundlePattern.h */,
+				80A0CB0E2DF45EBB003890DF /* BundlePattern.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -348,6 +353,7 @@
 				808F8AEF2DD5239F004EA975 /* 3.2.Command.swift in Sources */,
 				808F8A4E2DCF9AA5004EA975 /* 1.1.SimpleFactory.swift in Sources */,
 				808F8AF32DD52BF2004EA975 /* 3.4Iterator.swift in Sources */,
+				80A0CB0F2DF45EBB003890DF /* BundlePattern.m in Sources */,
 				808F8B132DD88674004EA975 /* TwoStageCreation.m in Sources */,
 				808F8AE32DD288EE004EA975 /* 2.5.Facade.swift in Sources */,
 				808F8AE52DD28B0E004EA975 /* 2.6.Flyweight.swift in Sources */,

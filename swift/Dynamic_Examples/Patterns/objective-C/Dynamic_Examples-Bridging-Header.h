@@ -23,3 +23,4 @@
 #import "PrototypePattern.h"
 #import "FlyweightPattern.h"
 #import "DecoratorPattern.h"
+#import "BundlePattern.h"
