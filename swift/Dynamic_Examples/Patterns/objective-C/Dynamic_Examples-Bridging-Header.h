@@ -25,4 +25,5 @@
 #import "DecoratorPattern.h"
 #import "BundlePattern.h"
 #import "ClassClustersPatterns.h"
+#import "FacadePattern.h"
 

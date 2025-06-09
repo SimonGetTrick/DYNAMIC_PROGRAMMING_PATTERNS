@@ -58,6 +58,7 @@
 		80A0CAF02DF3292F003890DF /* DecoratorPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CAEF2DF3292F003890DF /* DecoratorPattern.m */; };
 		80A0CB0F2DF45EBB003890DF /* BundlePattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CB0E2DF45EBB003890DF /* BundlePattern.m */; };
 		80A0CB122DF59EED003890DF /* ClassClustersPatterns.m in Sources */ = {isa = PBXBuildFile; fileRef = 80A0CB112DF59EED003890DF /* ClassClustersPatterns.m */; };
+		80F484CF2DF6F55900F7084B /* FacadePattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80F484CE2DF6F55900F7084B /* FacadePattern.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -151,6 +152,8 @@
 		80A0CB0E2DF45EBB003890DF /* BundlePattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BundlePattern.m; sourceTree = "<group>"; };
 		80A0CB102DF59EED003890DF /* ClassClustersPatterns.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClassClustersPatterns.h; sourceTree = "<group>"; };
 		80A0CB112DF59EED003890DF /* ClassClustersPatterns.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClassClustersPatterns.m; sourceTree = "<group>"; };
+		80F484CD2DF6F55900F7084B /* FacadePattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FacadePattern.h; sourceTree = "<group>"; };
+		80F484CE2DF6F55900F7084B /* FacadePattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FacadePattern.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -277,6 +280,8 @@
 				80A0CB0E2DF45EBB003890DF /* BundlePattern.m */,
 				80A0CB102DF59EED003890DF /* ClassClustersPatterns.h */,
 				80A0CB112DF59EED003890DF /* ClassClustersPatterns.m */,
+				80F484CD2DF6F55900F7084B /* FacadePattern.h */,
+				80F484CE2DF6F55900F7084B /* FacadePattern.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -314,7 +319,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1630;
+				LastUpgradeCheck = 1640;
 				TargetAttributes = {
 					808F8A062DC01112004EA975 = {
 						CreatedOnToolsVersion = 16.3;
@@ -394,6 +399,7 @@
 				808F8A562DD11A6D004EA975 /* 1.2.Builder.swift in Sources */,
 				80A0CAA92DEC4783003890DF /* ResponderChainPattern.m in Sources */,
 				808F8AF12DD52963004EA975 /* 3.3.Interpter.swift in Sources */,
+				80F484CF2DF6F55900F7084B /* FacadePattern.m in Sources */,
 				808F8A522DD0D748004EA975 /* 1.3.FactoryMethod.swift in Sources */,
 				808F8AED2DD4DA40004EA975 /* 3.1.ChainOfResponsibility.swift in Sources */,
 				808F8A1B2DC16F26004EA975 /* main.swift in Sources */,
@@ -437,6 +443,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = UQ5ENR6258;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -501,6 +508,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = UQ5ENR6258;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -528,6 +536,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = UQ5ENR6258;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -542,6 +551,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = UQ5ENR6258;
 				ENABLE_HARDENED_RUNTIME = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
