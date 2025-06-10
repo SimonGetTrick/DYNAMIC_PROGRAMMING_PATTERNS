@@ -26,4 +26,5 @@
 #import "BundlePattern.h"
 #import "ClassClustersPatterns.h"
 #import "FacadePattern.h"
+#import "ProxyPattern.h"
 

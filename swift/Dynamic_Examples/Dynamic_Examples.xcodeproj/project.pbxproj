@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		807DE5472DF8712800D2094F /* ProxyPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 807DE5462DF8712800D2094F /* ProxyPattern.m */; };
 		808F8A1B2DC16F26004EA975 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A1A2DC16F26004EA975 /* main.swift */; };
 		808F8A482DCD0136004EA975 /* 3.9.Strategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A472DCD0136004EA975 /* 3.9.Strategy.swift */; };
 		808F8A4A2DCDDB69004EA975 /* 3.7.Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A492DCDDB69004EA975 /* 3.7.Observer.swift */; };
@@ -74,6 +75,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		807DE5452DF8712800D2094F /* ProxyPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProxyPattern.h; sourceTree = "<group>"; };
+		807DE5462DF8712800D2094F /* ProxyPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProxyPattern.m; sourceTree = "<group>"; };
 		808F8A072DC01112004EA975 /* Dynamic_Examples */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Dynamic_Examples; sourceTree = BUILT_PRODUCTS_DIR; };
 		808F8A1A2DC16F26004EA975 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		808F8A472DCD0136004EA975 /* 3.9.Strategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.9.Strategy.swift; sourceTree = "<group>"; };
@@ -282,6 +285,8 @@
 				80A0CB112DF59EED003890DF /* ClassClustersPatterns.m */,
 				80F484CD2DF6F55900F7084B /* FacadePattern.h */,
 				80F484CE2DF6F55900F7084B /* FacadePattern.m */,
+				807DE5452DF8712800D2094F /* ProxyPattern.h */,
+				807DE5462DF8712800D2094F /* ProxyPattern.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -319,7 +324,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1630;
-				LastUpgradeCheck = 1640;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					808F8A062DC01112004EA975 = {
 						CreatedOnToolsVersion = 16.3;
@@ -375,6 +380,7 @@
 				808F8AE72DD28C75004EA975 /* 2.7.Proxy.swift in Sources */,
 				80A0CA372DE06257003890DF /* PerformSelector.m in Sources */,
 				808F8A482DCD0136004EA975 /* 3.9.Strategy.swift in Sources */,
+				807DE5472DF8712800D2094F /* ProxyPattern.m in Sources */,
 				808F8ADF2DD2870D004EA975 /* 2.2.Bridge.swift in Sources */,
 				808F8B0E2DD77BA4004EA975 /* 4.1.ThreadPool.swift in Sources */,
 				808F8AFB2DD534C3004EA975 /* 3.10.TemplateMethod.swift in Sources */,
@@ -469,6 +475,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -527,6 +534,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 			};
 			name = Release;
