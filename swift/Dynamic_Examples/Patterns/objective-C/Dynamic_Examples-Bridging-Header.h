@@ -27,4 +27,4 @@
 #import "ClassClustersPatterns.h"
 #import "FacadePattern.h"
 #import "ProxyPattern.h"
-
+#import "ManagersPattern.h"

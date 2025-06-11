@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		80362A9A2DF9D529009C67F2 /* ManagersPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80362A992DF9D529009C67F2 /* ManagersPattern.m */; };
 		807DE5472DF8712800D2094F /* ProxyPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 807DE5462DF8712800D2094F /* ProxyPattern.m */; };
 		808F8A1B2DC16F26004EA975 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A1A2DC16F26004EA975 /* main.swift */; };
 		808F8A482DCD0136004EA975 /* 3.9.Strategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A472DCD0136004EA975 /* 3.9.Strategy.swift */; };
@@ -75,6 +76,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		80362A982DF9D529009C67F2 /* ManagersPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManagersPattern.h; sourceTree = "<group>"; };
+		80362A992DF9D529009C67F2 /* ManagersPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManagersPattern.m; sourceTree = "<group>"; };
 		807DE5452DF8712800D2094F /* ProxyPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProxyPattern.h; sourceTree = "<group>"; };
 		807DE5462DF8712800D2094F /* ProxyPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProxyPattern.m; sourceTree = "<group>"; };
 		808F8A072DC01112004EA975 /* Dynamic_Examples */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Dynamic_Examples; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -287,6 +290,8 @@
 				80F484CE2DF6F55900F7084B /* FacadePattern.m */,
 				807DE5452DF8712800D2094F /* ProxyPattern.h */,
 				807DE5462DF8712800D2094F /* ProxyPattern.m */,
+				80362A982DF9D529009C67F2 /* ManagersPattern.h */,
+				80362A992DF9D529009C67F2 /* ManagersPattern.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -378,6 +383,7 @@
 				80A0CAED2DF17E91003890DF /* FlyweightPattern.m in Sources */,
 				80A0CA872DE9C11C003890DF /* HierarchiesPattern.m in Sources */,
 				808F8AE72DD28C75004EA975 /* 2.7.Proxy.swift in Sources */,
+				80362A9A2DF9D529009C67F2 /* ManagersPattern.m in Sources */,
 				80A0CA372DE06257003890DF /* PerformSelector.m in Sources */,
 				808F8A482DCD0136004EA975 /* 3.9.Strategy.swift in Sources */,
 				807DE5472DF8712800D2094F /* ProxyPattern.m in Sources */,
