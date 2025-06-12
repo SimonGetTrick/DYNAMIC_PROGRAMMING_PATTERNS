@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		80362A9A2DF9D529009C67F2 /* ManagersPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80362A992DF9D529009C67F2 /* ManagersPattern.m */; };
+		80362A9D2DFABF5C009C67F2 /* ControllerPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80362A9C2DFABF5C009C67F2 /* ControllerPattern.m */; };
 		807DE5472DF8712800D2094F /* ProxyPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 807DE5462DF8712800D2094F /* ProxyPattern.m */; };
 		808F8A1B2DC16F26004EA975 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A1A2DC16F26004EA975 /* main.swift */; };
 		808F8A482DCD0136004EA975 /* 3.9.Strategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A472DCD0136004EA975 /* 3.9.Strategy.swift */; };
@@ -78,6 +79,8 @@
 /* Begin PBXFileReference section */
 		80362A982DF9D529009C67F2 /* ManagersPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ManagersPattern.h; sourceTree = "<group>"; };
 		80362A992DF9D529009C67F2 /* ManagersPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ManagersPattern.m; sourceTree = "<group>"; };
+		80362A9B2DFABF5C009C67F2 /* ControllerPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ControllerPattern.h; sourceTree = "<group>"; };
+		80362A9C2DFABF5C009C67F2 /* ControllerPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ControllerPattern.m; sourceTree = "<group>"; };
 		807DE5452DF8712800D2094F /* ProxyPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ProxyPattern.h; sourceTree = "<group>"; };
 		807DE5462DF8712800D2094F /* ProxyPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProxyPattern.m; sourceTree = "<group>"; };
 		808F8A072DC01112004EA975 /* Dynamic_Examples */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Dynamic_Examples; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -292,6 +295,8 @@
 				807DE5462DF8712800D2094F /* ProxyPattern.m */,
 				80362A982DF9D529009C67F2 /* ManagersPattern.h */,
 				80362A992DF9D529009C67F2 /* ManagersPattern.m */,
+				80362A9B2DFABF5C009C67F2 /* ControllerPattern.h */,
+				80362A9C2DFABF5C009C67F2 /* ControllerPattern.m */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -393,6 +398,7 @@
 				808F8B172DD9D461004EA975 /* TemplateMethod_DataProcessor.m in Sources */,
 				80A0CA3D2DE32D22003890DF /* ArchivingPattern.m in Sources */,
 				80A0CA3A2DE1ACEC003890DF /* AccessorsPattern.m in Sources */,
+				80362A9D2DFABF5C009C67F2 /* ControllerPattern.m in Sources */,
 				80A0CA462DE5A2F9003890DF /* SingletonPatternObj.m in Sources */,
 				808F8B1B2DDB52A0004EA975 /* DynamicCreation.m in Sources */,
 				80A0CB122DF59EED003890DF /* ClassClustersPatterns.m in Sources */,

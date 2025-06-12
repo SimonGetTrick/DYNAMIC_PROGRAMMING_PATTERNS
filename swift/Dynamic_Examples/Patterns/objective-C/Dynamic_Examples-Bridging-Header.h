@@ -28,3 +28,4 @@
 #import "FacadePattern.h"
 #import "ProxyPattern.h"
 #import "ManagersPattern.h"
+#import "ControllerPattern.h"
