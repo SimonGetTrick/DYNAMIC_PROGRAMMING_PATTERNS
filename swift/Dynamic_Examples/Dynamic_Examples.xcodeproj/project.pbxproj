@@ -11,6 +11,8 @@
 		80362A9D2DFABF5C009C67F2 /* ControllerPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 80362A9C2DFABF5C009C67F2 /* ControllerPattern.m */; };
 		807DE5472DF8712800D2094F /* ProxyPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 807DE5462DF8712800D2094F /* ProxyPattern.m */; };
 		807DE5E72DFC663900D2094F /* CoreDataPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 807DE5E62DFC663900D2094F /* CoreDataPattern.m */; };
+		807DE5ED2DFC6D7A00D2094F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 807DE5EC2DFC6D7A00D2094F /* CoreData.framework */; };
+		807DE5F02DFC6EB900D2094F /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 807DE5EE2DFC6EB900D2094F /* Model.xcdatamodeld */; };
 		808F8A1B2DC16F26004EA975 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A1A2DC16F26004EA975 /* main.swift */; };
 		808F8A482DCD0136004EA975 /* 3.9.Strategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A472DCD0136004EA975 /* 3.9.Strategy.swift */; };
 		808F8A4A2DCDDB69004EA975 /* 3.7.Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A492DCDDB69004EA975 /* 3.7.Observer.swift */; };
@@ -86,6 +88,8 @@
 		807DE5462DF8712800D2094F /* ProxyPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ProxyPattern.m; sourceTree = "<group>"; };
 		807DE5E52DFC663900D2094F /* CoreDataPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreDataPattern.h; sourceTree = "<group>"; };
 		807DE5E62DFC663900D2094F /* CoreDataPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CoreDataPattern.m; sourceTree = "<group>"; };
+		807DE5EC2DFC6D7A00D2094F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		807DE5EF2DFC6EB900D2094F /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		808F8A072DC01112004EA975 /* Dynamic_Examples */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Dynamic_Examples; sourceTree = BUILT_PRODUCTS_DIR; };
 		808F8A1A2DC16F26004EA975 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		808F8A472DCD0136004EA975 /* 3.9.Strategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.9.Strategy.swift; sourceTree = "<group>"; };
@@ -181,18 +185,28 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				807DE5ED2DFC6D7A00D2094F /* CoreData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		807DE5EB2DFC6D7A00D2094F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				807DE5EC2DFC6D7A00D2094F /* CoreData.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		808F89FE2DC01112004EA975 = {
 			isa = PBXGroup;
 			children = (
 				808F8A462DCD00EC004EA975 /* Patterns */,
 				808F8A092DC01112004EA975 /* Dynamic_Examples */,
 				808F8A1A2DC16F26004EA975 /* main.swift */,
+				807DE5EB2DFC6D7A00D2094F /* Frameworks */,
 				808F8A082DC01112004EA975 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -302,6 +316,7 @@
 				80362A9C2DFABF5C009C67F2 /* ControllerPattern.m */,
 				807DE5E52DFC663900D2094F /* CoreDataPattern.h */,
 				807DE5E62DFC663900D2094F /* CoreDataPattern.m */,
+				807DE5EE2DFC6EB900D2094F /* Model.xcdatamodeld */,
 			);
 			path = "objective-C";
 			sourceTree = "<group>";
@@ -406,6 +421,7 @@
 				80A0CA3A2DE1ACEC003890DF /* AccessorsPattern.m in Sources */,
 				80362A9D2DFABF5C009C67F2 /* ControllerPattern.m in Sources */,
 				80A0CA462DE5A2F9003890DF /* SingletonPatternObj.m in Sources */,
+				807DE5F02DFC6EB900D2094F /* Model.xcdatamodeld in Sources */,
 				808F8B1B2DDB52A0004EA975 /* DynamicCreation.m in Sources */,
 				80A0CB122DF59EED003890DF /* ClassClustersPatterns.m in Sources */,
 				808F8AD92DD28075004EA975 /* 2.1.Adapter.swift in Sources */,
@@ -608,6 +624,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		807DE5EE2DFC6EB900D2094F /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				807DE5EF2DFC6EB900D2094F /* Model.xcdatamodel */,
+			);
+			currentVersion = 807DE5EF2DFC6EB900D2094F /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 808F89FF2DC01112004EA975 /* Project object */;
 }

@@ -59,11 +59,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)insertSampleData {
     NSManagedObjectContext *context = self.persistentContainer.viewContext;
 
-    NSManagedObject *person = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:context];
+    NSManagedObject *person = [NSEntityDescription insertNewObjectForEntityForName:@"PersonCD" inManagedObjectContext:context];
     [person setValue:@"Alice" forKey:@"name"];
     [person setValue:@30 forKey:@"age"];
 
-    NSManagedObject *person2 = [NSEntityDescription insertNewObjectForEntityForName:@"Person" inManagedObjectContext:context];
+    NSManagedObject *person2 = [NSEntityDescription insertNewObjectForEntityForName:@"PersonCD" inManagedObjectContext:context];
     [person2 setValue:@"Bob" forKey:@"name"];
     [person2 setValue:@42 forKey:@"age"];
 
@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)fetchAndPrintPeople {
     NSManagedObjectContext *context = self.persistentContainer.viewContext;
 
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Person"];
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"PersonCD"];
 
     NSError *error = nil;
     NSArray *results = [context executeFetchRequest:request error:&error];
