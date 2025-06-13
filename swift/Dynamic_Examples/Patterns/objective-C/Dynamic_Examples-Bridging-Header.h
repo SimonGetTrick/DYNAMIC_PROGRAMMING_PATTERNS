@@ -29,3 +29,4 @@
 #import "ProxyPattern.h"
 #import "ManagersPattern.h"
 #import "ControllerPattern.h"
+#import "CoreDataPattern.h"
