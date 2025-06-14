@@ -30,3 +30,5 @@
 #import "ManagersPattern.h"
 #import "ControllerPattern.h"
 #import "CoreDataPattern.h"
+#import "ApplicationKitViewsPattern.h"
+
