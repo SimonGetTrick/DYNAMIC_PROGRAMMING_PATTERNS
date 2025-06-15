@@ -14,6 +14,7 @@
 		807DE5ED2DFC6D7A00D2094F /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 807DE5EC2DFC6D7A00D2094F /* CoreData.framework */; };
 		807DE5F02DFC6EB900D2094F /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 807DE5EE2DFC6EB900D2094F /* Model.xcdatamodeld */; };
 		807DE5F32DFD8F5700D2094F /* ApplicationKitViewsPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 807DE5F22DFD8F5700D2094F /* ApplicationKitViewsPattern.m */; };
+		807DE5F62DFEC66700D2094F /* BindingsAndControllersPattern.m in Sources */ = {isa = PBXBuildFile; fileRef = 807DE5F52DFEC66700D2094F /* BindingsAndControllersPattern.m */; };
 		808F8A1B2DC16F26004EA975 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A1A2DC16F26004EA975 /* main.swift */; };
 		808F8A482DCD0136004EA975 /* 3.9.Strategy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A472DCD0136004EA975 /* 3.9.Strategy.swift */; };
 		808F8A4A2DCDDB69004EA975 /* 3.7.Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 808F8A492DCDDB69004EA975 /* 3.7.Observer.swift */; };
@@ -93,6 +94,8 @@
 		807DE5EF2DFC6EB900D2094F /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		807DE5F12DFD8F5700D2094F /* ApplicationKitViewsPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ApplicationKitViewsPattern.h; sourceTree = "<group>"; };
 		807DE5F22DFD8F5700D2094F /* ApplicationKitViewsPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ApplicationKitViewsPattern.m; sourceTree = "<group>"; };
+		807DE5F42DFEC66700D2094F /* BindingsAndControllersPattern.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BindingsAndControllersPattern.h; sourceTree = "<group>"; };
+		807DE5F52DFEC66700D2094F /* BindingsAndControllersPattern.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BindingsAndControllersPattern.m; sourceTree = "<group>"; };
 		808F8A072DC01112004EA975 /* Dynamic_Examples */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Dynamic_Examples; sourceTree = BUILT_PRODUCTS_DIR; };
 		808F8A1A2DC16F26004EA975 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		808F8A472DCD0136004EA975 /* 3.9.Strategy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = 3.9.Strategy.swift; sourceTree = "<group>"; };
@@ -321,6 +324,8 @@
 				807DE5E62DFC663900D2094F /* CoreDataPattern.m */,
 				807DE5F12DFD8F5700D2094F /* ApplicationKitViewsPattern.h */,
 				807DE5F22DFD8F5700D2094F /* ApplicationKitViewsPattern.m */,
+				807DE5F42DFEC66700D2094F /* BindingsAndControllersPattern.h */,
+				807DE5F52DFEC66700D2094F /* BindingsAndControllersPattern.m */,
 				807DE5EE2DFC6EB900D2094F /* Model.xcdatamodeld */,
 			);
 			path = "objective-C";
@@ -406,6 +411,7 @@
 				80A0CB0F2DF45EBB003890DF /* BundlePattern.m in Sources */,
 				807DE5E72DFC663900D2094F /* CoreDataPattern.m in Sources */,
 				808F8B132DD88674004EA975 /* TwoStageCreation.m in Sources */,
+				807DE5F62DFEC66700D2094F /* BindingsAndControllersPattern.m in Sources */,
 				808F8AE32DD288EE004EA975 /* 2.5.Facade.swift in Sources */,
 				808F8AE52DD28B0E004EA975 /* 2.6.Flyweight.swift in Sources */,
 				808F8AF72DD531E2004EA975 /* 3.6.Memento.swift in Sources */,

@@ -31,4 +31,4 @@
 #import "ControllerPattern.h"
 #import "CoreDataPattern.h"
 #import "ApplicationKitViewsPattern.h"
-
+#import "BindingsAndControllersPattern.h"
