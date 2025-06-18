@@ -142,6 +142,23 @@ class Graph {
         
         return false
     }
+    // Method to remove an edge from the graph
+    func removeEdge(from: String, to: String) {
+        if let neighbors = adjList[from] {
+            adjList[from] = neighbors.filter { $0 != to }
+        }
+        if let neighbors = adjList[to] {
+            adjList[to] = neighbors.filter { $0 != from }
+        }
+    }
+
+    // Check if the graph is fully connected using DFS
+    func isConnected() -> Bool {
+        guard let first = adjList.keys.first else { return true }  // Empty graph is trivially connected
+        var visited = Set<String>()
+        dfsHelper(node: first, visited: &visited)
+        return visited.count == adjList.keys.count
+    }
 }
 
 // Graph class with adjacency matrix representation
@@ -204,5 +221,25 @@ class GraphMatrix {
             }
         }
     }
+}
+
+func runConnectivityDemo() {
+    let g = Graph()
+    g.addEdge(from: "A", to: "B")
+    g.addEdge(from: "B", to: "C")
+    g.addEdge(from: "C", to: "D")
+    g.addEdge(from: "D", to: "E")
+    g.addEdge(from: "A", to: "E")
+
+    print("Connected initially:", g.isConnected())  // true
+
+    g.removeEdge(from: "C", to: "D")
+    print("After removing C-D:", g.isConnected())   // true
+
+    g.removeEdge(from: "B", to: "C")
+    print("After removing B-C:", g.isConnected())   // true
+
+    g.removeEdge(from: "A", to: "B")
+    print("After removing A-B:", g.isConnected())   // false
 }
 
