@@ -7,6 +7,74 @@
 
 import Foundation
 class Solution {
+    func maxAlternatingSum(_ nums: [Int]) -> Int {
+        var evenSum = 0 // Represents the maximum alternating sum ending with an element at an even index
+        var oddSum = 0  // Represents the maximum alternating sum ending with an element at an odd index
+        
+        for num in nums {
+            // Store the current `evenSum` before it's updated, as `oddSum`'s update depends on the old `evenSum`.
+            let prevEvenSum = evenSum
+            
+            // Calculate the new `evenSum`:
+            // Option 1: Keep the current `evenSum` (don't include `num` or `num` is part of an existing optimal evenSum subsequence).
+            // Option 2: Extend an `oddSum` subsequence by adding `num`. `num` becomes an even-indexed element.
+            evenSum = max(evenSum, oddSum + num)
+            
+            // Calculate the new `oddSum`:
+            // Option 1: Keep the current `oddSum` (don't include `num` or `num` is part of an existing optimal oddSum subsequence).
+            // Option 2: Extend a `prevEvenSum` subsequence by subtracting `num`. `num` becomes an odd-indexed element.
+            oddSum = max(oddSum, prevEvenSum - num)
+        }
+        
+        // The maximum alternating sum will always be found in `evenSum`.
+        // This is because if the optimal sum ended with a subtracted number (an odd index),
+        // you could always remove that last number and get a larger sum (or at least the same if the number was 0).
+        // Therefore, the maximum sum must end with an added number (an even index).
+        return evenSum
+    }
+    func demomaxAlternatingSum(){
+        
+        // Example Usage:
+        let solution = Solution()
+
+        // Example 1:
+        let nums1 = [4, 2, 5, 3]
+        print("Input: \(nums1), Output: \(solution.maxAlternatingSum(nums1))") // Expected: 7
+
+        // Example 2:
+        let nums2 = [5, 6, 7, 8]
+        print("Input: \(nums2), Output: \(solution.maxAlternatingSum(nums2))") // Expected: 8
+
+        // Example 3:
+        let nums3 = [6, 2, 1, 2, 4, 5]
+        print("Input: \(nums3), Output: \(solution.maxAlternatingSum(nums3))") // Expected: 10
+
+        // Additional Test Cases:
+        let nums4 = [1, 2, 3, 4]
+        print("Input: \(nums4), Output: \(solution.maxAlternatingSum(nums4))") // Expected: 4 (subsequence [4])
+
+        let nums5 = [10]
+        print("Input: \(nums5), Output: \(solution.maxAlternatingSum(nums5))") // Expected: 10 (subsequence [10])
+
+        let nums6 = [1, 10, 1, 10, 1]
+        print("Input: \(nums6), Output: \(solution.maxAlternatingSum(nums6))") // Expected: 19 (subsequence [10, 1, 10]) or [10,10,1]
+        /*
+         So the optimal subsequence is:
+         [1, -20, 3, -40, 5, -60, 7, -80, 9]
+
+         Let's calculate its alternating sum:
+         1−(−20)+3−(−40)+5−(−60)+7−(−80)+9
+         =1+20+3+40+5+60+7+80+9
+         =21+3+40+5+60+7+80+9
+         =24+40+5+60+7+80+9
+         =64+5+60+7+80+9
+         =69+60+7+80+9
+         =129+7+80+9
+         =136+80+9
+         =216+9
+         =225
+         */
+    }
     // Maximum robber dp[i] = max(dp[i - 1], dp[i - 2] + nums[i])
     func rob(_ nums: [Int]) -> Int {
         let n = nums.count
