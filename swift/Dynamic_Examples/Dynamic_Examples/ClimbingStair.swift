@@ -7,6 +7,27 @@
 
 import Foundation
 class Solution {
+    //coins = [1, 2, 5]
+    //amount = 11
+    //→ dp[11] = 3 → 5 + 5 + 1
+    //    coins = [2]
+    //    amount = 3
+    //    → fail 3 from [2] → -1
+    func coinChange(_ coins: [Int], _ amount: Int) -> Int {
+        var dp = Array(repeating: Int.max, count: amount + 1)
+        dp[0] = 0
+        
+        for x in 1...amount {
+            for coin in coins {
+                if x >= coin, dp[x - coin] != Int.max {
+                    dp[x] = min(dp[x], dp[x - coin] + 1)
+                }
+            }
+        }
+        
+        return dp[amount] == Int.max ? -1 : dp[amount]
+    }
+
     func maxAlternatingSum(_ nums: [Int]) -> Int {
         var evenSum = 0 // Represents the maximum alternating sum ending with an element at an even index
         var oddSum = 0  // Represents the maximum alternating sum ending with an element at an odd index
