@@ -7,6 +7,76 @@
 
 import Foundation
 class Solution {
+    func mincostTickets(_ days: [Int], _ costs: [Int]) -> Int {
+         let lastDay = days.last! // The last day you travel
+         var dp = Array(repeating: 0, count: lastDay + 1) // dp[i] is min cost to travel up to day i
+
+         // For efficient lookup of travel days
+         var isTravelDay = Array(repeating: false, count: lastDay + 1)
+         for day in days {
+             isTravelDay[day] = true
+         }
+
+         // Iterate from day 1 up to the last travel day
+         for i in 1...lastDay {
+             // If day 'i' is not a travel day, the cost is the same as the day before
+             if !isTravelDay[i] {
+                 dp[i] = dp[i-1]
+                 continue // Move to the next day
+             }
+
+             // If day 'i' is a travel day, we have three options:
+
+             // Option 1: Buy a 1-day pass today
+             let cost1Day = dp[i-1] + costs[0]
+
+             // Option 2: Buy a 7-day pass today. It covers days [i-6, i].
+             // The cost is dp[day before 7-day pass starts] + cost of 7-day pass.
+             // max(0, i-7) ensures we don't go out of bounds for dp array.
+             let cost7Day = dp[max(0, i-7)] + costs[1]
+
+             // Option 3: Buy a 30-day pass today. It covers days [i-29, i].
+             // Similar logic for the 30-day pass.
+             let cost30Day = dp[max(0, i-30)] + costs[2]
+
+             // Take the minimum of the three options
+             dp[i] = min(cost1Day, cost7Day, cost30Day)
+         }
+
+         return dp[lastDay]
+     }
+    func demon_mincostTicket() {
+        // Example Usage:
+        let solution = self//Solution()
+
+        // Example 1
+        let days1 = [1,4,6,7,8,20]
+        let costs1 = [2,7,15]
+        print("Example 1 Output: \(solution.mincostTickets(days1, costs1))") // Expected: 11
+
+        // Example 2
+        let days2 = [1,2,3,4,5,6,7,8,9,10,30,31]
+        let costs2 = [2,7,15]
+        print("Example 2 Output: \(solution.mincostTickets(days2, costs2))") // Expected: 17
+
+        // Custom Test Case
+        let days3 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        let costs3 = [2, 3, 10] // 1-day: 2, 7-day: 3, 30-day: 10
+        print("Custom 1 Output: \(solution.mincostTickets(days3, costs3))") // Expected: 6 (buy one 7-day pass on day 1 for 3, one 7-day pass on day 8 for 3. Total 6)
+
+        // Another Custom Test Case
+        let days4 = [1, 365]
+        let costs4 = [10, 50, 100]
+        print("Custom 2 Output: \(solution.mincostTickets(days4, costs4))") // Expected: 20 (1-day on day 1, 1-day on day 365) or 50 (7-day on day 365 if it covers day 1, but it doesn't. 100 for 30-day pass covers both. So 20 or 100. 20 is min.)
+        // Explanation for Custom 2:
+        // dp[1] = 10
+        // dp[365]: min(dp[364]+10, dp[358]+50, dp[335]+100)
+        // Since days 2-364 are not travel days, dp[364] = dp[1] = 10.
+        // dp[358] = dp[1] = 10.
+        // dp[335] = dp[1] = 10.
+        // dp[365] = min(10+10, 10+50, 10+100) = min(20, 60, 110) = 20. Correct.
+    }
+    
     //coins = [1, 2, 5]
     //amount = 11
     //→ dp[11] = 3 → 5 + 5 + 1
