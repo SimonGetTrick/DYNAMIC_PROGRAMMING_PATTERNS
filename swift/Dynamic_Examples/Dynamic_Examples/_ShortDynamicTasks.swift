@@ -7,6 +7,55 @@
 
 import Foundation
 class Solution {
+    func minDistance(_ word1: String, _ word2: String) -> Int {
+        let m = word1.count
+        let n = word2.count
+        
+        // Convert strings to array of characters for easier access
+        let chars1 = Array(word1)
+        let chars2 = Array(word2)
+        
+        // Create DP table with dimensions (m+1) x (n+1)
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: n + 1), count: m + 1)
+        
+        // Initialize first row and column
+        for i in 0...m {
+            dp[i][0] = i // Cost of deleting characters from word1
+        }
+        for j in 0...n {
+            dp[0][j] = j // Cost of inserting characters from word2
+        }
+        
+        // Fill DP table
+        for i in 1...m {
+            for j in 1...n {
+                if chars1[i-1] == chars2[j-1] {
+                    // Characters match, no operation needed
+                    dp[i][j] = dp[i-1][j-1]
+                } else {
+                    // Take minimum of three operations:
+                    // 1. Replace: dp[i-1][j-1] + 1
+                    // 2. Delete: dp[i-1][j] + 1
+                    // 3. Insert: dp[i][j-1] + 1
+                    dp[i][j] = min(
+                        dp[i-1][j-1] + 1, // Replace
+                        dp[i-1][j] + 1,   // Delete
+                        dp[i][j-1] + 1    // Insert
+                    )
+                }
+            }
+        }
+        
+        return dp[m][n]
+    }
+    func minDistance_demo(){
+        // Test cases
+        let test1 = minDistance("horse", "ros") // Output: 3
+        let test2 = minDistance("intention", "execution") // Output: 5
+        print("Test 1: \(test1)")
+        print("Test 2: \(test2)")
+    }
+    
     func mincostTickets(_ days: [Int], _ costs: [Int]) -> Int {
          let lastDay = days.last! // The last day you travel
          var dp = Array(repeating: 0, count: lastDay + 1) // dp[i] is min cost to travel up to day i
