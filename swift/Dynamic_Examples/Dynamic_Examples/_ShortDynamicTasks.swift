@@ -7,6 +7,97 @@
 
 import Foundation
 class Solution {
+    func numDistinct(_ s: String, _ t: String) -> Int {
+        let sChars = Array(s)
+        let tChars = Array(t)
+        let sCount = sChars.count
+        let tCount = tChars.count
+        
+        // dp[i][j] represents the number of distinct subsequences of s[0...j-1]
+        // that equal t[0...i-1].
+        // The array size is (tCount + 1) x (sCount + 1) to handle empty prefixes.
+        var dp = Array(repeating: Array(repeating: 0, count: sCount + 1), count: tCount + 1)
+        
+        // Initialization:
+        // dp[0][j] = 1 for all j: An empty string t can always be formed in one way
+        // (by deleting all characters) from any prefix of s.
+        for j in 0...sCount {
+            dp[0][j] = 1
+        }
+        
+        // dp[i][0] = 0 for all i > 0: A non-empty string t cannot be formed from an empty string s.
+        // This is already handled by the default initialization of 0s.
+        
+        // Fill the dp table
+        for i in 1...tCount {
+            for j in 1...sCount {
+                if sChars[j-1] == tChars[i-1] {
+                    // Case 1: Characters match.
+                    // We can either use sChars[j-1] to match tChars[i-1] (dp[i-1][j-1])
+                    // OR we can choose not to use sChars[j-1] (dp[i][j-1]).
+                    dp[i][j] = dp[i-1][j-1] + dp[i][j-1]
+                } else {
+                    // Case 2: Characters don't match.
+                    // We cannot use sChars[j-1] to match tChars[i-1].
+                    // So, the number of distinct subsequences is the same as
+                    // not considering sChars[j-1].
+                    dp[i][j] = dp[i][j-1]
+                }
+            }
+        }
+        
+        return dp[tCount][sCount]
+    }
+    
+    // Function to demonstrate the solution
+    func demo_DistinctSubsequences() {
+        /*
+         Given two strings s and t, return the number of distinct subsequences of s which equals t.
+         
+         The test cases are generated so that the answer fits on a 32-bit signed integer.
+         
+          
+         
+         Example 1:
+         
+         Input: s = "rabbbit", t = "rabbit"Output: 3Explanation:
+         
+         As shown below, there are 3 ways you can generate "rabbit" from s.rabbbitrabbbitrabbbit
+         
+         Example 2:
+         
+         Input: s = "babgbag", t = "bag"Output: 5Explanation:
+         
+         As shown below, there are 5 ways you can generate "bag" from s.babgbagbabgbagbabgbagbabgbagbabgbag
+         
+          
+         
+         Constraints:
+         
+         1 <= s.length, t.length <= 1000
+         
+         s and t consist of English letters.
+         */
+        let solution = self//Solution()
+        
+        // Example 1
+        let s1 = "rabbbit"
+        let t1 = "rabbit"
+        let result1 = solution.numDistinct(s1, t1)
+        print("Input: s = \"\(s1)\", t = \"\(t1)\"")
+        print("Output: \(result1)") // Expected: 3
+        print("---")
+        
+        // Example 2
+        let s2 = "babgbag"
+        let t2 = "bag"
+        let result2 = solution.numDistinct(s2, t2)
+        print("Input: s = \"\(s2)\", t = \"\(t2)\"")
+        print("Output: \(result2)") // Expected: 5
+        print("---")
+    }
+    
+    
     func minDistance(_ word1: String, _ word2: String) -> Int {
         let m = word1.count
         let n = word2.count
@@ -57,62 +148,62 @@ class Solution {
     }
     
     func mincostTickets(_ days: [Int], _ costs: [Int]) -> Int {
-         let lastDay = days.last! // The last day you travel
-         var dp = Array(repeating: 0, count: lastDay + 1) // dp[i] is min cost to travel up to day i
-
-         // For efficient lookup of travel days
-         var isTravelDay = Array(repeating: false, count: lastDay + 1)
-         for day in days {
-             isTravelDay[day] = true
-         }
-
-         // Iterate from day 1 up to the last travel day
-         for i in 1...lastDay {
-             // If day 'i' is not a travel day, the cost is the same as the day before
-             if !isTravelDay[i] {
-                 dp[i] = dp[i-1]
-                 continue // Move to the next day
-             }
-
-             // If day 'i' is a travel day, we have three options:
-
-             // Option 1: Buy a 1-day pass today
-             let cost1Day = dp[i-1] + costs[0]
-
-             // Option 2: Buy a 7-day pass today. It covers days [i-6, i].
-             // The cost is dp[day before 7-day pass starts] + cost of 7-day pass.
-             // max(0, i-7) ensures we don't go out of bounds for dp array.
-             let cost7Day = dp[max(0, i-7)] + costs[1]
-
-             // Option 3: Buy a 30-day pass today. It covers days [i-29, i].
-             // Similar logic for the 30-day pass.
-             let cost30Day = dp[max(0, i-30)] + costs[2]
-
-             // Take the minimum of the three options
-             dp[i] = min(cost1Day, cost7Day, cost30Day)
-         }
-
-         return dp[lastDay]
-     }
+        let lastDay = days.last! // The last day you travel
+        var dp = Array(repeating: 0, count: lastDay + 1) // dp[i] is min cost to travel up to day i
+        
+        // For efficient lookup of travel days
+        var isTravelDay = Array(repeating: false, count: lastDay + 1)
+        for day in days {
+            isTravelDay[day] = true
+        }
+        
+        // Iterate from day 1 up to the last travel day
+        for i in 1...lastDay {
+            // If day 'i' is not a travel day, the cost is the same as the day before
+            if !isTravelDay[i] {
+                dp[i] = dp[i-1]
+                continue // Move to the next day
+            }
+            
+            // If day 'i' is a travel day, we have three options:
+            
+            // Option 1: Buy a 1-day pass today
+            let cost1Day = dp[i-1] + costs[0]
+            
+            // Option 2: Buy a 7-day pass today. It covers days [i-6, i].
+            // The cost is dp[day before 7-day pass starts] + cost of 7-day pass.
+            // max(0, i-7) ensures we don't go out of bounds for dp array.
+            let cost7Day = dp[max(0, i-7)] + costs[1]
+            
+            // Option 3: Buy a 30-day pass today. It covers days [i-29, i].
+            // Similar logic for the 30-day pass.
+            let cost30Day = dp[max(0, i-30)] + costs[2]
+            
+            // Take the minimum of the three options
+            dp[i] = min(cost1Day, cost7Day, cost30Day)
+        }
+        
+        return dp[lastDay]
+    }
     func demon_mincostTicket() {
         // Example Usage:
         let solution = self//Solution()
-
+        
         // Example 1
         let days1 = [1,4,6,7,8,20]
         let costs1 = [2,7,15]
         print("Example 1 Output: \(solution.mincostTickets(days1, costs1))") // Expected: 11
-
+        
         // Example 2
         let days2 = [1,2,3,4,5,6,7,8,9,10,30,31]
         let costs2 = [2,7,15]
         print("Example 2 Output: \(solution.mincostTickets(days2, costs2))") // Expected: 17
-
+        
         // Custom Test Case
         let days3 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         let costs3 = [2, 3, 10] // 1-day: 2, 7-day: 3, 30-day: 10
         print("Custom 1 Output: \(solution.mincostTickets(days3, costs3))") // Expected: 6 (buy one 7-day pass on day 1 for 3, one 7-day pass on day 8 for 3. Total 6)
-
+        
         // Another Custom Test Case
         let days4 = [1, 365]
         let costs4 = [10, 50, 100]
@@ -146,7 +237,7 @@ class Solution {
         
         return dp[amount] == Int.max ? -1 : dp[amount]
     }
-
+    
     func maxAlternatingSum(_ nums: [Int]) -> Int {
         var evenSum = 0 // Represents the maximum alternating sum ending with an element at an even index
         var oddSum = 0  // Represents the maximum alternating sum ending with an element at an odd index
@@ -176,32 +267,32 @@ class Solution {
         
         // Example Usage:
         let solution = Solution()
-
+        
         // Example 1:
         let nums1 = [4, 2, 5, 3]
         print("Input: \(nums1), Output: \(solution.maxAlternatingSum(nums1))") // Expected: 7
-
+        
         // Example 2:
         let nums2 = [5, 6, 7, 8]
         print("Input: \(nums2), Output: \(solution.maxAlternatingSum(nums2))") // Expected: 8
-
+        
         // Example 3:
         let nums3 = [6, 2, 1, 2, 4, 5]
         print("Input: \(nums3), Output: \(solution.maxAlternatingSum(nums3))") // Expected: 10
-
+        
         // Additional Test Cases:
         let nums4 = [1, 2, 3, 4]
         print("Input: \(nums4), Output: \(solution.maxAlternatingSum(nums4))") // Expected: 4 (subsequence [4])
-
+        
         let nums5 = [10]
         print("Input: \(nums5), Output: \(solution.maxAlternatingSum(nums5))") // Expected: 10 (subsequence [10])
-
+        
         let nums6 = [1, 10, 1, 10, 1]
         print("Input: \(nums6), Output: \(solution.maxAlternatingSum(nums6))") // Expected: 19 (subsequence [10, 1, 10]) or [10,10,1]
         /*
          So the optimal subsequence is:
          [1, -20, 3, -40, 5, -60, 7, -80, 9]
-
+         
          Let's calculate its alternating sum:
          1−(−20)+3−(−40)+5−(−60)+7−(−80)+9
          =1+20+3+40+5+60+7+80+9
@@ -233,17 +324,17 @@ class Solution {
     }
     // Time complexity: O(n) Space complexity: O(1)
     func robMin(_ nums: [Int]) -> Int {
-          var prev1 = 0
-          var prev2 = 0
-          
-          for num in nums {
-              let temp = max(prev1, prev2 + num)
-              prev2 = prev1
-              prev1 = temp
-          }
-          
-          return prev1
-      }
+        var prev1 = 0
+        var prev2 = 0
+        
+        for num in nums {
+            let temp = max(prev1, prev2 + num)
+            prev2 = prev1
+            prev1 = temp
+        }
+        
+        return prev1
+    }
     
     // iterative time O(n), memory — O(1).
     func climbStairs(_ n: Int) -> Int {
@@ -289,24 +380,24 @@ class Solution {
 /*
  task: Rober
  ou are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
-
+ 
  Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.
-
-  
-
+ 
+ 
+ 
  Example 1:
-
+ 
  Input: nums = [1,2,3,1]
  Output: 4
  Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
  Total amount you can rob = 1 + 3 = 4.
  Example 2:
-
+ 
  Input: nums = [2,7,9,3,1]
  Output: 12
  Explanation: Rob house 1 (money = 2), rob house 3 (money = 9) and rob house 5 (money = 1).
  Total amount you can rob = 2 + 9 + 1 = 12.
-  
+ 
  task: Climbing Stairs
  Easy
  Topics
@@ -314,20 +405,20 @@ class Solution {
  Companies
  Hint
  You are climbing a staircase. It takes n steps to reach the top.
-
+ 
  Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
-
-  
-
+ 
+ 
+ 
  Example 1:
-
+ 
  Input: n = 2
  Output: 2
  Explanation: There are two ways to climb to the top.
  1. 1 step + 1 step
  2. 2 steps
  Example 2:
-
+ 
  Input: n = 3
  Output: 3
  Explanation: There are three ways to climb to the top.
