@@ -7,6 +7,68 @@
 
 import Foundation
 class Solution {
+    /*
+     Given a string s, return the longest palindromic substring in s.
+     
+     
+     
+     Example 1:
+     
+     Input: s = "babad"
+     Output: "bab"
+     Explanation: "aba" is also a valid answer.
+     Example 2:
+     
+     Input: s = "cbbd"
+     Output: "bb"
+     */
+    func longestPalindrome(_ s: String) -> String {
+        // Handle edge cases
+        guard !s.isEmpty else { return "" }
+        if s.count == 1 { return s }
+        
+        let chars = Array(s)
+        var start = 0
+        var maxLength = 1
+        
+        // Helper function to expand around a center
+        func expandAroundCenter(left: Int, right: Int) -> (Int, Int) {
+            var left = left
+            var right = right
+            
+            // Expand while within bounds and characters match
+            while left >= 0 && right < chars.count && chars[left] == chars[right] {
+                left -= 1
+                right += 1
+            }
+            
+            // Return start index and length of palindrome
+            return (left + 1, right - left - 1)
+        }
+        
+        // Iterate through each possible center
+        for i in 0..<chars.count {
+            // Check odd-length palindromes (single character center)
+            let (start1, length1) = expandAroundCenter(left: i, right: i)
+            // Check even-length palindromes (between i and i+1)
+            let (start2, length2) = expandAroundCenter(left: i, right: i + 1)
+            
+            // Update if we find a longer palindrome
+            if length1 > maxLength {
+                start = start1
+                maxLength = length1
+            }
+            if length2 > maxLength {
+                start = start2
+                maxLength = length2
+            }
+        }
+        // Extract the substring using the start index and length
+        let startIndex = s.index(s.startIndex, offsetBy: start)
+        let endIndex = s.index(startIndex, offsetBy: maxLength)
+        return String(s[startIndex..<endIndex])
+    }
+    
     func numDistinct(_ s: String, _ t: String) -> Int {
         let sChars = Array(s)
         let tChars = Array(t)
