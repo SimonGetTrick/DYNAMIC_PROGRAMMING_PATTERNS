@@ -8,6 +8,69 @@
 import Foundation
 class Solution {
     /*
+     Palindromic Substrings
+    Medium
+    Topics
+    premium lock icon
+    Companies
+    Hint
+    Given a string s, return the number of palindromic substrings in it.
+
+    A string is a palindrome when it reads the same backward as forward.
+
+    A substring is a contiguous sequence of characters within the string.
+
+     
+
+    Example 1:
+
+    Input: s = "abc"
+    Output: 3
+    Explanation: Three palindromic strings: "a", "b", "c".
+    Example 2:
+
+    Input: s = "aaa"
+    Output: 6
+    Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
+     
+
+    Constraints:
+
+    1 <= s.length <= 1000
+    s consists of lowercase English letters.
+     */
+    func countSubstrings(_ s: String) -> Int {
+        // Handle edge cases
+        guard !s.isEmpty else { return 0 }
+        
+        let chars = Array(s)
+        var count = 0
+        
+        // Helper function to count palindromes expanding around a center
+        func countPalindromes(left: Int, right: Int) {
+            var left = left
+            var right = right
+            
+            // Expand while within bounds and characters match
+            while left >= 0 && right < chars.count && chars[left] == chars[right] {
+                count += 1 // Increment count for each valid palindrome
+                left -= 1
+                right += 1
+            }
+        }
+        
+        // Iterate through each possible center
+        for i in 0..<chars.count {
+            // Count odd-length palindromes (single character center)
+            countPalindromes(left: i, right: i)
+            // Count even-length palindromes (between i and i+1)
+            countPalindromes(left: i, right: i + 1)
+        }
+        
+        return count
+    }
+    
+    /*
      Given a string s, return the longest palindromic substring in s.
      
      
