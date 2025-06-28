@@ -8,6 +8,69 @@
 import Foundation
 class Solution {
     /*
+     Given a string s, find the longest palindromic subsequence's length in s.
+
+     A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements.
+
+      
+
+     Example 1:
+
+     Input: s = "bbbab"
+     Output: 4
+     Explanation: One possible longest palindromic subsequence is "bbbb".
+     Example 2:
+
+     Input: s = "cbbd"
+     Output: 2
+     Explanation: One possible longest palindromic subsequence is "bb".
+     */
+    // Function to find the length of the longest palindromic subsequence in a string
+    func longestPalindromeSubseq(_ s: String) -> Int {
+        // Handle edge cases: empty string returns 0, single character returns 1
+        guard !s.isEmpty else { return 0 }
+        if s.count == 1 { return 1 }
+        
+        // Convert string to array for efficient character access
+        let chars = Array(s)
+        let n = chars.count
+        
+        // Initialize a 2D DP table to store lengths of palindromic subsequences
+        // dp[i][j] represents the length of the longest palindromic subsequence in s[i...j]
+        var dp = Array(repeating: Array(repeating: 0, count: n), count: n)
+        
+        // Base case: every single character is a palindrome of length 1
+        for i in 0..<n {
+            dp[i][i] = 1
+        }
+        
+        // Iterate over substring lengths from 2 to n
+        for length in 2...n {
+            // Iterate over possible starting indices for the current length
+            for start in 0...(n - length) {
+                // Calculate the end index of the current substring
+                let end = start + length - 1
+                
+                // Case 1: If characters at start and end match and length is 2, set length to 2
+                if chars[start] == chars[end] && length == 2 {
+                    dp[start][end] = 2
+                }
+                // Case 2: If characters at start and end match, include them and add inner subsequence length
+                else if chars[start] == chars[end] {
+                    dp[start][end] = dp[start + 1][end - 1] + 2
+                }
+                // Case 3: If characters don't match, take the maximum of subsequences excluding either end
+                else {
+                    dp[start][end] = max(dp[start + 1][end], dp[start][end - 1])
+                }
+            }
+        }
+        
+        // Return the length of the longest palindromic subsequence for the entire string
+        return dp[0][n - 1]
+    }
+    
+    /*
      Palindromic Substrings
     Medium
     Topics
