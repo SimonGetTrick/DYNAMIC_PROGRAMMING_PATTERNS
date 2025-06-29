@@ -8,6 +8,79 @@
 import Foundation
 class Solution {
     /*
+     You have n super washing machines on a line. Initially, each washing machine has some dresses or is empty.
+
+     For each move, you could choose any m (1 <= m <= n) washing machines, and pass one dress of each washing machine to one of its adjacent washing machines at the same time.
+
+     Given an integer array machines representing the number of dresses in each washing machine from left to right on the line, return the minimum number of moves to make all the washing machines have the same number of dresses. If it is not possible to do it, return -1.
+
+      
+
+     Example 1:
+
+     Input: machines = [1,0,5]
+     Output: 3
+     Explanation:
+     1st move:    1     0 <-- 5    =>    1     1     4
+     2nd move:    1 <-- 1 <-- 4    =>    2     1     3
+     3rd move:    2     1 <-- 3    =>    2     2     2
+     Example 2:
+
+     Input: machines = [0,3,0]
+     Output: 2
+     Explanation:
+     1st move:    0 <-- 3     0    =>    1     2     0
+     2nd move:    1     2 --> 0    =>    1     1     1
+     Example 3:
+
+     Input: machines = [0,2,0]
+     Output: -1
+     Explanation:
+     It's impossible to make all three washing machines have the same number of dresses.
+      
+
+     Constraints:
+
+     n == machines.length
+     1 <= n <= 104
+     0 <= machines[i] <= 105
+     */
+    // Function to find the minimum number of moves to equalize dresses in washing machines
+    func findMinMoves(_ machines: [Int]) -> Int {
+        // Handle edge case: single machine requires no moves
+        guard machines.count > 1 else { return 0 }
+        
+        // Calculate total number of dresses and number of machines
+        let totalDresses = machines.reduce(0, +)
+        let n = machines.count
+        
+        // Check if equal distribution is possible
+        // Total dresses must be divisible by number of machines
+        guard totalDresses % n == 0 else { return -1 }
+        
+        // Calculate target number of dresses per machine
+        let target = totalDresses / n
+        
+        // Initialize variables to track moves and cumulative dress difference
+        var maxMoves = 0 // Maximum moves required through any point
+        var balance = 0 // Running sum of dresses relative to target
+        
+        // Iterate through each machine
+        for dresses in machines {
+            // Calculate how many dresses need to be moved to/from this machine
+            let diff = dresses - target
+            // Update balance: positive means excess dresses, negative means deficit
+            balance += diff
+            // Maximum moves is the maximum of:
+            // - Absolute balance (dresses that must pass through this point)
+            // - Current machine's excess dresses (if positive)
+            maxMoves = max(maxMoves, max(abs(balance), diff))
+        }
+        
+        // Return the minimum number of moves required
+        return maxMoves
+    }
+    /*
      Given a string s, find the longest palindromic subsequence's length in s.
 
      A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements.
