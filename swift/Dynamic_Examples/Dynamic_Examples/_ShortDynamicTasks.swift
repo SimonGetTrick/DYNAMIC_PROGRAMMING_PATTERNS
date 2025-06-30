@@ -7,6 +7,62 @@
 
 import Foundation
 class Solution {
+    // Definition for a binary tree node
+    public class TreeNode {
+        public var val: Int
+        public var left: TreeNode?
+        public var right: TreeNode?
+        public init(_ val: Int) {
+            self.val = val
+            self.left = nil
+            self.right = nil
+        }
+    }
+
+    // Function to find the largest value in each row of a binary tree
+    func largestValues(_ root: TreeNode?) -> [Int] {
+        // Handle edge case: empty tree returns empty array
+        guard let root = root else { return [] }
+        
+        // Initialize result array to store maximum values per level
+        var result: [Int] = []
+        
+        // Initialize queue for BFS, starting with the root node
+        var queue: [TreeNode] = [root]
+        
+        // Process each level of the tree
+        while !queue.isEmpty {
+            // Get the number of nodes in the current level
+            let levelSize = queue.count
+            // Initialize maximum value for the current level
+            var levelMax = Int.min
+            
+            // Process all nodes in the current level
+            for _ in 0..<levelSize {
+                // Dequeue the next node
+                let node = queue.removeFirst()
+                
+                // Update maximum value for the current level
+                levelMax = max(levelMax, node.val)
+                
+                // Add left child to queue if it exists
+                if let left = node.left {
+                    queue.append(left)
+                }
+                // Add right child to queue if it exists
+                if let right = node.right {
+                    queue.append(right)
+                }
+            }
+            
+            // Append the maximum value of the current level to the result
+            result.append(levelMax)
+        }
+        
+        // Return the array of maximum values
+        return result
+    }
+    
     /*
      You have n super washing machines on a line. Initially, each washing machine has some dresses or is empty.
 
