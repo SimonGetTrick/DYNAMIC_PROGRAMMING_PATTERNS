@@ -150,7 +150,54 @@ class Solution {
         // Return the array of maximum values
         return result
     }
-    
+    /*
+     Given the root of a binary tree, return the leftmost value in the last row of the tree.
+     Example 1:
+     Input: root = [2,1,3]
+     Output: 1
+     Example 2:
+     Input: root = [1,2,3,4,null,5,6,null,null,7]
+     Output: 7
+     Constraints:
+     The number of nodes in the tree is in the range [1, 104].
+     -231 <= Node.val <= 231 - 1
+     */
+    // Function to find the leftmost value in the last row of a binary tree
+    func findBottomLeftValue(_ root: TreeNode?) -> Int {
+        // Since the tree is guaranteed to have at least one node, root is non-nil
+        guard let root = root else { fatalError("Tree is guaranteed to have at least one node") }
+        
+        // Initialize queue for BFS, starting with the root node
+        var queue: [TreeNode] = [root]
+        // Variable to store the leftmost value of the last level
+        var leftmostValue = root.val
+        
+        // Process the tree level by level
+        while !queue.isEmpty {
+            // Get the number of nodes in the current level
+            let levelSize = queue.count
+            // Store the value of the first node in the current level
+            leftmostValue = queue[0].val
+            
+            // Process all nodes in the current level
+            for _ in 0..<levelSize {
+                // Dequeue the next node
+                let node = queue.removeFirst()
+                
+                // Add left child to queue if it exists (processed first for left-to-right order)
+                if let left = node.left {
+                    queue.append(left)
+                }
+                // Add right child to queue if it exists
+                if let right = node.right {
+                    queue.append(right)
+                }
+            }
+        }
+        
+        // Return the leftmost value of the last level processed
+        return leftmostValue
+    }
     /*
      You have n super washing machines on a line. Initially, each washing machine has some dresses or is empty.
 
