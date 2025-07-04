@@ -8,6 +8,68 @@
 import Foundation
 class Solution {
     /*
+     You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
+     You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+     Example 1:
+     Input: l1 = [2,4,3], l2 = [5,6,4]
+     Output: [7,0,8]
+     Explanation: 342 + 465 = 807.
+     Example 2:
+     Input: l1 = [0], l2 = [0]
+     Output: [0]
+     Example 3:
+     Input: l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
+     Output: [8,9,9,9,0,0,0,1]
+     Constraints:
+     The number of nodes in each linked list is in the range [1, 100].
+     0 <= Node.val <= 9
+     It is guaranteed that the list represents a number that does not have leading zeros.
+     */
+    // Definition for singly-linked list node
+    public class ListNode {
+        public var val: Int
+        public var next: ListNode?
+        public init(_ val: Int) {
+            self.val = val
+            self.next = nil
+        }
+    }
+
+    // Function to add two numbers represented as linked lists
+    func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+        // Initialize a dummy node to simplify list construction
+        let dummy = ListNode(0)
+        var current = dummy
+        var carry = 0
+        
+        // Pointers to traverse the input lists
+        var p1 = l1
+        var p2 = l2
+        
+        // Process both lists until all digits and carry are handled
+        while p1 != nil || p2 != nil || carry != 0 {
+            // Get values from lists, default to 0 if node is nil
+            let x = p1?.val ?? 0
+            let y = p2?.val ?? 0
+            
+            // Calculate sum and new carry
+            let sum = x + y + carry
+            carry = sum / 10
+            let digit = sum % 10
+            
+            // Create new node with the current digit
+            current.next = ListNode(digit)
+            current = current.next!
+            
+            // Move to next nodes if available
+            p1 = p1?.next
+            p2 = p2?.next
+        }
+        
+        // Return the head of the result list (skip dummy node)
+        return dummy.next
+    }
+    /*
      Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
 
      You may assume that each input would have exactly one solution, and you may not use the same element twice.
