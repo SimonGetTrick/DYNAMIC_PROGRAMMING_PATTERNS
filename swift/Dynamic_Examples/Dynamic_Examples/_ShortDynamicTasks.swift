@@ -8,6 +8,62 @@
 import Foundation
 class Solution {
     /*
+     Given a string s, find the length of the longest substring without duplicate characters.
+
+      
+
+     Example 1:
+
+     Input: s = "abcabcbb"
+     Output: 3
+     Explanation: The answer is "abc", with the length of 3.
+     Example 2:
+
+     Input: s = "bbbbb"
+     Output: 1
+     Explanation: The answer is "b", with the length of 1.
+     Example 3:
+
+     Input: s = "pwwkew"
+     Output: 3
+     Explanation: The answer is "wke", with the length of 3.
+     Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.
+      
+
+     Constraints:
+
+     0 <= s.length <= 5 * 104
+     s consists of English letters, digits, symbols and spaces.
+     */
+    func lengthOfLongestSubstring(_ s: String) -> Int {
+        // Handle empty string case
+        if s.isEmpty { return 0 }
+        
+        // Convert string to array for easier character access
+        let chars = Array(s)
+        // Dictionary to store the last seen position of each character
+        var charIndex = [Character: Int]()
+        // Start of current window
+        var start = 0
+        // Maximum length found so far
+        var maxLength = 0
+        
+        // Iterate through the string
+        for (end, char) in chars.enumerated() {
+            // If character is seen and its last position is >= start of current window
+            if let lastIndex = charIndex[char], lastIndex >= start {
+                // Move window start to position after the last occurrence
+                start = lastIndex + 1
+            }
+            // Update character's last seen position
+            charIndex[char] = end
+            // Update max length if current window is larger
+            maxLength = max(maxLength, end - start + 1)
+        }
+        
+        return maxLength
+    }
+    /*
      You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
      You may assume the two numbers do not contain any leading zero, except the number 0 itself.
      Example 1:
