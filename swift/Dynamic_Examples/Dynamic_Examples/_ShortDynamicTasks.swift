@@ -8,6 +8,76 @@
 import Foundation
 class Solution {
     /*
+     Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
+
+     The overall run time complexity should be O(log (m+n)).
+
+      
+
+     Example 1:
+
+     Input: nums1 = [1,3], nums2 = [2]
+     Output: 2.00000
+     Explanation: merged array = [1,2,3] and median is 2.
+     Example 2:
+
+     Input: nums1 = [1,2], nums2 = [3,4]
+     Output: 2.50000
+     Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.
+      
+
+     Constraints:
+
+     nums1.length == m
+     nums2.length == n
+     0 <= m <= 1000
+     0 <= n <= 1000
+     1 <= m + n <= 2000
+     -106 <= nums1[i], nums2[i] <= 106
+     */
+    func findMedianSortedArrays(_ nums1: [Int], _ nums2: [Int]) -> Double {
+        // Ensure nums1 is the shorter array to minimize binary search space
+        let (A, B) = nums1.count <= nums2.count ? (nums1, nums2) : (nums2, nums1)
+        let m = A.count
+        let n = B.count
+        let total = m + n
+        let half = (total + 1) / 2 // Left partition size for odd or even total length
+        
+        // Binary search on the smaller array
+        var left = 0
+        var right = m
+        
+        while left <= right {
+            let partitionA = (left + right) / 2 // Partition index in A
+            let partitionB = half - partitionA  // Corresponding partition index in B
+            
+            // Get left and right elements around the partition
+            let leftA = partitionA == 0 ? Int.min : A[partitionA - 1]
+            let rightA = partitionA == m ? Int.max : A[partitionA]
+            let leftB = partitionB == 0 ? Int.min : B[partitionB - 1]
+            let rightB = partitionB == n ? Int.max : B[partitionB]
+            
+            // Check if we have a valid partition
+            if leftA <= rightB && leftB <= rightA {
+                // If total length is odd, median is the max of left elements
+                if total % 2 == 1 {
+                    return Double(max(leftA, leftB))
+                }
+                // If total length is even, median is average of max(left) and min(right)
+                return Double(max(leftA, leftB) + min(rightA, rightB)) / 2.0
+            } else if leftA > rightB {
+                // Too many elements from A, move left
+                right = partitionA - 1
+            } else {
+                // Too many elements from B, move right
+                left = partitionA + 1
+            }
+        }
+        
+        // Should never reach here for valid inputs
+        return 0.0
+    }
+    /*
      Given a string s, find the length of the longest substring without duplicate characters.
 
       
