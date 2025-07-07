@@ -8,6 +8,75 @@
 import Foundation
 class Solution {
     /*
+     The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
+
+     P   A   H   N
+     A P L S I I G
+     Y   I   R
+     And then read line by line: "PAHNAPLSIIGYIR"
+
+     Write the code that will take a string and make this conversion given a number of rows:
+
+     string convert(string s, int numRows);
+      
+
+     Example 1:
+
+     Input: s = "PAYPALISHIRING", numRows = 3
+     Output: "PAHNAPLSIIGYIR"
+     Example 2:
+
+     Input: s = "PAYPALISHIRING", numRows = 4
+     Output: "PINALSIGYAHRPI"
+     Explanation:
+     P     I    N
+     A   L S  I G
+     Y A   H R
+     P     I
+     Example 3:
+
+     Input: s = "A", numRows = 1
+     Output: "A"
+      
+
+     Constraints:
+
+     1 <= s.length <= 1000
+     s consists of English letters (lower-case and upper-case), ',' and '.'.
+     1 <= numRows <= 1000
+     */
+    func convertZigzag(_ s: String, _ numRows: Int) -> String {
+        // Handle edge cases: if numRows is 1 or greater than or equal to string length, return the string as is
+        if numRows == 1 || numRows >= s.count {
+            return s
+        }
+        
+        // Initialize an array to store characters for each row
+        var rows = Array(repeating: "", count: numRows)
+        let chars = Array(s) // Convert string to array of characters for easier access
+        var currentRow = 0   // Track the current row index
+        var step = 1         // Direction of movement: 1 (down), -1 (up)
+        
+        // Iterate through each character in the string
+        for char in chars {
+            // Append the current character to the corresponding row
+            rows[currentRow].append(char)
+            
+            // Change direction if we reach the first or last row
+            if currentRow == 0 {
+                step = 1 // Move down
+            } else if currentRow == numRows - 1 {
+                step = -1 // Move up
+            }
+            
+            // Move to the next row based on direction
+            currentRow += step
+        }
+        
+        // Combine all rows into a single string
+        return rows.joined().map { String($0) }.joined()
+    }
+    /*
      Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
 
      The overall run time complexity should be O(log (m+n)).
