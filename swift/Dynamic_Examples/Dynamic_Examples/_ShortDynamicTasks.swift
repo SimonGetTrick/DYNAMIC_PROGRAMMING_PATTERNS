@@ -8,6 +8,65 @@
 import Foundation
 class Solution {
     /*
+     Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.
+
+     Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
+
+      
+
+     Example 1:
+
+     Input: x = 123
+     Output: 321
+     Example 2:
+
+     Input: x = -123
+     Output: -321
+     Example 3:
+
+     Input: x = 120
+     Output: 21
+      
+
+     Constraints:
+
+     -231 <= x <= 231 - 1
+     */
+    func reverse(_ x: Int, base: Int) -> Int {
+        // Validate base (2 to 36 for standard numeral systems)
+        guard base >= 2 && base <= 36 else { return 0 }
+        
+        // Handle the sign of the input number
+        let sign = x < 0 ? -1 : 1
+        // Work with absolute value to simplify digit processing
+        var num = abs(x)
+        var reversed = 0
+        
+        // Process each digit in the given base
+        while num > 0 {
+            // Extract the last digit in the given base
+            let digit = num % base
+            // Check for overflow before adding new digit
+            if reversed > Int32.max / Int32(base) {
+                return 0
+            }
+            // Build the reversed number in the given base
+            reversed = reversed * base + digit
+            // Remove the last digit
+            num /= base
+        }
+        
+        // Apply the original sign
+        let result = sign * reversed
+        
+        // Check if the result is within 32-bit signed integer range
+        if result < Int32.min || result > Int32.max {
+            return 0
+        }
+        
+        return result
+    }
+    /*
      The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
 
      P   A   H   N
