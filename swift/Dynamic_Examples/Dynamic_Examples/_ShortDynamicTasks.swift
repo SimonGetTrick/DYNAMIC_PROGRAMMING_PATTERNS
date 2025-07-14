@@ -8,6 +8,67 @@
 import Foundation
 class Solution {
     /*
+     Given an integer array nums of length n and an integer target, find three integers in nums such that the sum is closest to target.
+
+     Return the sum of the three integers.
+
+     You may assume that each input would have exactly one solution.
+
+      
+
+     Example 1:
+
+     Input: nums = [-1,2,1,-4], target = 1
+     Output: 2
+     Explanation: The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
+     Example 2:
+
+     Input: nums = [0,0,0], target = 1
+     Output: 0
+     Explanation: The sum that is closest to the target is 0. (0 + 0 + 0 = 0).
+      
+
+     Constraints:
+
+     3 <= nums.length <= 500
+     -1000 <= nums[i] <= 1000
+     -104 <= target <= 104
+     */
+    static func threeSumClosest(_ nums: [Int], _ target: Int) -> Int {
+        // Step 1: Sort the array to use the two-pointer technique
+        let nums = nums.sorted()
+        var closestSum = nums[0] + nums[1] + nums[2]
+        
+        // Step 2: Iterate through each element as a fixed first element
+        for i in 0..<nums.count - 2 {
+            var left = i + 1
+            var right = nums.count - 1
+            
+            // Step 3: Use two pointers to find the best match
+            while left < right {
+                let currentSum = nums[i] + nums[left] + nums[right]
+                
+                // Update closest sum if the current one is closer
+                if abs(currentSum - target) < abs(closestSum - target) {
+                    closestSum = currentSum
+                }
+                
+                // Move pointers based on comparison with target
+                if currentSum < target {
+                    left += 1
+                } else if currentSum > target {
+                    right -= 1
+                } else {
+                    // If exact match found, return it
+                    return target
+                }
+            }
+        }
+        
+        return closestSum
+    }
+    
+    /*
      Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
 
      Notice that the solution set must not contain duplicate triplets.
