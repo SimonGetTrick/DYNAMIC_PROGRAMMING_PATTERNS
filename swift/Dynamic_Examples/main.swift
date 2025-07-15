@@ -213,3 +213,8 @@ swiftContainer.processItems()
 
 KnightDialer.runDemo()
 runConnectivityDemo()
+
+
+let solution = Solution()
+let res = solution.isMatch("aaa", "ab*a*c*a")
+print(res)
