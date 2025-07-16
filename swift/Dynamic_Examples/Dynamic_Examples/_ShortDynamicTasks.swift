@@ -8,6 +8,48 @@
 import Foundation
 class Solution {
     /*
+     Given the head of a linked list, remove the nth node from the end of the list and return its head.
+     Example 1:
+     Input: head = [1,2,3,4,5], n = 2
+     Output: [1,2,3,5]
+     Example 2:
+     Input: head = [1], n = 1
+     Output: []
+     Example 3:
+     Input: head = [1,2], n = 1
+     Output: [1]
+     Constraints:
+     The number of nodes in the list is sz.
+     1 <= sz <= 30
+     0 <= Node.val <= 100
+     1 <= n <= sz
+     */
+    func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
+        // Create a dummy node that points to the head
+        let dummy = ListNode(0)
+        dummy.next = head
+
+        var first: ListNode? = dummy
+        var second: ListNode? = dummy
+
+        // Move the first pointer n+1 steps ahead so the gap between first and second is n nodes
+        for _ in 0...n {
+            first = first?.next
+        }
+
+        // Move both pointers until the first reaches the end
+        while first != nil {
+            first = first?.next
+            second = second?.next
+        }
+
+        // Skip the target node
+        second?.next = second?.next?.next
+
+        return dummy.next
+    }
+    
+    /*
      Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:
      0 <= a, b, c, d < n
      a, b, c, and d are distinct.
