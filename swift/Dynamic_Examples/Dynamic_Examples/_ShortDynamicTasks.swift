@@ -8,6 +8,46 @@
 import Foundation
 class Solution {
     /*
+     Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+     An input string is valid if:
+     Open brackets must be closed by the same type of brackets.
+     Open brackets must be closed in the correct order.
+     Every close bracket has a corresponding open bracket of the same type.
+     Example 1:
+     Input: s = "()"
+     Output: true
+     Example 2:
+     Input: s = "()[]{}"
+     Output: true
+     Example 3:
+     Input: s = "(]"
+     Output: false
+     Example 4:
+     Input: s = "([])"
+     Output: true
+     
+     */
+    func isValid(_ s: String) -> Bool {
+        var stack: [Character] = []
+        let matching: [Character: Character] = [")": "(", "]": "[", "}": "{"]
+        
+        for char in s {
+            if char == "(" || char == "[" || char == "{" {
+                // Push opening brackets onto the stack
+                stack.append(char)
+            } else if let expectedOpen = matching[char] {
+                // If it's a closing bracket, check for matching opening bracket
+                if stack.isEmpty || stack.removeLast() != expectedOpen {
+                    return false
+                }
+            }
+        }
+        
+        // Stack must be empty if all brackets matched
+        return stack.isEmpty
+    }
+    
+    /*
      Given the head of a linked list, remove the nth node from the end of the list and return its head.
      Example 1:
      Input: head = [1,2,3,4,5], n = 2
