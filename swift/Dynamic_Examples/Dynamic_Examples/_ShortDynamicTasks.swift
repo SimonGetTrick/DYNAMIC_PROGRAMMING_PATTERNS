@@ -8,6 +8,66 @@
 import Foundation
 class Solution {
     /*
+     Merge Two Sorted Lists
+     You are given the heads of two sorted linked lists list1 and list2.
+     Merge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.
+     Return the head of the merged linked list.
+     Example 1:
+     Input: list1 = [1,2,4], list2 = [1,3,4]
+     Output: [1,1,2,3,4,4]
+     Example 2:
+     Input: list1 = [], list2 = []
+     Output: []
+     Example 3:
+     Input: list1 = [], list2 = [0]
+     Output: [0]
+     Constraints:
+     The number of nodes in both lists is in the range [0, 50].
+     -100 <= Node.val <= 100
+     Both list1 and list2 are sorted in non-decreasing order.
+     */
+    func mergeTwoLists(_ list1: ListNode?, _ list2: ListNode?) -> ListNode? {
+        // Create a dummy head to simplify edge cases
+        let dummy = ListNode(0)
+        var current = dummy
+        var l1 = list1
+        var l2 = list2
+
+        // Compare and merge nodes in sorted order
+        while let node1 = l1, let node2 = l2 {
+            if node1.val < node2.val {
+                current.next = node1
+                l1 = node1.next
+            } else {
+                current.next = node2
+                l2 = node2.next
+            }
+            current = current.next!
+        }
+
+        // Append remaining nodes
+        current.next = l1 ?? l2
+
+        return dummy.next
+    }
+    func buildList(_ values: [Int]) -> ListNode? {
+        let dummy = ListNode(0)
+        var current = dummy
+        for val in values {
+            current.next = ListNode(val)
+            current = current.next!
+        }
+        return dummy.next
+    }
+
+    func printList(_ head: ListNode?) {
+        var current = head
+        while let node = current {
+            print(node.val, terminator: node.next != nil ? " -> " : "\n")
+            current = node.next
+        }
+    }
+    /*
      Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
      An input string is valid if:
      Open brackets must be closed by the same type of brackets.
