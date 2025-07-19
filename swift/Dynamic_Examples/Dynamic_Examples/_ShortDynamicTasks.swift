@@ -7,6 +7,40 @@
 
 import Foundation
 class Solution {
+    /* Generate Parentsheses
+     Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+     Example 1:
+     Input: n = 3
+     Output: ["((()))","(()())","(())()","()(())","()()()"]
+     Example 2:
+     Input: n = 1
+     Output: ["()"]
+     */
+    func generateParenthesis(_ n: Int) -> [String] {
+        var result = [String]()
+
+        func backtrack(_ current: String, _ open: Int, _ close: Int) {
+            // Base case: valid sequence of length 2n
+            if current.count == 2 * n {
+                result.append(current)
+                return
+            }
+
+            // Add '(' if we still have opening brackets left
+            if open < n {
+                backtrack(current + "(", open + 1, close)
+            }
+
+            // Add ')' if it won't lead to invalid sequence
+            if close < open {
+                backtrack(current + ")", open, close + 1)
+            }
+        }
+
+        backtrack("", 0, 0)
+        return result
+    }
+
     /*
      Merge Two Sorted Lists
      You are given the heads of two sorted linked lists list1 and list2.
