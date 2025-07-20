@@ -7,6 +7,145 @@
 
 import Foundation
 class Solution {
+    /*
+     You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
+     Merge all the linked-lists into one sorted linked-list and return it.
+     Example 1:
+     Input: lists = [[1,4,5],[1,3,4],[2,6]]
+     Output: [1,1,2,3,4,4,5,6]
+     Explanation: The linked-lists are:
+     [
+     1->4->5,
+     1->3->4,
+     2->6
+     ]
+     merging them into one sorted linked list:
+     1->1->2->3->4->4->5->6
+     Example 2:
+     Input: lists = []
+     Output: []
+     Example 3:
+     Input: lists = [[]]
+     Output: []     */
+    // Custom comparator for the min-heap (Priority Queue)
+    struct HeapNode: Comparable {
+        //Comparable
+        static func == (lhs: HeapNode, rhs: HeapNode) -> Bool {
+            return lhs.node === rhs.node
+        }
+        
+        let node: ListNode
+        static func < (lhs: HeapNode, rhs: HeapNode) -> Bool {
+            return lhs.node.val < rhs.node.val
+        }
+    }
+    
+    // MinHeap implementation using BinaryHeap
+    struct MinHeap<T: Comparable> {
+        private var heap: [T] = []
+        
+        mutating func push(_ element: T) {
+            heap.append(element)
+            siftUp(heap.count - 1)
+        }
+        
+        mutating func pop() -> T? {
+            guard !heap.isEmpty else { return nil }
+            heap.swapAt(0, heap.count - 1)
+            let popped = heap.removeLast()
+            siftDown(0)
+            return popped
+        }
+        
+        func peek() -> T? {
+            return heap.first
+        }
+        
+        var isEmpty: Bool {
+            return heap.isEmpty
+        }
+        
+        private mutating func siftUp(_ index: Int) {
+            var child = index
+            var parent = (child - 1) / 2
+            while child > 0 && heap[child] < heap[parent] {
+                heap.swapAt(child, parent)
+                child = parent
+                parent = (child - 1) / 2
+            }
+        }
+        
+        private mutating func siftDown(_ index: Int) {
+            var parent = index
+            let count = heap.count
+            while true {
+                let left = 2 * parent + 1
+                let right = 2 * parent + 2
+                var candidate = parent
+                
+                if left < count && heap[left] < heap[candidate] {
+                    candidate = left
+                }
+                if right < count && heap[right] < heap[candidate] {
+                    candidate = right
+                }
+                if candidate == parent { return }
+                heap.swapAt(parent, candidate)
+                parent = candidate
+            }
+        }
+    }
+    func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
+        var minHeap = MinHeap<HeapNode>()
+        
+        // Push head of each list into the heap
+        for list in lists {
+            if let node = list {
+                minHeap.push(HeapNode(node: node))
+            }
+        }
+        
+        let dummy = ListNode(0)
+        var tail = dummy
+        
+        while !minHeap.isEmpty {
+            guard let smallest = minHeap.pop()?.node else { break }
+            tail.next = smallest
+            tail = tail.next!
+            if let next = smallest.next {
+                minHeap.push(HeapNode(node: next))
+            }
+        }
+        
+        return dummy.next
+    }
+    static func mergeKListsTests() {
+        func createList(_ nums: [Int]) -> ListNode? {
+            let dummy = ListNode(0)
+            var current = dummy
+            for num in nums {
+                current.next = ListNode(num)
+                current = current.next!
+            }
+            return dummy.next
+        }
+
+        let list1 = createList([1,4,5])
+        let list2 = createList([1,3,4])
+        let list3 = createList([2,6])
+
+        let solution = Solution()
+        if let merged = solution.mergeKLists([list1, list2, list3]) {
+            var current: ListNode? = merged
+            while let node = current {
+                print(node.val, terminator: " -> ")
+                current = node.next
+            }
+        } else {
+            print("[]")
+        }
+    }
+    
     /* Generate Parentsheses
      Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
      Example 1:
@@ -18,29 +157,29 @@ class Solution {
      */
     func generateParenthesis(_ n: Int) -> [String] {
         var result = [String]()
-
+        
         func backtrack(_ current: String, _ open: Int, _ close: Int) {
             // Base case: valid sequence of length 2n
             if current.count == 2 * n {
                 result.append(current)
                 return
             }
-
+            
             // Add '(' if we still have opening brackets left
             if open < n {
                 backtrack(current + "(", open + 1, close)
             }
-
+            
             // Add ')' if it won't lead to invalid sequence
             if close < open {
                 backtrack(current + ")", open, close + 1)
             }
         }
-
+        
         backtrack("", 0, 0)
         return result
     }
-
+    
     /*
      Merge Two Sorted Lists
      You are given the heads of two sorted linked lists list1 and list2.
@@ -66,7 +205,7 @@ class Solution {
         var current = dummy
         var l1 = list1
         var l2 = list2
-
+        
         // Compare and merge nodes in sorted order
         while let node1 = l1, let node2 = l2 {
             if node1.val < node2.val {
@@ -78,10 +217,10 @@ class Solution {
             }
             current = current.next!
         }
-
+        
         // Append remaining nodes
         current.next = l1 ?? l2
-
+        
         return dummy.next
     }
     func buildList(_ values: [Int]) -> ListNode? {
@@ -93,7 +232,7 @@ class Solution {
         }
         return dummy.next
     }
-
+    
     func printList(_ head: ListNode?) {
         var current = head
         while let node = current {
@@ -162,24 +301,24 @@ class Solution {
         // Create a dummy node that points to the head
         let dummy = ListNode(0)
         dummy.next = head
-
+        
         var first: ListNode? = dummy
         var second: ListNode? = dummy
-
+        
         // Move the first pointer n+1 steps ahead so the gap between first and second is n nodes
         for _ in 0...n {
             first = first?.next
         }
-
+        
         // Move both pointers until the first reaches the end
         while first != nil {
             first = first?.next
             second = second?.next
         }
-
+        
         // Skip the target node
         second?.next = second?.next?.next
-
+        
         return dummy.next
     }
     
@@ -204,30 +343,30 @@ class Solution {
         let nums = nums.sorted()
         var result = [[Int]]()
         let n = nums.count
-
+        
         // First loop: fix the first number
         for i in 0..<n {
             if i > 0 && nums[i] == nums[i - 1] {
                 continue // Skip duplicate for the first number
             }
-
+            
             // Second loop: fix the second number
             for j in (i + 1)..<n {
                 if j > i + 1 && nums[j] == nums[j - 1] {
                     continue // Skip duplicate for the second number
                 }
-
+                
                 var left = j + 1
                 var right = n - 1
-
+                
                 // Two-pointer approach to find the remaining two numbers
                 while left < right {
                     let sum = nums[i] + nums[j] + nums[left] + nums[right]
-
+                    
                     if sum == target {
                         // Found a valid quadruplet
                         result.append([nums[i], nums[j], nums[left], nums[right]])
-
+                        
                         // Skip duplicates for the third number
                         while left < right && nums[left] == nums[left + 1] {
                             left += 1
@@ -236,10 +375,10 @@ class Solution {
                         while left < right && nums[right] == nums[right - 1] {
                             right -= 1
                         }
-
+                        
                         left += 1
                         right -= 1
-
+                        
                     } else if sum < target {
                         // Move the left pointer to increase the sum
                         left += 1
@@ -250,32 +389,32 @@ class Solution {
                 }
             }
         }
-
+        
         return result
     }
     /*
      Given an integer array nums of length n and an integer target, find three integers in nums such that the sum is closest to target.
-
+     
      Return the sum of the three integers.
-
+     
      You may assume that each input would have exactly one solution.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: nums = [-1,2,1,-4], target = 1
      Output: 2
      Explanation: The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
      Example 2:
-
+     
      Input: nums = [0,0,0], target = 1
      Output: 0
      Explanation: The sum that is closest to the target is 0. (0 + 0 + 0 = 0).
-      
-
+     
+     
      Constraints:
-
+     
      3 <= nums.length <= 500
      -1000 <= nums[i] <= 1000
      -104 <= target <= 104
@@ -316,13 +455,13 @@ class Solution {
     
     /*
      Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
-
+     
      Notice that the solution set must not contain duplicate triplets.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: nums = [-1,0,1,2,-1,-4]
      Output: [[-1,-1,2],[-1,0,1]]
      Explanation:
@@ -332,12 +471,12 @@ class Solution {
      The distinct triplets are [-1,0,1] and [-1,-1,2].
      Notice that the order of the output and the order of the triplets does not matter.
      Example 2:
-
+     
      Input: nums = [0,1,1]
      Output: []
      Explanation: The only possible triplet does not sum up to 0.
      Example 3:
-
+     
      Input: nums = [0,0,0]
      Output: [[0,0,0]]
      Explanation: The only possible triplet sums up to 0.
@@ -389,10 +528,10 @@ class Solution {
         return result
         
     }
-
+    
     /*
      Seven different symbols represent Roman numerals with the following values:
-
+     
      Symbol    Value
      I    1
      V    5
@@ -402,53 +541,53 @@ class Solution {
      D    500
      M    1000
      Roman numerals are formed by appending the conversions of decimal place values from highest to lowest. Converting a decimal place value into a Roman numeral has the following rules:
-
+     
      If the value does not start with 4 or 9, select the symbol of the maximal value that can be subtracted from the input, append that symbol to the result, subtract its value, and convert the remainder to a Roman numeral.
      If the value starts with 4 or 9 use the subtractive form representing one symbol subtracted from the following symbol, for example, 4 is 1 (I) less than 5 (V): IV and 9 is 1 (I) less than 10 (X): IX. Only the following subtractive forms are used: 4 (IV), 9 (IX), 40 (XL), 90 (XC), 400 (CD) and 900 (CM).
      Only powers of 10 (I, X, C, M) can be appended consecutively at most 3 times to represent multiples of 10. You cannot append 5 (V), 50 (L), or 500 (D) multiple times. If you need to append a symbol 4 times use the subtractive form.
      Given an integer, convert it to a Roman numeral.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: num = 3749
-
+     
      Output: "MMMDCCXLIX"
-
+     
      Explanation:
-
+     
      3000 = MMM as 1000 (M) + 1000 (M) + 1000 (M)
-      700 = DCC as 500 (D) + 100 (C) + 100 (C)
-       40 = XL as 10 (X) less of 50 (L)
-        9 = IX as 1 (I) less of 10 (X)
+     700 = DCC as 500 (D) + 100 (C) + 100 (C)
+     40 = XL as 10 (X) less of 50 (L)
+     9 = IX as 1 (I) less of 10 (X)
      Note: 49 is not 1 (I) less of 50 (L) because the conversion is based on decimal places
      Example 2:
-
+     
      Input: num = 58
-
+     
      Output: "LVIII"
-
+     
      Explanation:
-
+     
      50 = L
-      8 = VIII
+     8 = VIII
      Example 3:
-
+     
      Input: num = 1994
-
+     
      Output: "MCMXCIV"
-
+     
      Explanation:
-
+     
      1000 = M
-      900 = CM
-       90 = XC
-        4 = IV
-      
-
+     900 = CM
+     90 = XC
+     4 = IV
+     
+     
      Constraints:
-
+     
      1 <= num <= 3999
      */
     func intToRoman(_ num: Int) -> String {
@@ -480,32 +619,32 @@ class Solution {
         
         return result
     }
-
+    
     /*
      You are given an integer array height of length n. There are n vertical lines drawn such that the two endpoints of the ith line are (i, 0) and (i, height[i]).
-
+     
      Find two lines that together with the x-axis form a container, such that the container contains the most water.
-
+     
      Return the maximum amount of water a container can store.
-
+     
      Notice that you may not slant the container.
-
-      
-
+     
+     
+     
      Example 1:
      barArea.png
-
+     
      Input: height = [1,8,6,2,5,4,8,3,7]
      Output: 49
      Explanation: The above vertical lines are represented by array [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue section) the container can contain is 49.
      Example 2:
-
+     
      Input: height = [1,1]
      Output: 1
-      
-
+     
+     
      Constraints:
-
+     
      n == height.length
      2 <= n <= 105
      0 <= height[i] <= 104
@@ -514,7 +653,7 @@ class Solution {
         var left = 0
         var right = height.count - 1
         var maxWater = 0
-
+        
         while left < right {
             // Calculate width
             let width = right - left
@@ -523,7 +662,7 @@ class Solution {
             // Compute current area
             let currentWater = width * minHeight
             maxWater = max(maxWater, currentWater)
-
+            
             // Move pointer that has the smaller height
             if height[left] < height[right] {
                 left += 1
@@ -531,38 +670,38 @@ class Solution {
                 right -= 1
             }
         }
-
+        
         return maxWater
     }
-
+    
     /*
      Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:
-
+     
      '.' Matches any single character.
      '*' Matches zero or more of the preceding element.
      The matching should cover the entire input string (not partial).
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: s = "aa", p = "a"
      Output: false
      Explanation: "a" does not match the entire string "aa".
      Example 2:
-
+     
      Input: s = "aa", p = "a*"
      Output: true
      Explanation: '*' means zero or more of the preceding element, 'a'. Therefore, by repeating 'a' once, it becomes "aa".
      Example 3:
-
+     
      Input: s = "ab", p = ".*"
      Output: true
      Explanation: ".*" means "zero or more (*) of any character (.)".
-      
-
+     
+     
      Constraints:
-
+     
      1 <= s.length <= 20
      1 <= p.length <= 20
      s contains only lowercase English letters.
@@ -574,21 +713,21 @@ class Solution {
         let pChars = Array(p)
         let m = sChars.count
         let n = pChars.count
-
+        
         // dp[i][j] = true if s[0..<i] matches p[0..<j]
         var dp = Array(
             repeating: Array(repeating: false, count: n + 1),
             count: m + 1
         )
         dp[0][0] = true
-
+        
         // Initialize pattern for empty string s
         for j in 1...n {
             if pChars[j - 1] == "*" {
                 dp[0][j] = dp[0][j - 2]
             }
         }
-
+        
         for i in 1...m {
             for j in 1...n {
                 if pChars[j - 1] == "." || pChars[j - 1] == sChars[i - 1] {
@@ -604,94 +743,94 @@ class Solution {
                 }
             }
         }
-
+        
         return dp[m][n]
     }
-
+    
     /*
      Implement the myAtoi(string s) function, which converts a string to a 32-bit signed integer.
-
+     
      The algorithm for myAtoi(string s) is as follows:
-
+     
      Whitespace: Ignore any leading whitespace (" ").
      Signedness: Determine the sign by checking if the next character is '-' or '+', assuming positivity if neither present.
      Conversion: Read the integer by skipping leading zeros until a non-digit character is encountered or the end of the string is reached. If no digits were read, then the result is 0.
      Rounding: If the integer is out of the 32-bit signed integer range [-231, 231 - 1], then round the integer to remain in the range. Specifically, integers less than -231 should be rounded to -231, and integers greater than 231 - 1 should be rounded to 231 - 1.
      Return the integer as the final result.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: s = "42"
-
+     
      Output: 42
-
+     
      Explanation:
-
+     
      The underlined characters are what is read in and the caret is the current reader position.
      Step 1: "42" (no characters read because there is no leading whitespace)
-              ^
+     ^
      Step 2: "42" (no characters read because there is neither a '-' nor '+')
-              ^
+     ^
      Step 3: "42" ("42" is read in)
-                ^
+     ^
      Example 2:
-
+     
      Input: s = " -042"
-
+     
      Output: -42
-
+     
      Explanation:
-
+     
      Step 1: "   -042" (leading whitespace is read and ignored)
-                 ^
+     ^
      Step 2: "   -042" ('-' is read, so the result should be negative)
-                  ^
+     ^
      Step 3: "   -042" ("042" is read in, leading zeros ignored in the result)
-                    ^
+     ^
      Example 3:
-
+     
      Input: s = "1337c0d3"
-
+     
      Output: 1337
-
+     
      Explanation:
-
+     
      Step 1: "1337c0d3" (no characters read because there is no leading whitespace)
-              ^
+     ^
      Step 2: "1337c0d3" (no characters read because there is neither a '-' nor '+')
-              ^
+     ^
      Step 3: "1337c0d3" ("1337" is read in; reading stops because the next character is a non-digit)
-                  ^
+     ^
      Example 4:
-
+     
      Input: s = "0-1"
-
+     
      Output: 0
-
+     
      Explanation:
-
+     
      Step 1: "0-1" (no characters read because there is no leading whitespace)
-              ^
+     ^
      Step 2: "0-1" (no characters read because there is neither a '-' nor '+')
-              ^
+     ^
      Step 3: "0-1" ("0" is read in; reading stops because the next character is a non-digit)
-               ^
+     ^
      Example 5:
-
+     
      Input: s = "words and 987"
-
+     
      Output: 0
-
+     
      Explanation:
-
+     
      Reading stops at the first non-digit character 'w'.
-
-      
-
+     
+     
+     
      Constraints:
-
+     
      0 <= s.length <= 200
      s consists of English letters (lower-case and upper-case), digits (0-9), ' ', '+', '-', and '.'.
      */
@@ -703,18 +842,18 @@ class Solution {
         var result = 0
         let INT_MAX = Int(Int32.max)
         let INT_MIN = Int(Int32.min)
-
+        
         // Step 1: Skip leading whitespaces
         while i < n && chars[i] == " " {
             i += 1
         }
-
+        
         // Step 2: Handle optional sign
         if i < n && (chars[i] == "+" || chars[i] == "-") {
             sign = chars[i] == "-" ? -1 : 1
             i += 1
         }
-
+        
         // Step 3: Read digits
         while i < n, let digit = chars[i].wholeNumberValue {
             // Check for overflow
@@ -724,33 +863,33 @@ class Solution {
             result = result * 10 + digit
             i += 1
         }
-
+        
         return result * sign
     }
-
+    
     /*
      Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.
-
+     
      Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: x = 123
      Output: 321
      Example 2:
-
+     
      Input: x = -123
      Output: -321
      Example 3:
-
+     
      Input: x = 120
      Output: 21
-      
-
+     
+     
      Constraints:
-
+     
      -231 <= x <= 231 - 1
      */
     func reverse(_ x: Int, base: Int) -> Int {
@@ -789,23 +928,23 @@ class Solution {
     }
     /*
      The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
-
+     
      P   A   H   N
      A P L S I I G
      Y   I   R
      And then read line by line: "PAHNAPLSIIGYIR"
-
+     
      Write the code that will take a string and make this conversion given a number of rows:
-
+     
      string convert(string s, int numRows);
-      
-
+     
+     
      Example 1:
-
+     
      Input: s = "PAYPALISHIRING", numRows = 3
      Output: "PAHNAPLSIIGYIR"
      Example 2:
-
+     
      Input: s = "PAYPALISHIRING", numRows = 4
      Output: "PINALSIGYAHRPI"
      Explanation:
@@ -814,13 +953,13 @@ class Solution {
      Y A   H R
      P     I
      Example 3:
-
+     
      Input: s = "A", numRows = 1
      Output: "A"
-      
-
+     
+     
      Constraints:
-
+     
      1 <= s.length <= 1000
      s consists of English letters (lower-case and upper-case), ',' and '.'.
      1 <= numRows <= 1000
@@ -858,25 +997,25 @@ class Solution {
     }
     /*
      Given two sorted arrays nums1 and nums2 of size m and n respectively, return the median of the two sorted arrays.
-
+     
      The overall run time complexity should be O(log (m+n)).
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: nums1 = [1,3], nums2 = [2]
      Output: 2.00000
      Explanation: merged array = [1,2,3] and median is 2.
      Example 2:
-
+     
      Input: nums1 = [1,2], nums2 = [3,4]
      Output: 2.50000
      Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 = 2.5.
-      
-
+     
+     
      Constraints:
-
+     
      nums1.length == m
      nums2.length == n
      0 <= m <= 1000
@@ -928,29 +1067,29 @@ class Solution {
     }
     /*
      Given a string s, find the length of the longest substring without duplicate characters.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: s = "abcabcbb"
      Output: 3
      Explanation: The answer is "abc", with the length of 3.
      Example 2:
-
+     
      Input: s = "bbbbb"
      Output: 1
      Explanation: The answer is "b", with the length of 1.
      Example 3:
-
+     
      Input: s = "pwwkew"
      Output: 3
      Explanation: The answer is "wke", with the length of 3.
      Notice that the answer must be a substring, "pwke" is a subsequence and not a substring.
-      
-
+     
+     
      Constraints:
-
+     
      0 <= s.length <= 5 * 104
      s consists of English letters, digits, symbols and spaces.
      */
@@ -1009,7 +1148,7 @@ class Solution {
             self.next = nil
         }
     }
-
+    
     // Function to add two numbers represented as linked lists
     func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
         // Initialize a dummy node to simplify list construction
@@ -1046,24 +1185,24 @@ class Solution {
     }
     /*
      Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.
-
+     
      You may assume that each input would have exactly one solution, and you may not use the same element twice.
-
+     
      You can return the answer in any order.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: nums = [2,7,11,15], target = 9
      Output: [0,1]
      Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
      Example 2:
-
+     
      Input: nums = [3,2,4], target = 6
      Output: [1,2]
      Example 3:
-
+     
      Input: nums = [3,3], target = 6
      Output: [0,1]
      */
@@ -1092,20 +1231,20 @@ class Solution {
     
     /*
      In the video game Fallout 4, the quest "Road to Freedom" requires players to reach a metal dial called the "Freedom Trail Ring" and use the dial to spell a specific keyword to open the door.
-
+     
      Given a string ring that represents the code engraved on the outer ring and another string key that represents the keyword that needs to be spelled, return the minimum number of steps to spell all the characters in the keyword.
-
+     
      Initially, the first character of the ring is aligned at the "12:00" direction. You should spell all the characters in key one by one by rotating ring clockwise or anticlockwise to make each character of the string key aligned at the "12:00" direction and then by pressing the center button.
-
+     
      At the stage of rotating the ring to spell the key character key[i]:
-
+     
      You can rotate the ring clockwise or anticlockwise by one place, which counts as one step. The final purpose of the rotation is to align one of ring's characters at the "12:00" direction, where this character must equal key[i].
      If the character key[i] has been aligned at the "12:00" direction, press the center button to spell, which also counts as one step. After the pressing, you could begin to spell the next character in the key (next stage). Otherwise, you have finished all the spelling.
-      
-
+     
+     
      Example 1:
-
-
+     
+     
      Input: ring = "godding", key = "gd"
      Output: 4
      Explanation:
@@ -1114,13 +1253,13 @@ class Solution {
      Also, we need 1 more step for spelling.
      So the final output is 4.
      Example 2:
-
+     
      Input: ring = "godding", key = "godding"
      Output: 13
-      
-
+     
+     
      Constraints:
-
+     
      1 <= ring.length, key.length <= 100
      ring and key consist of only lower case English letters.
      It is guaranteed that key could always be spelled by rotating ring.
@@ -1189,7 +1328,7 @@ class Solution {
             self.right = nil
         }
     }
-
+    
     // Function to find the largest value in each row of a binary tree
     func largestValues(_ root: TreeNode?) -> [Int] {
         // Handle edge case: empty tree returns empty array
@@ -1283,15 +1422,15 @@ class Solution {
     }
     /*
      You have n super washing machines on a line. Initially, each washing machine has some dresses or is empty.
-
+     
      For each move, you could choose any m (1 <= m <= n) washing machines, and pass one dress of each washing machine to one of its adjacent washing machines at the same time.
-
+     
      Given an integer array machines representing the number of dresses in each washing machine from left to right on the line, return the minimum number of moves to make all the washing machines have the same number of dresses. If it is not possible to do it, return -1.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: machines = [1,0,5]
      Output: 3
      Explanation:
@@ -1299,22 +1438,22 @@ class Solution {
      2nd move:    1 <-- 1 <-- 4    =>    2     1     3
      3rd move:    2     1 <-- 3    =>    2     2     2
      Example 2:
-
+     
      Input: machines = [0,3,0]
      Output: 2
      Explanation:
      1st move:    0 <-- 3     0    =>    1     2     0
      2nd move:    1     2 --> 0    =>    1     1     1
      Example 3:
-
+     
      Input: machines = [0,2,0]
      Output: -1
      Explanation:
      It's impossible to make all three washing machines have the same number of dresses.
-      
-
+     
+     
      Constraints:
-
+     
      n == machines.length
      1 <= n <= 104
      0 <= machines[i] <= 105
@@ -1356,18 +1495,18 @@ class Solution {
     }
     /*
      Given a string s, find the longest palindromic subsequence's length in s.
-
+     
      A subsequence is a sequence that can be derived from another sequence by deleting some or no elements without changing the order of the remaining elements.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: s = "bbbab"
      Output: 4
      Explanation: One possible longest palindromic subsequence is "bbbb".
      Example 2:
-
+     
      Input: s = "cbbd"
      Output: 2
      Explanation: One possible longest palindromic subsequence is "bb".
@@ -1419,35 +1558,35 @@ class Solution {
     
     /*
      Palindromic Substrings
-    Medium
-    Topics
-    premium lock icon
-    Companies
-    Hint
-    Given a string s, return the number of palindromic substrings in it.
-
-    A string is a palindrome when it reads the same backward as forward.
-
-    A substring is a contiguous sequence of characters within the string.
-
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Hint
+     Given a string s, return the number of palindromic substrings in it.
      
-
-    Example 1:
-
-    Input: s = "abc"
-    Output: 3
-    Explanation: Three palindromic strings: "a", "b", "c".
-    Example 2:
-
-    Input: s = "aaa"
-    Output: 6
-    Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
+     A string is a palindrome when it reads the same backward as forward.
      
-
-    Constraints:
-
-    1 <= s.length <= 1000
-    s consists of lowercase English letters.
+     A substring is a contiguous sequence of characters within the string.
+     
+     
+     
+     Example 1:
+     
+     Input: s = "abc"
+     Output: 3
+     Explanation: Three palindromic strings: "a", "b", "c".
+     Example 2:
+     
+     Input: s = "aaa"
+     Output: 6
+     Explanation: Six palindromic strings: "a", "a", "a", "aa", "aa", "aaa".
+     
+     
+     Constraints:
+     
+     1 <= s.length <= 1000
+     s consists of lowercase English letters.
      */
     func countSubstrings(_ s: String) -> Int {
         // Handle edge cases
