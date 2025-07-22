@@ -8,6 +8,54 @@
 import Foundation
 class Solution {
     /*
+     Given the head of a linked list, reverse the nodes of the list k at a time, and return the modified list.
+     k is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of k then left-out nodes, in the end, should remain as it is.
+     You may not alter the values in the list's nodes, only nodes themselves may be changed.
+     Example 1:
+     Input: head = [1,2,3,4,5], k = 2
+     Output: [2,1,4,3,5]
+     Example 2:
+     Input: head = [1,2,3,4,5], k = 3
+     Output: [3,2,1,4,5]
+     Constraints:
+     The number of nodes in the list is n.
+     1 <= k <= n <= 5000
+     0 <= Node.val <= 1000
+     */
+     func reverseKGroup(_ head: ListNode?, _ k: Int) -> ListNode? {
+        let dummy = ListNode(0)
+        dummy.next = head
+        var groupPrev: ListNode? = dummy
+        
+        while true {
+            var kth = groupPrev
+            for _ in 0..<k {
+                kth = kth?.next
+                if kth == nil {
+                    return dummy.next
+                }
+            }
+
+            let groupNext = kth?.next
+            // Reverse the group
+            var prev: ListNode? = groupNext
+            var curr = groupPrev?.next
+
+            for _ in 0..<k {
+                let tmp = curr?.next
+                curr?.next = prev
+                prev = curr
+                curr = tmp
+            }
+
+            // Adjust pointers
+            let tmp = groupPrev?.next
+            groupPrev?.next = prev
+            groupPrev = tmp
+        }
+    }
+    
+    /*
      Given a linked list, swap every two adjacent nodes and return its head. You must solve the problem without modifying the values in the list's nodes (i.e., only nodes themselves may be changed.)
      Example 1:
      Input: head = [1,2,3,4]
