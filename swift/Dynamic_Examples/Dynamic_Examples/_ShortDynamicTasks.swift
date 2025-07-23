@@ -8,6 +8,65 @@
 import Foundation
 class Solution {
     /*
+     Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.
+     The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.
+     Return the quotient after dividing dividend by divisor.
+     Note: Assume we are dealing with an environment that could only store integers within the 32-bit signed integer range: [−231, 231 − 1]. For this problem, if the quotient is strictly greater than 231 - 1, then return 231 - 1, and if the quotient is strictly less than -231, then return -231.
+     Example 1:
+     Input: dividend = 10, divisor = 3
+     Output: 3
+     Explanation: 10/3 = 3.33333.. which is truncated to 3.
+     Example 2:
+     Input: dividend = 7, divisor = -3
+     Output: -2
+     Explanation: 7/-3 = -2.33333.. which is truncated to -2.
+     Constraints:
+     -231 <= dividend, divisor <= 231 - 1
+     divisor != 0
+     */
+    func divide(_ dividend: Int, _ divisor: Int) -> Int {
+        // Constants for 32-bit integer boundaries
+        let INT_MAX = Int(Int32.max)
+        let INT_MIN = Int(Int32.min)
+        
+        // Special case: overflow
+        if dividend == INT_MIN && divisor == -1 {
+            return INT_MAX
+        }
+
+        // Determine the sign of the result
+        let negative = (dividend < 0) != (divisor < 0)
+
+        // Work with absolute values (use Int64 to prevent overflow)
+        var a = Int64(abs(dividend))
+        let b = Int64(abs(divisor))
+        var result: Int64 = 0
+
+        while a >= b {
+            var temp = b
+            var multiple: Int64 = 1
+
+            // Double temp and multiple until it would exceed 'a'
+            while a >= (temp << 1) {
+                temp <<= 1
+                multiple <<= 1
+            }
+
+            // Subtract and accumulate
+            a -= temp
+            result += multiple
+        }
+
+        // Apply sign
+        result = negative ? -result : result
+
+        // Clamp result to 32-bit signed range
+        if result > Int64(INT_MAX) { return INT_MAX }
+        if result < Int64(INT_MIN) { return INT_MIN }
+        
+        return Int(result)
+    }
+    /*
      Given the head of a linked list, reverse the nodes of the list k at a time, and return the modified list.
      k is a positive integer and is less than or equal to the length of the linked list. If the number of nodes is not a multiple of k then left-out nodes, in the end, should remain as it is.
      You may not alter the values in the list's nodes, only nodes themselves may be changed.
