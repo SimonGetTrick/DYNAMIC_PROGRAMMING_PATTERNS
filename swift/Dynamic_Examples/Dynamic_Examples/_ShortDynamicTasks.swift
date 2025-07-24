@@ -8,6 +8,91 @@
 import Foundation
 class Solution {
     /*
+     30 Substring with Concatenation of All Words
+     You are given a string s and an array of strings words. All the strings of words are of the same length.
+     A concatenated string is a string that exactly contains all the strings of any permutation of words concatenated.
+     For example, if words = ["ab","cd","ef"], then "abcdef", "abefcd", "cdabef", "cdefab", "efabcd", and "efcdab" are all concatenated strings. "acdbef" is not a concatenated string because it is not the concatenation of any permutation of words.
+     Return an array of the starting indices of all the concatenated substrings in s. You can return the answer in any order.
+     Example 1:
+     Input: s = "barfoothefoobarman", words = ["foo","bar"]
+     Output: [0,9]
+     Explanation:
+     The substring starting at 0 is "barfoo". It is the concatenation of ["bar","foo"] which is a permutation of words.
+     The substring starting at 9 is "foobar". It is the concatenation of ["foo","bar"] which is a permutation of words.
+     Example 2:
+     Input: s = "wordgoodgoodgoodbestword", words = ["word","good","best","word"]
+     Output: []
+     Explanation:
+     There is no concatenated substring.
+     Example 3:
+     Input: s = "barfoofoobarthefoobarman", words = ["bar","foo","the"]
+     Output: [6,9,12]
+     Explanation:
+     The substring starting at 6 is "foobarthe". It is the concatenation of ["foo","bar","the"].
+     The substring starting at 9 is "barthefoo". It is the concatenation of ["bar","the","foo"].
+     The substring starting at 12 is "thefoobar". It is the concatenation of ["the","foo","bar"].
+     Constraints:
+     1 <= s.length <= 104
+     1 <= words.length <= 5000
+     1 <= words[i].length <= 30
+     s and words[i] consist of lowercase English letters.
+     */
+    static func findSubstring(_ s: String, _ words: [String]) -> [Int] {
+            // Early return if input is invalid
+            guard !s.isEmpty, !words.isEmpty else { return [] }
+
+            let wordLength = words[0].count
+            let wordCount = words.count
+            let totalLength = wordLength * wordCount
+            let sArray = Array(s)
+            var result = [Int]()
+
+            // Create frequency map for all words
+            let wordFrequency = words.reduce(into: [String: Int]()) { dict, word in
+                dict[word, default: 0] += 1
+            }
+
+            // We try all possible starting points within the word length offset
+            for i in 0..<wordLength {
+                var left = i
+                var right = i
+                var windowWords = [String: Int]()
+                var count = 0
+
+                // Slide the window by word length
+                while right + wordLength <= s.count {
+                    let word = String(sArray[right..<right+wordLength])
+                    right += wordLength
+
+                    // If word is part of words list
+                    if wordFrequency[word] != nil {
+                        windowWords[word, default: 0] += 1
+                        count += 1
+
+                        // If word occurs more than expected, move the left side of the window
+                        while windowWords[word]! > wordFrequency[word]! {
+                            let leftWord = String(sArray[left..<left+wordLength])
+                            windowWords[leftWord]! -= 1
+                            left += wordLength
+                            count -= 1
+                        }
+
+                        // If the window matches all words
+                        if count == wordCount {
+                            result.append(left)
+                        }
+                    } else {
+                        // Reset window if word is not in the list
+                        windowWords.removeAll()
+                        count = 0
+                        left = right
+                    }
+                }
+            }
+
+            return result
+        }
+    /*
      Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.
      The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.
      Return the quotient after dividing dividend by divisor.
