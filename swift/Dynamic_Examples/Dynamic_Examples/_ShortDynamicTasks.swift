@@ -8,6 +8,51 @@
 import Foundation
 class Solution {
     /*
+     Longest Valid Parentheses
+     Given a string containing just the characters '(' and ')', return the length of the longest valid (well-formed) parentheses substring.
+     Example 1:
+
+     Input: s = "(()"
+     Output: 2
+     Explanation: The longest valid parentheses substring is "()".
+     Example 2:
+
+     Input: s = ")()())"
+     Output: 4
+     Explanation: The longest valid parentheses substring is "()()".
+     Example 3:
+
+     Input: s = ""
+     Output: 0
+      
+
+     Constraints:
+
+     0 <= s.length <= 3 * 104
+     s[i] is '(', or ')'.
+     */
+    func longestValidParentheses(_ s: String) -> Int {
+        var maxLength = 0
+        var stack: [Int] = [-1]  // Stack to store indices; start with -1 as base
+
+        for (i, char) in s.enumerated() {
+            if char == "(" {
+                stack.append(i)  // Push index of '('
+            } else {
+                stack.removeLast()  // Pop the last '(' index or base
+                if let last = stack.last {
+                    maxLength = max(maxLength, i - last)  // Update max length
+                } else {
+                    stack.append(i)  // No base left, set new base
+                }
+            }
+        }
+
+        return maxLength
+    }
+
+    
+    /*
      A permutation of an array of integers is an arrangement of its members into a sequence or linear order.
 
      For example, for arr = [1,2,3], the following are all the permutations of arr: [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1], [3,1,2], [3,2,1].
