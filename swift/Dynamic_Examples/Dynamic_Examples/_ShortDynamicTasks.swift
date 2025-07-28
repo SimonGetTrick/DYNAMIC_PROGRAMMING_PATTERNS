@@ -7,6 +7,79 @@
 
 import Foundation
 class Solution {
+    /*
+     Sudoku validator
+     Determine if a 9 x 9 Sudoku board is valid. Only the filled cells need to be validated according to the following rules:
+     
+     Each row must contain the digits 1-9 without repetition.
+     Each column must contain the digits 1-9 without repetition.
+     Each of the nine 3 x 3 sub-boxes of the grid must contain the digits 1-9 without repetition.
+     Note:
+     
+     A Sudoku board (partially filled) could be valid but is not necessarily solvable.
+     Only the filled cells need to be validated according to the mentioned rules.
+     
+     
+     Example 1:
+     
+     
+     Input: board =
+     [["5","3",".",".","7",".",".",".","."]
+     ,["6",".",".","1","9","5",".",".","."]
+     ,[".","9","8",".",".",".",".","6","."]
+     ,["8",".",".",".","6",".",".",".","3"]
+     ,["4",".",".","8",".","3",".",".","1"]
+     ,["7",".",".",".","2",".",".",".","6"]
+     ,[".","6",".",".",".",".","2","8","."]
+     ,[".",".",".","4","1","9",".",".","5"]
+     ,[".",".",".",".","8",".",".","7","9"]]
+     Output: true
+     Example 2:
+     
+     Input: board =
+     [["8","3",".",".","7",".",".",".","."]
+     ,["6",".",".","1","9","5",".",".","."]
+     ,[".","9","8",".",".",".",".","6","."]
+     ,["8",".",".",".","6",".",".",".","3"]
+     ,["4",".",".","8",".","3",".",".","1"]
+     ,["7",".",".",".","2",".",".",".","6"]
+     ,[".","6",".",".",".",".","2","8","."]
+     ,[".",".",".","4","1","9",".",".","5"]
+     ,[".",".",".",".","8",".",".","7","9"]]
+     Output: false
+     Explanation: Same as Example 1, except with the 5 in the top left corner being modified to 8. Since there are two 8's in the top left 3x3 sub-box, it is invalid.
+     
+     */
+    func isValidSudoku(_ board: [[Character]]) -> Bool {
+        // Sets to keep track of seen values in rows, columns, and boxes
+        var rows = Array(repeating: Set<Character>(), count: 9)
+        var cols = Array(repeating: Set<Character>(), count: 9)
+        var boxes = Array(repeating: Set<Character>(), count: 9)
+        
+        for i in 0..<9 {
+            for j in 0..<9 {
+                let value = board[i][j]
+                if value == "." {
+                    continue // Skip empty cells
+                }
+                
+                // Calculate box index
+                let boxIndex = (i / 3) * 3 + j / 3
+                
+                // Check for duplicates
+                if rows[i].contains(value) || cols[j].contains(value) || boxes[boxIndex].contains(value) {
+                    return false
+                }
+                
+                // Add value to sets
+                rows[i].insert(value)
+                cols[j].insert(value)
+                boxes[boxIndex].insert(value)
+            }
+        }
+        
+        return true // Valid if no duplicates found
+    }
     /* Search in Rotated Sorted Array
      (O(log n)
      There is an integer array nums sorted in ascending order (with distinct values).
@@ -20,13 +93,13 @@ class Solution {
      Input: nums = [4,5,6,7,0,1,2], target = 3
      Output: -1
      Example 3:
-
+     
      Input: nums = [1], target = 0
      Output: -1
-      
-
+     
+     
      Constraints:
-
+     
      1 <= nums.length <= 5000
      -104 <= nums[i] <= 104
      All values of nums are unique.
@@ -36,15 +109,15 @@ class Solution {
     func search(_ nums: [Int], _ target: Int) -> Int {
         var left = 0
         var right = nums.count - 1
-
+        
         while left <= right {
             let mid = (left + right) / 2
-
+            
             // If mid is the target
             if nums[mid] == target {
                 return mid
             }
-
+            
             // Determine which half is sorted
             if nums[left] <= nums[mid] {
                 // Left half is sorted
@@ -62,38 +135,38 @@ class Solution {
                 }
             }
         }
-
+        
         return -1
     }
-
+    
     /*
      Longest Valid Parentheses
      Given a string containing just the characters '(' and ')', return the length of the longest valid (well-formed) parentheses substring.
      Example 1:
-
+     
      Input: s = "(()"
      Output: 2
      Explanation: The longest valid parentheses substring is "()".
      Example 2:
-
+     
      Input: s = ")()())"
      Output: 4
      Explanation: The longest valid parentheses substring is "()()".
      Example 3:
-
+     
      Input: s = ""
      Output: 0
-      
-
+     
+     
      Constraints:
-
+     
      0 <= s.length <= 3 * 104
      s[i] is '(', or ')'.
      */
     func longestValidParentheses(_ s: String) -> Int {
         var maxLength = 0
         var stack: [Int] = [-1]  // Stack to store indices; start with -1 as base
-
+        
         for (i, char) in s.enumerated() {
             if char == "(" {
                 stack.append(i)  // Push index of '('
@@ -106,12 +179,12 @@ class Solution {
                 }
             }
         }
-
+        
         return maxLength
     }
     func longestValidParentheses_withoutStackMemory(_ s: String) -> Int {
         var left = 0, right = 0, maxLength = 0
-
+        
         // Left to right
         for char in s {
             if char == "(" {
@@ -119,7 +192,7 @@ class Solution {
             } else {
                 right += 1
             }
-
+            
             if left == right {
                 maxLength = max(maxLength, 2 * right)
             } else if right > left {
@@ -127,7 +200,7 @@ class Solution {
                 right = 0
             }
         }
-
+        
         // Right to left
         left = 0
         right = 0
@@ -137,7 +210,7 @@ class Solution {
             } else {
                 left += 1
             }
-
+            
             if left == right {
                 maxLength = max(maxLength, 2 * left)
             } else if left > right {
@@ -145,23 +218,23 @@ class Solution {
                 right = 0
             }
         }
-
+        
         return maxLength
     }
-
+    
     
     /*
      A permutation of an array of integers is an arrangement of its members into a sequence or linear order.
-
+     
      For example, for arr = [1,2,3], the following are all the permutations of arr: [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1], [3,1,2], [3,2,1].
      The next permutation of an array of integers is the next lexicographically greater permutation of its integer. More formally, if all the permutations of the array are sorted in one container according to their lexicographical order, then the next permutation of that array is the permutation that follows it in the sorted container. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).
      For example, the next permutation of arr = [1,2,3] is [1,3,2].
      Similarly, the next permutation of arr = [2,3,1] is [3,1,2].
      While the next permutation of arr = [3,2,1] is [1,2,3] because [3,2,1] does not have a lexicographical larger rearrangement.
      Given an array of integers nums, find the next permutation of nums.
-
+     
      The replacement must be in place and use only constant extra memory.
-
+     
      Example 1:
      Input: nums = [1,2,3]
      Output: [1,3,2]
@@ -172,7 +245,7 @@ class Solution {
      Input: nums = [1,1,5]
      Output: [1,5,1]
      Constraints:
-
+     
      1 <= nums.length <= 100
      0 <= nums[i] <= 100
      */
@@ -238,60 +311,60 @@ class Solution {
      s and words[i] consist of lowercase English letters.
      */
     static func findSubstring(_ s: String, _ words: [String]) -> [Int] {
-            // Early return if input is invalid
-            guard !s.isEmpty, !words.isEmpty else { return [] }
-
-            let wordLength = words[0].count
-            let wordCount = words.count
-            let totalLength = wordLength * wordCount
-            let sArray = Array(s)
-            var result = [Int]()
-
-            // Create frequency map for all words
-            let wordFrequency = words.reduce(into: [String: Int]()) { dict, word in
-                dict[word, default: 0] += 1
-            }
-
-            // We try all possible starting points within the word length offset
-            for i in 0..<wordLength {
-                var left = i
-                var right = i
-                var windowWords = [String: Int]()
-                var count = 0
-
-                // Slide the window by word length
-                while right + wordLength <= s.count {
-                    let word = String(sArray[right..<right+wordLength])
-                    right += wordLength
-
-                    // If word is part of words list
-                    if wordFrequency[word] != nil {
-                        windowWords[word, default: 0] += 1
-                        count += 1
-
-                        // If word occurs more than expected, move the left side of the window
-                        while windowWords[word]! > wordFrequency[word]! {
-                            let leftWord = String(sArray[left..<left+wordLength])
-                            windowWords[leftWord]! -= 1
-                            left += wordLength
-                            count -= 1
-                        }
-
-                        // If the window matches all words
-                        if count == wordCount {
-                            result.append(left)
-                        }
-                    } else {
-                        // Reset window if word is not in the list
-                        windowWords.removeAll()
-                        count = 0
-                        left = right
+        // Early return if input is invalid
+        guard !s.isEmpty, !words.isEmpty else { return [] }
+        
+        let wordLength = words[0].count
+        let wordCount = words.count
+        let totalLength = wordLength * wordCount
+        let sArray = Array(s)
+        var result = [Int]()
+        
+        // Create frequency map for all words
+        let wordFrequency = words.reduce(into: [String: Int]()) { dict, word in
+            dict[word, default: 0] += 1
+        }
+        
+        // We try all possible starting points within the word length offset
+        for i in 0..<wordLength {
+            var left = i
+            var right = i
+            var windowWords = [String: Int]()
+            var count = 0
+            
+            // Slide the window by word length
+            while right + wordLength <= s.count {
+                let word = String(sArray[right..<right+wordLength])
+                right += wordLength
+                
+                // If word is part of words list
+                if wordFrequency[word] != nil {
+                    windowWords[word, default: 0] += 1
+                    count += 1
+                    
+                    // If word occurs more than expected, move the left side of the window
+                    while windowWords[word]! > wordFrequency[word]! {
+                        let leftWord = String(sArray[left..<left+wordLength])
+                        windowWords[leftWord]! -= 1
+                        left += wordLength
+                        count -= 1
                     }
+                    
+                    // If the window matches all words
+                    if count == wordCount {
+                        result.append(left)
+                    }
+                } else {
+                    // Reset window if word is not in the list
+                    windowWords.removeAll()
+                    count = 0
+                    left = right
                 }
             }
-
-            return result
         }
+        
+        return result
+    }
     /*
      Given two integers dividend and divisor, divide two integers without using multiplication, division, and mod operator.
      The integer division should truncate toward zero, which means losing its fractional part. For example, 8.345 would be truncated to 8, and -2.7335 would be truncated to -2.
@@ -318,33 +391,33 @@ class Solution {
         if dividend == INT_MIN && divisor == -1 {
             return INT_MAX
         }
-
+        
         // Determine the sign of the result
         let negative = (dividend < 0) != (divisor < 0)
-
+        
         // Work with absolute values (use Int64 to prevent overflow)
         var a = Int64(abs(dividend))
         let b = Int64(abs(divisor))
         var result: Int64 = 0
-
+        
         while a >= b {
             var temp = b
             var multiple: Int64 = 1
-
+            
             // Double temp and multiple until it would exceed 'a'
             while a >= (temp << 1) {
                 temp <<= 1
                 multiple <<= 1
             }
-
+            
             // Subtract and accumulate
             a -= temp
             result += multiple
         }
-
+        
         // Apply sign
         result = negative ? -result : result
-
+        
         // Clamp result to 32-bit signed range
         if result > Int64(INT_MAX) { return INT_MAX }
         if result < Int64(INT_MIN) { return INT_MIN }
@@ -366,7 +439,7 @@ class Solution {
      1 <= k <= n <= 5000
      0 <= Node.val <= 1000
      */
-     func reverseKGroup(_ head: ListNode?, _ k: Int) -> ListNode? {
+    func reverseKGroup(_ head: ListNode?, _ k: Int) -> ListNode? {
         let dummy = ListNode(0)
         dummy.next = head
         var groupPrev: ListNode? = dummy
@@ -379,19 +452,19 @@ class Solution {
                     return dummy.next
                 }
             }
-
+            
             let groupNext = kth?.next
             // Reverse the group
             var prev: ListNode? = groupNext
             var curr = groupPrev?.next
-
+            
             for _ in 0..<k {
                 let tmp = curr?.next
                 curr?.next = prev
                 prev = curr
                 curr = tmp
             }
-
+            
             // Adjust pointers
             let tmp = groupPrev?.next
             groupPrev?.next = prev
@@ -415,30 +488,30 @@ class Solution {
      Input: head = [1,2,3]
      Output: [2,1,3]
      Constraints:
-
+     
      The number of nodes in the list is in the range [0, 100].
      0 <= Node.val <= 100
      */
     func swapPairs(_ head: ListNode?) -> ListNode? {
-           let dummy = ListNode(0)
-           dummy.next = head
-           var prev = dummy
-
-           while let first = prev.next, let second = first.next {
-               // Nodes to swap: first and second
-               let nextPair = second.next
-
-               // Swap logic
-               prev.next = second
-               second.next = first
-               first.next = nextPair
-
-               // Move `prev` two nodes ahead
-               prev = first
-           }
-
-           return dummy.next
-       }
+        let dummy = ListNode(0)
+        dummy.next = head
+        var prev = dummy
+        
+        while let first = prev.next, let second = first.next {
+            // Nodes to swap: first and second
+            let nextPair = second.next
+            
+            // Swap logic
+            prev.next = second
+            second.next = first
+            first.next = nextPair
+            
+            // Move `prev` two nodes ahead
+            prev = first
+        }
+        
+        return dummy.next
+    }
     /*
      You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
      Merge all the linked-lists into one sorted linked-list and return it.
@@ -561,11 +634,11 @@ class Solution {
             }
             return dummy.next
         }
-
+        
         let list1 = createList([1,4,5])
         let list2 = createList([1,3,4])
         let list3 = createList([2,6])
-
+        
         let solution = Solution()
         if let merged = solution.mergeKLists([list1, list2, list3]) {
             var current: ListNode? = merged
