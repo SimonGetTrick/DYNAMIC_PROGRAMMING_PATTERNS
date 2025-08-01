@@ -8,6 +8,75 @@
 import Foundation
 class Solution {
     /*
+     Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target.
+     Each number in candidates may only be used once in the combination.
+     Note: The solution set must not contain duplicate combinations.
+     Example 1:
+     Input: candidates = [10,1,2,7,6,1,5], target = 8
+     Output:
+     [
+     [1,1,6],
+     [1,2,5],
+     [1,7],
+     [2,6]
+     ]
+     Example 2:
+
+     Input: candidates = [2,5,2,1,2], target = 5
+     Output:
+     [
+     [1,2,2],
+     [5]
+     ]
+     */
+    class CombinationSumII {
+        // Entry point to test
+        static func runDemo() {
+            let candidates1 = [10,1,2,7,6,1,5]
+            let target1 = 8
+            let result1 = combinationSum2(candidates1, target1)
+            print("Result 1:", result1)
+
+            let candidates2 = [2,5,2,1,2]
+            let target2 = 5
+            let result2 = combinationSum2(candidates2, target2)
+            print("Result 2:", result2)
+        }
+
+        // Main function to find unique combinations
+        static func combinationSum2(_ candidates: [Int], _ target: Int) -> [[Int]] {
+            var results: [[Int]] = []
+            var path: [Int] = []
+            let sortedCandidates = candidates.sorted() // Sort to handle duplicates easily
+            backtrack(sortedCandidates, target, 0, &path, &results)
+            return results
+        }
+
+        // Backtracking helper function
+        private static func backtrack(_ candidates: [Int], _ target: Int, _ start: Int, _ path: inout [Int], _ results: inout [[Int]]) {
+            if target == 0 {
+                results.append(path)
+                return
+            }
+
+            for i in start..<candidates.count {
+                // Skip duplicates
+                if i > start && candidates[i] == candidates[i - 1] {
+                    continue
+                }
+
+                let current = candidates[i]
+                if current > target {
+                    break // No need to proceed if current is greater than remaining target
+                }
+
+                path.append(current)
+                backtrack(candidates, target - current, i + 1, &path, &results) // i + 1: use number only once
+                path.removeLast()
+            }
+        }
+    }
+    /*
      39. Combination Sum
      Medium
      Topics
@@ -507,7 +576,7 @@ class Solution {
         
         let wordLength = words[0].count
         let wordCount = words.count
-        let totalLength = wordLength * wordCount
+        // let totalLength = wordLength * wordCount
         let sArray = Array(s)
         var result = [Int]()
         
