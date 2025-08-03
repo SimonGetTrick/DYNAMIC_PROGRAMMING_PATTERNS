@@ -8,6 +8,67 @@
 import Foundation
 class Solution {
     /*
+     Given two non-negative integers num1 and num2 represented as strings, return the product of num1 and num2, also represented as a string.
+     Note: You must not use any built-in BigInteger library or convert the inputs to integer directly.
+     Example 1:
+     Input: num1 = "2", num2 = "3"
+     Output: "6"
+     Example 2:
+     Input: num1 = "123", num2 = "456"
+     Output: "56088"
+     Constraints:
+     1 <= num1.length, num2.length <= 200
+     num1 and num2 consist of digits only.
+     Both num1 and num2 do not contain any leading zero, except the number 0 itself.
+     */
+    class MultiplyStrings {
+        static func runDemo() {
+            print(multiply("2", "3"))       // Output: "6"
+            print(multiply("123", "456"))   // Output: "56088"
+            print(multiply("0", "12345"))   // Output: "0"
+        }
+
+        static func multiply(_ num1: String, _ num2: String) -> String {
+            let len1 = num1.count
+            let len2 = num2.count
+            if num1 == "0" || num2 == "0" { return "0" }
+
+            // Create an array to hold the result digits
+            var result = Array(repeating: 0, count: len1 + len2)
+            let digits1 = Array(num1)
+            let digits2 = Array(num2)
+
+            // Multiply each digit
+            for i in (0..<len1).reversed() {
+                let d1 = Int(String(digits1[i]))!
+                for j in (0..<len2).reversed() {
+                    let d2 = Int(String(digits2[j]))!
+                    let product = d1 * d2
+                    let p1 = i + j
+                    let p2 = i + j + 1
+                    let sum = product + result[p2]
+
+                    result[p2] = sum % 10
+                    result[p1] += sum / 10
+                }
+            }
+
+            // Convert result array to string
+            var resultString = ""
+            var leadingZero = true
+            for digit in result {
+                if digit == 0 && leadingZero {
+                    continue
+                }
+                leadingZero = false
+                resultString.append(String(digit))
+            }
+
+            return resultString.isEmpty ? "0" : resultString
+        }
+    }
+
+    /*
      Given an unsorted integer array nums. Return the smallest positive integer that is not present in nums.
      You must implement an algorithm that runs in O(n) time and uses O(1) auxiliary space.
      Example 1:
