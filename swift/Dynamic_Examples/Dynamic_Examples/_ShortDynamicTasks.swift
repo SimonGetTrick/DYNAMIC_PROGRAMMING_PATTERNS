@@ -8,6 +8,74 @@
 import Foundation
 class Solution {
     /*
+     44. Wildcard Matching
+     Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*' where:
+     '?' Matches any single character.
+     '*' Matches any sequence of characters (including the empty sequence).
+     The matching should cover the entire input string (not partial).
+     Example 1:
+     Input: s = "aa", p = "a"
+     Output: false
+     Explanation: "a" does not match the entire string "aa".
+     Example 2:
+     Input: s = "aa", p = "*"
+     Output: true
+     Explanation: '*' matches any sequence.
+     Example 3:
+     Input: s = "cb", p = "?a"
+     Output: false
+     Explanation: '?' matches 'c', but the second letter is 'a', which does not match 'b'.
+     Constraints:
+     0 <= s.length, p.length <= 2000
+     s contains only lowercase English letters.
+     p contains only lowercase English letters, '?' or '*'.
+     */
+    class WildcardMatching {
+        static func runDemo() {
+            print(isMatch("aa", "a"))     // false
+            print(isMatch("aa", "*"))     // true
+            print(isMatch("cb", "?a"))    // false
+            print(isMatch("adceb", "*a*b")) // true
+            print(isMatch("acdcb", "a*c?b")) // false
+        }
+
+        // Dynamic Programming solution
+        static func isMatch(_ s: String, _ p: String) -> Bool {
+            let sChars = Array(s)
+            let pChars = Array(p)
+            let m = sChars.count
+            let n = pChars.count
+
+            // dp[i][j] means: does s[0..<i] match p[0..<j]
+            var dp = Array(repeating: Array(repeating: false, count: n + 1), count: m + 1)
+            dp[0][0] = true // empty pattern matches empty string
+
+            // Handle patterns like '*', '**', '***'
+            for j in 1...n {
+                if pChars[j - 1] == "*" {
+                    dp[0][j] = dp[0][j - 1]
+                }
+            }
+
+            for i in 1...m {
+                for j in 1...n {
+                    let sc = sChars[i - 1]
+                    let pc = pChars[j - 1]
+
+                    if pc == "?" || pc == sc {
+                        dp[i][j] = dp[i - 1][j - 1]
+                    } else if pc == "*" {
+                        // '*' matches 0 (dp[i][j - 1]) or more (dp[i - 1][j])
+                        dp[i][j] = dp[i][j - 1] || dp[i - 1][j]
+                    }
+                }
+            }
+
+            return dp[m][n]
+        }
+    }
+
+    /*
      Given two non-negative integers num1 and num2 represented as strings, return the product of num1 and num2, also represented as a string.
      Note: You must not use any built-in BigInteger library or convert the inputs to integer directly.
      Example 1:
