@@ -7,6 +7,95 @@
 
 import Foundation
 class Solution {
+    /*46. Permutations
+     Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
+     Example 1:
+     Input: nums = [1,2,3]
+     Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+     Example 2:
+     Input: nums = [0,1]
+     Output: [[0,1],[1,0]]
+     Example 3:
+     Input: nums = [1]
+     Output: [[1]]
+     Constraints:
+     1 <= nums.length <= 6
+     -10 <= nums[i] <= 10
+     All the integers of nums are unique.
+Metriks:
+     Performance Comparison of Both Permutation Approaches (Time and Space)
+
+     | Metric                     | Version 1: with `used[]`         | Version 2: in-place (no `used[]`) |
+     |---------------------------|----------------------------------|-----------------------------------|
+     | Time Complexity           | O(n * n!)                        | O(n * n!)                         |
+     | Explanation (time)        | n! permutations of length n      | Same: n! permutations of length n |
+     | Call Stack Depth          | O(n)                             | O(n)                              |
+     | Auxiliary Space           | O(n) (used[] + current[])        | O(1) (in-place swaps only)        |
+     | Total Space Complexity    | O(n)                             | O(n) (recursion only)             |
+     | Modifies Input?           | No                               | Yes (but restores via backtrack)  |
+
+     Summary:
+     - Version 1 is easier to read and suitable for beginners.
+     - Version 2 is more memory-efficient and preferred for optimal space usage.
+     */
+
+    class Permutations {
+        static func runDemo() {
+            print(permute([1, 2, 3]))
+            print(permute([0, 1]))
+            print(permute([1]))
+            print(permute2([1, 2, 3]))
+            print(permute2([0, 1]))
+            print(permute2([1]))
+
+        }
+
+        static func permute(_ nums: [Int]) -> [[Int]] {
+            var result: [[Int]] = []
+            var current: [Int] = []
+            var used = Array(repeating: false, count: nums.count)
+
+            func backtrack() {
+                if current.count == nums.count {
+                    result.append(current)
+                    return
+                }
+
+                for i in 0..<nums.count {
+                    if used[i] { continue }
+
+                    used[i] = true
+                    current.append(nums[i])
+                    backtrack()
+                    current.removeLast()
+                    used[i] = false
+                }
+            }
+
+            backtrack()
+            return result
+        }
+        static func permute2(_ nums: [Int]) -> [[Int]] {
+                var result: [[Int]] = []
+                var nums = nums // make mutable
+
+                func backtrack(_ start: Int) {
+                    if start == nums.count {
+                        result.append(nums)
+                        return
+                    }
+
+                    for i in start..<nums.count {
+                        nums.swapAt(start, i)
+                        backtrack(start + 1)
+                        nums.swapAt(start, i) // backtrack
+                    }
+                }
+
+                backtrack(0)
+                return result
+            }
+    }
     /*
      45. Jump Game II
      Medium
