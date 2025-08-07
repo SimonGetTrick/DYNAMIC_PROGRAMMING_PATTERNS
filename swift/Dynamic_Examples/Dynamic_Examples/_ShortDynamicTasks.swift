@@ -22,9 +22,9 @@ class Solution {
      1 <= nums.length <= 6
      -10 <= nums[i] <= 10
      All the integers of nums are unique.
-Metriks:
+     Metriks:
      Performance Comparison of Both Permutation Approaches (Time and Space)
-
+     
      | Metric                     | Version 1: with `used[]`         | Version 2: in-place (no `used[]`) |
      |---------------------------|----------------------------------|-----------------------------------|
      | Time Complexity           | O(n * n!)                        | O(n * n!)                         |
@@ -33,12 +33,14 @@ Metriks:
      | Auxiliary Space           | O(n) (used[] + current[])        | O(1) (in-place swaps only)        |
      | Total Space Complexity    | O(n)                             | O(n) (recursion only)             |
      | Modifies Input?           | No                               | Yes (but restores via backtrack)  |
-
+     
      Summary:
      - Version 1 is easier to read and suitable for beginners.
      - Version 2 is more memory-efficient and preferred for optimal space usage.
+     
+     47 permurmutaion unic requered sort
      */
-
+    
     class Permutations {
         static func runDemo() {
             print(permute([1, 2, 3]))
@@ -47,23 +49,29 @@ Metriks:
             print(permute2([1, 2, 3]))
             print(permute2([0, 1]))
             print(permute2([1]))
-
+            
         }
-
-        static func permute(_ nums: [Int]) -> [[Int]] {
+        static func permuteUnique(_ nums: [Int]) -> [[Int]] {
+            let nums = nums.sorted()  // Sort to handle duplicates
             var result: [[Int]] = []
             var current: [Int] = []
             var used = Array(repeating: false, count: nums.count)
-
+            
             func backtrack() {
                 if current.count == nums.count {
                     result.append(current)
                     return
                 }
-
+                
                 for i in 0..<nums.count {
+                    // Skip used elements
                     if used[i] { continue }
-
+                    
+                    // Skip duplicates: if current == previous and previous hasn't been used
+                    if i > 0 && nums[i] == nums[i - 1] && !used[i - 1] {
+                        continue
+                    }
+                    
                     used[i] = true
                     current.append(nums[i])
                     backtrack()
@@ -71,30 +79,55 @@ Metriks:
                     used[i] = false
                 }
             }
-
+            
+            backtrack()
+            return result
+        }
+        static func permute(_ nums: [Int]) -> [[Int]] {
+            var result: [[Int]] = []
+            var current: [Int] = []
+            var used = Array(repeating: false, count: nums.count)
+            
+            func backtrack() {
+                if current.count == nums.count {
+                    result.append(current)
+                    return
+                }
+                
+                for i in 0..<nums.count {
+                    if used[i] { continue }
+                    
+                    used[i] = true
+                    current.append(nums[i])
+                    backtrack()
+                    current.removeLast()
+                    used[i] = false
+                }
+            }
+            
             backtrack()
             return result
         }
         static func permute2(_ nums: [Int]) -> [[Int]] {
-                var result: [[Int]] = []
-                var nums = nums // make mutable
-
-                func backtrack(_ start: Int) {
-                    if start == nums.count {
-                        result.append(nums)
-                        return
-                    }
-
-                    for i in start..<nums.count {
-                        nums.swapAt(start, i)
-                        backtrack(start + 1)
-                        nums.swapAt(start, i) // backtrack
-                    }
+            var result: [[Int]] = []
+            var nums = nums // make mutable
+            
+            func backtrack(_ start: Int) {
+                if start == nums.count {
+                    result.append(nums)
+                    return
                 }
-
-                backtrack(0)
-                return result
+                
+                for i in start..<nums.count {
+                    nums.swapAt(start, i)
+                    backtrack(start + 1)
+                    nums.swapAt(start, i) // backtrack
+                }
             }
+            
+            backtrack(0)
+            return result
+        }
     }
     /*
      45. Jump Game II
@@ -125,15 +158,15 @@ Metriks:
             print(jump([2,3,0,1,4]))     // Output: 2
             print(jump([1,2,1,1,1]))     // Output: 3
         }
-
+        
         static func jump(_ nums: [Int]) -> Int {
             let n = nums.count
             if n <= 1 { return 0 }
-
+            
             var jumps = 0
             var currentEnd = 0  // farthest point in current jump
             var farthest = 0    // farthest we can reach
-
+            
             for i in 0..<n - 1 {
                 farthest = max(farthest, i + nums[i])
                 if i == currentEnd {
@@ -141,11 +174,11 @@ Metriks:
                     currentEnd = farthest
                 }
             }
-
+            
             return jumps
         }
     }
-
+    
     /*
      44. Wildcard Matching
      Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*' where:
@@ -177,30 +210,30 @@ Metriks:
             print(isMatch("adceb", "*a*b")) // true
             print(isMatch("acdcb", "a*c?b")) // false
         }
-
+        
         // Dynamic Programming solution
         static func isMatch(_ s: String, _ p: String) -> Bool {
             let sChars = Array(s)
             let pChars = Array(p)
             let m = sChars.count
             let n = pChars.count
-
+            
             // dp[i][j] means: does s[0..<i] match p[0..<j]
             var dp = Array(repeating: Array(repeating: false, count: n + 1), count: m + 1)
             dp[0][0] = true // empty pattern matches empty string
-
+            
             // Handle patterns like '*', '**', '***'
             for j in 1...n {
                 if pChars[j - 1] == "*" {
                     dp[0][j] = dp[0][j - 1]
                 }
             }
-
+            
             for i in 1...m {
                 for j in 1...n {
                     let sc = sChars[i - 1]
                     let pc = pChars[j - 1]
-
+                    
                     if pc == "?" || pc == sc {
                         dp[i][j] = dp[i - 1][j - 1]
                     } else if pc == "*" {
@@ -209,11 +242,11 @@ Metriks:
                     }
                 }
             }
-
+            
             return dp[m][n]
         }
     }
-
+    
     /*
      Given two non-negative integers num1 and num2 represented as strings, return the product of num1 and num2, also represented as a string.
      Note: You must not use any built-in BigInteger library or convert the inputs to integer directly.
@@ -234,17 +267,17 @@ Metriks:
             print(multiply("123", "456"))   // Output: "56088"
             print(multiply("0", "12345"))   // Output: "0"
         }
-
+        
         static func multiply(_ num1: String, _ num2: String) -> String {
             let len1 = num1.count
             let len2 = num2.count
             if num1 == "0" || num2 == "0" { return "0" }
-
+            
             // Create an array to hold the result digits
             var result = Array(repeating: 0, count: len1 + len2)
             let digits1 = Array(num1)
             let digits2 = Array(num2)
-
+            
             // Multiply each digit
             for i in (0..<len1).reversed() {
                 let d1 = Int(String(digits1[i]))!
@@ -254,12 +287,12 @@ Metriks:
                     let p1 = i + j
                     let p2 = i + j + 1
                     let sum = product + result[p2]
-
+                    
                     result[p2] = sum % 10
                     result[p1] += sum / 10
                 }
             }
-
+            
             // Convert result array to string
             var resultString = ""
             var leadingZero = true
@@ -270,11 +303,11 @@ Metriks:
                 leadingZero = false
                 resultString.append(String(digit))
             }
-
+            
             return resultString.isEmpty ? "0" : resultString
         }
     }
-
+    
     /*
      Given an unsorted integer array nums. Return the smallest positive integer that is not present in nums.
      You must implement an algorithm that runs in O(n) time and uses O(1) auxiliary space.
@@ -299,36 +332,36 @@ Metriks:
             let nums1 = [1, 2, 0]
             let nums2 = [3, 4, -1, 1]
             let nums3 = [7, 8, 9, 11, 12]
-
+            
             print(firstMissingPositive(nums1)) // Output: 3
             print(firstMissingPositive(nums2)) // Output: 2
             print(firstMissingPositive(nums3)) // Output: 1
         }
-
+        
         // Main function: O(n) time, O(1) space
         static func firstMissingPositive(_ nums: [Int]) -> Int {
             var nums = nums // make mutable copy
             let n = nums.count
-
+            
             // Step 1: Place each number in its correct position if possible
             for i in 0..<n {
                 while nums[i] > 0 && nums[i] <= n && nums[nums[i] - 1] != nums[i] {
                     nums.swapAt(i, nums[i] - 1)
                 }
             }
-
+            
             // Step 2: The first place where index != value means missing number
             for i in 0..<n {
                 if nums[i] != i + 1 {
                     return i + 1
                 }
             }
-
+            
             // Step 3: All numbers are in place from 1 to n
             return n + 1
         }
     }
-
+    
     /*
      Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target.
      Each number in candidates may only be used once in the combination.
@@ -343,7 +376,7 @@ Metriks:
      [2,6]
      ]
      Example 2:
-
+     
      Input: candidates = [2,5,2,1,2], target = 5
      Output:
      [
@@ -358,13 +391,13 @@ Metriks:
             let target1 = 8
             let result1 = combinationSum2(candidates1, target1)
             print("Result 1:", result1)
-
+            
             let candidates2 = [2,5,2,1,2]
             let target2 = 5
             let result2 = combinationSum2(candidates2, target2)
             print("Result 2:", result2)
         }
-
+        
         // Main function to find unique combinations
         static func combinationSum2(_ candidates: [Int], _ target: Int) -> [[Int]] {
             var results: [[Int]] = []
@@ -373,25 +406,25 @@ Metriks:
             backtrack(sortedCandidates, target, 0, &path, &results)
             return results
         }
-
+        
         // Backtracking helper function
         private static func backtrack(_ candidates: [Int], _ target: Int, _ start: Int, _ path: inout [Int], _ results: inout [[Int]]) {
             if target == 0 {
                 results.append(path)
                 return
             }
-
+            
             for i in start..<candidates.count {
                 // Skip duplicates
                 if i > start && candidates[i] == candidates[i - 1] {
                     continue
                 }
-
+                
                 let current = candidates[i]
                 if current > target {
                     break // No need to proceed if current is greater than remaining target
                 }
-
+                
                 path.append(current)
                 backtrack(candidates, target - current, i + 1, &path, &results) // i + 1: use number only once
                 path.removeLast()
@@ -452,7 +485,7 @@ Metriks:
     }
     /*
      The count-and-say sequence is a sequence of digit strings defined by the recursive formula:
-
+     
      countAndSay(1) = "1"
      countAndSay(n) is the run-length encoding of countAndSay(n - 1).
      Run-length encoding (RLE) is a string compression method that works by replacing consecutive identical characters (repeated 2 or more times) with the concatenation of the character and the number marking the count of the characters (length of the run). For example, to compress the string "3322251" we replace "33" with "23", replace "222" with "32", replace "5" with "15" and replace "1" with "11". Thus the compressed string becomes "23321511".
@@ -478,21 +511,21 @@ Metriks:
             let result = countAndSay(n)
             print("countAndSay(\(n)) = \(result)") // Should print: 1211
         }
-
+        
         // Returns the nth term of the count-and-say sequence
         static func countAndSay(_ n: Int) -> String {
             if n == 1 { return "1" }
-
+            
             let prev = countAndSay(n - 1)
             return say(prev)
         }
-
+        
         // Helper function to perform run-length encoding
         private static func say(_ input: String) -> String {
             var result = ""
             var count = 0
             var prevChar: Character = input.first!
-
+            
             for char in input {
                 if char == prevChar {
                     count += 1
@@ -502,12 +535,12 @@ Metriks:
                     count = 1
                 }
             }
-
+            
             result += "\(count)\(prevChar)" // Add the last group
             return result
         }
     }
-
+    
     /*
      Write a program to solve a Sudoku puzzle by filling the empty cells.
      A sudoku solution must satisfy all of the following rules:
@@ -539,16 +572,16 @@ Metriks:
                 [".",".",".","4","1","9",".",".","5"],
                 [".",".",".",".","8",".",".","7","9"]
             ]
-
+            
             solveSudoku(&board)
             printBoard(board)
         }
-
+        
         // Main solver function using backtracking
         static func solveSudoku(_ board: inout [[Character]]) {
             _ = solve(&board)
         }
-
+        
         // Recursive function to fill the board
         private static func solve(_ board: inout [[Character]]) -> Bool {
             for row in 0..<9 {
@@ -569,7 +602,7 @@ Metriks:
             }
             return true // fully filled
         }
-
+        
         // Check if placing a digit is valid
         private static func isValid(_ board: [[Character]], _ row: Int, _ col: Int, _ char: Character) -> Bool {
             for i in 0..<9 {
@@ -581,7 +614,7 @@ Metriks:
             }
             return true
         }
-
+        
         // Utility to print the board
         private static func printBoard(_ board: [[Character]]) {
             for row in board {
