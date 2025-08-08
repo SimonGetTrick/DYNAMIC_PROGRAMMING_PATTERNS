@@ -8,6 +8,70 @@
 import Foundation
 class Solution {
     /*
+     49. Group Anagrams
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Given an array of strings strs, group the anagrams together. You can return the answer in any order.
+     Example 1:
+     Input: strs = ["eat","tea","tan","ate","nat","bat"]
+     Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+     Explanation:
+     There is no string in strs that can be rearranged to form "bat".
+     The strings "nat" and "tan" are anagrams as they can be rearranged to form each other.
+     The strings "ate", "eat", and "tea" are anagrams as they can be rearranged to form each other.
+     Example 2:
+     Input: strs = [""]
+     Output: [[""]]
+     Example 3:
+     Input: strs = ["a"]
+     Output: [["a"]]
+     Constraints:
+     1 <= strs.length <= 104
+     0 <= strs[i].length <= 100
+     strs[i] consists of lowercase English letters.
+     */
+    class GroupAnagrams {
+        static func runDemo() {
+            let strs1 = ["eat","tea","tan","ate","nat","bat"]
+            print(groupAnagrams(strs1))
+            // Possible output: [["bat"],["nat","tan"],["ate","eat","tea"]]
+
+            let strs2 = [""]
+            print(groupAnagrams(strs2)) // [[""]]
+
+            let strs3 = ["a"]
+            print(groupAnagrams(strs3)) // [["a"]]
+        }
+
+        static func groupAnagrams(_ strs: [String]) -> [[String]] {
+            var dict = [String: [String]]()
+
+            for word in strs {
+                // Sort characters to form the key
+                let key = String(word.sorted())
+                dict[key, default: []].append(word)
+            }
+
+            return Array(dict.values)
+        }
+    }
+
+    /*
+    Comparison of O() metrics (time and space):
+
+    Algorithm: Sort each string and group by sorted key
+
+    Time Complexity:
+    - Sorting each word: O(k log k), where k = length of the word
+    - For n words: O(n * k log k)
+
+    Space Complexity:
+    - Dictionary for grouping: O(n * k)
+    - Sorting uses O(k) extra space per word (Swift’s sort is not strictly i
+
+    /*
      48. Rotate Image
      Medium
      Topics
