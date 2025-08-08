@@ -31,6 +31,17 @@ class Solution {
      1 <= strs.length <= 104
      0 <= strs[i].length <= 100
      strs[i] consists of lowercase English letters.
+ ß    Comparison of O() metrics (time and space):
+
+     Algorithm: Sort each string and group by sorted key
+
+     Time Complexity:
+     - Sorting each word: O(k log k), where k = length of the word
+     - For n words: O(n * k log k)
+
+     Space Complexity:
+     - Dictionary for grouping: O(n * k)
+     - Sorting uses O(k) extra space per word (Swift’s sort is not strictly i
      */
     class GroupAnagrams {
         static func runDemo() {
@@ -57,19 +68,6 @@ class Solution {
             return Array(dict.values)
         }
     }
-
-    /*
-    Comparison of O() metrics (time and space):
-
-    Algorithm: Sort each string and group by sorted key
-
-    Time Complexity:
-    - Sorting each word: O(k log k), where k = length of the word
-    - For n words: O(n * k log k)
-
-    Space Complexity:
-    - Dictionary for grouping: O(n * k)
-    - Sorting uses O(k) extra space per word (Swift’s sort is not strictly i
 
     /*
      48. Rotate Image
