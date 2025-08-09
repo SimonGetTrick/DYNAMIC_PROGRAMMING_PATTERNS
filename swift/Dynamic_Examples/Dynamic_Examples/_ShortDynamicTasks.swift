@@ -8,6 +8,72 @@
 import Foundation
 class Solution {
     /*
+     50. Pow(x, n)
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Implement pow(x, n), which calculates x raised to the power n (i.e., xn).
+     Example 1:
+     Input: x = 2.00000, n = 10
+     Output: 1024.00000
+     Example 2:
+     Input: x = 2.10000, n = 3
+     Output: 9.26100
+     Example 3:
+     Input: x = 2.00000, n = -2
+     Output: 0.25000
+     Explanation: 2-2 = 1/22 = 1/4 = 0.25
+     Constraints:
+     -100.0 < x < 100.0
+     -231 <= n <= 231-1
+     n is an integer.
+     Either x is not zero or n > 0.
+     -104 <= xn <= 104
+     */
+    class PowXN {
+        static func runDemo() {
+            print(myPow(2.00000, 10))   // 1024.0
+            print(myPow(2.10000, 3))    // 9.261
+            print(myPow(2.00000, -2))   // 0.25
+        }
+
+        static func myPow(_ x: Double, _ n: Int) -> Double {
+            var base = x
+            var exp = n
+            if exp < 0 {
+                base = 1 / base
+                exp = -exp
+            }
+            return fastPow(base, exp)
+        }
+
+        private static func fastPow(_ x: Double, _ n: Int) -> Double {
+            if n == 0 { return 1.0 }
+            let half = fastPow(x, n / 2)
+            if n % 2 == 0 {
+                return half * half
+            } else {
+                return half * half * x
+            }
+        }
+    }
+
+    /*
+    Comparison of O() metrics (time and space):
+
+    Algorithm: Fast exponentiation (binary exponentiation)
+
+    Time Complexity:
+    - O(log n) — exponent is halved at each recursive step
+
+    Space Complexity:
+    - O(log n) due to recursion stack (can be reduced to O(1) with iterative implementation)
+
+    n = absolute value of exponent
+    */
+
+    /*
      49. Group Anagrams
      Medium
      Topics
