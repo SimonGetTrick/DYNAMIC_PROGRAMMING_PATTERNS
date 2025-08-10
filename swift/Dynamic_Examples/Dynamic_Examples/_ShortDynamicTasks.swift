@@ -8,6 +8,84 @@
 import Foundation
 class Solution {
     /*
+     51. N-Queens
+     Hard
+     Topics
+     premium lock icon
+     Companies
+     The n-queens puzzle is the problem of placing n queens on an n x n chessboard such that no two queens attack each other.
+     Given an integer n, return all distinct solutions to the n-queens puzzle. You may return the answer in any order.
+     Each solution contains a distinct board configuration of the n-queens' placement, where 'Q' and '.' both indicate a queen and an empty space, respectively.
+     Example 1:
+     Input: n = 4
+     Output: [[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]]
+     Explanation: There exist two distinct solutions to the 4-queens puzzle as shown above
+     Example 2:
+     Input: n = 1
+     Output: [["Q"]]
+     Constraints:
+     1 <= n <= 9
+     */
+    // Solve the n-queens problem and return all distinct solutions.
+    func solveNQueens(_ n: Int) -> [[String]] {
+        // result container
+        var results = [[String]]()
+        // positions[r] = column index of queen placed in row r
+        var positions = [Int](repeating: 0, count: n)
+        // All bits set for n columns (1..n bits = available mask)
+        let fullMask = (1 << n) - 1
+        
+        // Backtracking function using bitmasks:
+        // cols: occupied columns mask
+        // d1: occupied "main" diagonals mask (shifted left each row)
+        // d2: occupied "anti" diagonals mask (shifted right each row)
+        // row: current row index
+        func backtrack(_ cols: Int, _ d1: Int, _ d2: Int, _ row: Int) {
+            // If all rows are filled, convert positions -> board strings
+            if row == n {
+                var board = [String]()
+                for r in 0..<n {
+                    // build row string with 'Q' at positions[r]
+                    var rowChars = [Character](repeating: ".", count: n)
+                    rowChars[positions[r]] = "Q"
+                    board.append(String(rowChars))
+                }
+                results.append(board)
+                return
+            }
+            
+            // available positions: bits that are 1 where we can place a queen
+            var available = fullMask & ~(cols | d1 | d2)
+            
+            // iterate through all available positions
+            while available != 0 {
+                // pick lowest set bit
+                let bit = available & -available
+                // remove picked bit from available
+                available &= (available - 1)
+                
+                // column index is the number of trailing zeros
+                let col = bit.trailingZeroBitCount
+                positions[row] = col
+                
+                // place queen and move to next row
+                // shift d1 left (main diagonal), d2 right (anti diagonal)
+                backtrack(cols | bit, (d1 | bit) << 1, (d2 | bit) >> 1, row + 1)
+                
+                // backtrack: positions[row] will be overwritten on next placement
+            }
+        }
+        
+        backtrack(0, 0, 0, 0)
+        return results
+    }
+    static func demo(){
+        // Example usage:
+        let sol = Solution()
+        let examples = sol.solveNQueens(4)
+        print(examples) // prints two solutions for n = 4
+    }
+    /*
      50. Pow(x, n)
      Medium
      Topics
