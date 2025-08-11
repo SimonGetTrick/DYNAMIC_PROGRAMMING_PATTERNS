@@ -8,6 +8,61 @@
 import Foundation
 class Solution {
     /*
+     53. Maximum Subarray
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Given an integer array nums, find the subarray with the largest sum, and return its sum.
+     Example 1:
+     Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+     Output: 6
+     Explanation: The subarray [4,-1,2,1] has the largest sum 6.
+     Example 2:
+     Input: nums = [1]
+     Output: 1
+     Explanation: The subarray [1] has the largest sum 1.
+     Example 3:
+     Input: nums = [5,4,-1,7,8]
+     Output: 23
+     Explanation: The subarray [5,4,-1,7,8] has the largest sum 23.
+     Constraints:
+     1 <= nums.length <= 105
+     -104 <= nums[i] <= 104
+     Follow up: If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.     */
+    // Kadane's Algorithm
+    static func maxSubArray(_ nums: [Int]) -> Int {
+        // Initialize with the first element
+        var currentSum = nums[0]
+        var maxSum = nums[0]
+        
+        // Iterate through the rest of the array
+        for i in 1..<nums.count {
+            // Either extend the current subarray or start new from nums[i]
+            currentSum = max(nums[i], currentSum + nums[i])
+            // Update maxSum if needed
+            maxSum = max(maxSum, currentSum)
+        }
+        
+        return maxSum
+    }
+    
+    // Demo runner
+    static func demo_maxSubArray() {
+        let testCases = [
+            [-2, 1, -3, 4, -1, 2, 1, -5, 4],
+            [1],
+            [5, 4, -1, 7, 8]
+        ]
+        
+        for nums in testCases {
+            let result = maxSubArray(nums)
+            print("Input: \(nums)")
+            print("Maximum subarray sum = \(result)")
+            print("---")
+        }
+    }
+    /*
      51. N-Queens
      Hard
      Topics
