@@ -8,6 +8,91 @@
 import Foundation
 class Solution {
     /*
+     54. Spiral Matrix
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Hint
+     Given an m x n matrix, return all elements of the matrix in spiral order.
+     Example 1:
+     Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+     Output: [1,2,3,6,9,8,7,4,5]
+     Example 2:
+     Input: matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+     Output: [1,2,3,4,8,12,11,10,9,5,6,7]
+     Constraints:
+     m == matrix.length
+     n == matrix[i].length
+     1 <= m, n <= 10
+     -100 <= matrix[i][j] <= 100
+     */
+    class SpiralMatrixDemo {
+        // Return elements of the matrix in spiral order
+        static func spiralOrder(_ matrix: [[Int]]) -> [Int] {
+            var result = [Int]()
+            guard !matrix.isEmpty else { return result }
+            
+            var top = 0
+            var bottom = matrix.count - 1
+            var left = 0
+            var right = matrix[0].count - 1
+            
+            while top <= bottom && left <= right {
+                // Traverse from left to right
+                for col in left...right {
+                    result.append(matrix[top][col])
+                }
+                top += 1
+                
+                // Traverse from top to bottom
+                if top <= bottom {
+                    for row in top...bottom {
+                        result.append(matrix[row][right])
+                    }
+                    right -= 1
+                }
+                
+                // Traverse from right to left
+                if left <= right && top <= bottom {
+                    for col in stride(from: right, through: left, by: -1) {
+                        result.append(matrix[bottom][col])
+                    }
+                    bottom -= 1
+                }
+                
+                // Traverse from bottom to top
+                if top <= bottom && left <= right {
+                    for row in stride(from: bottom, through: top, by: -1) {
+                        result.append(matrix[row][left])
+                    }
+                    left += 1
+                }
+            }
+            
+            return result
+        }
+        
+        // Demo runner
+        static func demo_spiralMatrix() {
+            let testCases = [
+                [[1,2,3],[4,5,6],[7,8,9]],
+                [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+            ]
+            
+            for matrix in testCases {
+                print("Input: \(matrix)")
+                let output = spiralOrder(matrix)
+                print("Spiral order: \(output)")
+                print("---")
+            }
+        }
+    }
+
+    // Uncomment to run
+    // SpiralMatrixDemo.demo_spiralMatrix()
+
+    /*
      53. Maximum Subarray
      Medium
      Topics
