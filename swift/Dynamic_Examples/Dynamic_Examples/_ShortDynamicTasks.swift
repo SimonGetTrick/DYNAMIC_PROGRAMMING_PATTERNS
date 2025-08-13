@@ -44,19 +44,43 @@ class Solution {
             return true
         }
         
-        // Demo runner
+        // Minimum jumps to reach last index (Greedy BFS-like)
+        static func minJumps(_ nums: [Int]) -> Int {
+            if nums.count <= 1 { return 0 }
+            
+            var jumps = 0
+            var currentEnd = 0
+            var farthest = 0
+            
+            for i in 0..<nums.count - 1 {
+                farthest = max(farthest, i + nums[i])
+                if i == currentEnd {
+                    jumps += 1
+                    currentEnd = farthest
+                    if currentEnd >= nums.count - 1 { break }
+                }
+            }
+            
+            return jumps
+        }
+        
+        // Demo with visualization
         static func demo_jumpGame() {
             let testCases: [[Int]] = [
-                [2, 3, 1, 1, 4], // true
-                [3, 2, 1, 0, 4], // false
-                [0],             // true (already at last index)
-                [1, 0, 1, 0]     // false
+                [2, 3, 1, 1, 4],
+                [3, 2, 1, 0, 4],
+                [1, 0, 1, 0],
+                [0]
             ]
             
             for nums in testCases {
                 print("Input: \(nums)")
-                let result = canJump(nums)
-                print("Can reach last index? \(result)")
+                let reachable = canJump(nums)
+                print("Can reach last index? \(reachable)")
+                if reachable {
+                    let jumps = minJumps(nums)
+                    print("Minimum jumps: \(jumps)")
+                }
                 print("---")
             }
         }
