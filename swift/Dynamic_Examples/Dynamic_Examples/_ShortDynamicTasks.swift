@@ -8,6 +8,72 @@
 import Foundation
 class Solution {
     /*
+     56. Merge Intervals
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+     Example 1:
+     Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+     Output: [[1,6],[8,10],[15,18]]
+     Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+     Example 2:
+     Input: intervals = [[1,4],[4,5]]
+     Output: [[1,5]]
+     Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+     Constraints:
+     1 <= intervals.length <= 104
+     intervals[i].length == 2
+     0 <= starti <= endi <= 104
+     */
+    class MergeIntervalsDemo {
+        static func merge(_ intervals: [[Int]]) -> [[Int]] {
+            guard !intervals.isEmpty else { return [] }
+            
+            // Step 1: Sort by start time
+            let sorted = intervals.sorted { $0[0] < $1[0] }
+            
+            var merged: [[Int]] = []
+            merged.append(sorted[0])
+            
+            // Step 2: Merge intervals
+            for i in 1..<sorted.count {
+                let last = merged[merged.count - 1]
+                let current = sorted[i]
+                
+                if current[0] <= last[1] {
+                    // Overlap → merge
+                    merged[merged.count - 1][1] = max(last[1], current[1])
+                } else {
+                    // No overlap → add new
+                    merged.append(current)
+                }
+            }
+            
+            return merged
+        }
+        
+        static func demo_mergeIntervals() {
+            let tests = [
+                [[1,3],[2,6],[8,10],[15,18]],
+                [[1,4],[4,5]],
+                [[1,2],[3,4],[5,6]],
+                [[1,10],[2,3],[4,5],[6,7],[8,9]]
+            ]
+            
+            for intervals in tests {
+                print("Input: \(intervals)")
+                print("Merged: \(merge(intervals))")
+                print("---")
+            }
+        }
+    }
+
+    // Uncomment to test
+    // MergeIntervalsDemo.demo_mergeIntervals()
+
+    /*
      55. Jump Game
      Medium
      Topics
