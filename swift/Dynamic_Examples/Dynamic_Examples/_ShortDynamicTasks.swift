@@ -8,6 +8,142 @@
 import Foundation
 class Solution {
     /*
+     57. Insert Interval
+     You are given an array of non-overlapping intervals intervals where intervals[i] = [starti, endi] represent the start and the end of the ith interval and intervals is sorted in ascending order by starti. You are also given an interval newInterval = [start, end] that represents the start and end of another interval.
+     Insert newInterval into intervals such that intervals is still sorted in ascending order by starti and intervals still does not have any overlapping intervals (merge overlapping intervals if necessary).
+     Return intervals after the insertion.
+     Note that you don't need to modify intervals in-place. You can make a new array and return it.
+     Example 1:
+     Input: intervals = [[1,3],[6,9]], newInterval = [2,5]
+     Output: [[1,5],[6,9]]
+     Example 2:
+     Input: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+     Output: [[1,2],[3,10],[12,16]]
+     Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
+     Constraints:
+     0 <= intervals.length <= 104
+     intervals[i].length == 2
+     0 <= starti <= endi <= 105
+     intervals is sorted by starti in ascending order.
+     newInterval.length == 2
+     0 <= start <= end <= 105
+     */
+    class InsertIntervalDemo {
+        static func insert(_ intervals: [[Int]], _ newInterval: [Int]) -> [[Int]] {
+            var result: [[Int]] = []
+            var newInt = newInterval
+            var inserted = false
+            
+            for interval in intervals {
+                if interval[1] < newInt[0] {
+                    // Current interval ends before newInterval starts
+                    result.append(interval)
+                } else if interval[0] > newInt[1] {
+                    // Current interval starts after newInterval ends
+                    if !inserted {
+                        result.append(newInt)
+                        inserted = true
+                    }
+                    result.append(interval)
+                } else {
+                    // Overlap → merge intervals
+                    newInt[0] = min(newInt[0], interval[0])
+                    newInt[1] = max(newInt[1], interval[1])
+                }
+            }
+            
+            // If newInterval hasn't been inserted, add it at the end
+            if !inserted {
+                result.append(newInt)
+            }
+            
+            return result
+        }
+        
+        static func demo_insertInterval() {
+            let tests: [([[Int]], [Int])] = [
+                ([[1,3],[6,9]], [2,5]),
+                ([[1,2],[3,5],[6,7],[8,10],[12,16]], [4,8]),
+                ([], [5,7]),
+                ([[1,5]], [2,3]),
+                ([[1,5]], [2,7])
+            ]
+            
+            for (intervals, newInt) in tests {
+                print("Intervals: \(intervals), New: \(newInt)")
+                print("Result: \(insert(intervals, newInt))")
+                print("---")
+            }
+        }
+    }
+    //practice example for intervals
+    struct Booking {
+        var start: Date
+        var end: Date
+    }
+
+    class TimeBookingManager {
+        
+        // Insert a new booking interval into the list
+        static func insertBooking(existing: [Booking], newBooking: Booking) -> [Booking] {
+            var result = [Booking]()
+            var inserted = false
+            
+            for booking in existing {
+                // If current booking ends before new booking starts
+                if booking.end < newBooking.start {
+                    result.append(booking)
+                }
+                // If current booking starts after new booking ends
+                else if booking.start > newBooking.end {
+                    if !inserted {
+                        result.append(newBooking)
+                        inserted = true
+                    }
+                    result.append(booking)
+                }
+                // Overlap case: merge intervals
+                else {
+                    let mergedStart = min(booking.start, newBooking.start)
+                    let mergedEnd = max(booking.end, newBooking.end)
+                    let mergedBooking = Booking(start: mergedStart, end: mergedEnd)
+                    return insertBooking(existing: result + [mergedBooking] + existing.dropFirst(result.count + 1),
+                                         newBooking: mergedBooking)
+                }
+            }
+            
+            if !inserted {
+                result.append(newBooking)
+            }
+            return result
+        }
+        
+        // Demo method
+        static func runDemo() {
+            let formatter = DateFormatter()
+            formatter.dateFormat = "HH:mm"
+            
+            func t(_ str: String) -> Date { formatter.date(from: str)! }
+            
+            let existingBookings = [
+                Booking(start: t("09:00"), end: t("10:00")),
+                Booking(start: t("13:00"), end: t("14:00"))
+            ]
+            
+            let newBooking = Booking(start: t("09:30"), end: t("13:30"))
+            
+            let updated = insertBooking(existing: existingBookings, newBooking: newBooking)
+            
+            print("📅 Updated bookings:")
+            for b in updated {
+                print("\(formatter.string(from: b.start)) - \(formatter.string(from: b.end))")
+            }
+        }
+    }
+    // Uncomment to test
+    // InsertIntervalDemo.demo_insertInterval()
+
+    /*
      56. Merge Intervals
      Medium
      Topics
