@@ -8,6 +8,52 @@
 import Foundation
 class Solution {
     /*
+     58. Length of Last Word
+     Given a string s consisting of words and spaces, return the length of the last word in the string.
+     A word is a maximal substring consisting of non-space characters only.
+     Example 1:
+     Input: s = "Hello World"
+     Output: 5
+     Explanation: The last word is "World" with length 5.
+     Example 2:
+     Input: s = "   fly me   to   the moon  "
+     Output: 4
+     Explanation: The last word is "moon" with length 4.
+     Example 3:
+     Input: s = "luffy is still joyboy"
+     Output: 6
+     Explanation: The last word is "joyboy" with length 6.
+     Constraints:
+     1 <= s.length <= 104
+     s consists of only English letters and spaces ' '.
+     There will be at least one word in s.
+     */
+    class LengthOfLastWord {
+        
+        // Return the length of the last word in the string
+        static func lengthOfLastWord(_ s: String) -> Int {
+            // Trim spaces at the end, split into words
+            let words = s.trimmingCharacters(in: .whitespaces).split(separator: " ")
+            // Return length of the last word
+            return words.last?.count ?? 0
+        }
+        
+        // Demo method for testing
+        static func demo_lengthOfLastWord() {
+            let examples = [
+                "Hello World",
+                "   fly me   to   the moon  ",
+                "luffy is still joyboy"
+            ]
+            
+            for s in examples {
+                let result = lengthOfLastWord(s)
+                print("Input: \"\(s)\" → Output: \(result)")
+            }
+        }
+    }
+
+    /*
      57. Insert Interval
      You are given an array of non-overlapping intervals intervals where intervals[i] = [starti, endi] represent the start and the end of the ith interval and intervals is sorted in ascending order by starti. You are also given an interval newInterval = [start, end] that represents the start and end of another interval.
      Insert newInterval into intervals such that intervals is still sorted in ascending order by starti and intervals still does not have any overlapping intervals (merge overlapping intervals if necessary).
