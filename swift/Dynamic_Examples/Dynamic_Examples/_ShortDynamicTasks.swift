@@ -8,6 +8,63 @@
 import Foundation
 class Solution {
     /*
+     59. Spiral Matrix II
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
+     Example 1:
+     Input: n = 3
+     Output: [[1,2,3],[8,9,4],[7,6,5]]
+     Example 2:
+     Input: n = 1
+     Output: [[1]]
+     */
+    class SpiralMatrixII {
+        
+        // Generate an n x n spiral matrix
+        static func generateMatrix(_ n: Int) -> [[Int]] {
+            var matrix = Array(repeating: Array(repeating: 0, count: n), count: n)
+            
+            // Directions: right, down, left, up
+            let directions = [(0,1),(1,0),(0,-1),(-1,0)]
+            var dirIndex = 0 // start moving right
+            
+            var row = 0, col = 0
+            for num in 1...(n*n) {
+                matrix[row][col] = num
+                // Calculate next cell
+                let nextRow = row + directions[dirIndex].0
+                let nextCol = col + directions[dirIndex].1
+                
+                // Check boundaries and filled cells
+                if nextRow < 0 || nextRow >= n || nextCol < 0 || nextCol >= n || matrix[nextRow][nextCol] != 0 {
+                    dirIndex = (dirIndex + 1) % 4 // change direction
+                }
+                
+                row += directions[dirIndex].0
+                col += directions[dirIndex].1
+            }
+            
+            return matrix
+        }
+        
+        // Demo method
+        static func demo_generateMatrix() {
+            let examples = [3, 1, 4]
+            
+            for n in examples {
+                let result = generateMatrix(n)
+                print("n = \(n)")
+                for row in result {
+                    print(row)
+                }
+                print("------")
+            }
+        }
+    }
+    /*
      58. Length of Last Word
      Given a string s consisting of words and spaces, return the length of the last word in the string.
      A word is a maximal substring consisting of non-space characters only.
