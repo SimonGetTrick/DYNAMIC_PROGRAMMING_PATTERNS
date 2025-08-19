@@ -8,6 +8,77 @@
 import Foundation
 class Solution {
     /*
+     61. Rotate List
+     Given the head of a linked list, rotate the list to the right by k places.
+     Example 1:
+     Input: head = [1,2,3,4,5], k = 2
+     Output: [4,5,1,2,3]
+     Example 2:
+     Input: head = [0,1,2], k = 4
+     Output: [2,0,1]
+     Constraints:
+     The number of nodes in the list is in the range [0, 500].
+     -100 <= Node.val <= 100
+     0 <= k <= 2 * 109
+     */
+    // Definition for singly-linked list
+    class SolutionRotaterList {
+        func rotateRight(_ head: ListNode?, _ k: Int) -> ListNode? {
+            // Edge cases: empty list or single node
+            guard let head = head, head.next != nil else {
+                return head
+            }
+            
+            // Step 1: Find the length of the list
+            var length = 1
+            var tail = head
+            while tail.next != nil {
+                tail = tail.next!
+                length += 1
+            }
+            
+            // Step 2: Normalize k (avoid unnecessary full rotations)
+            let k = k % length
+            if k == 0 { return head }
+            
+            // Step 3: Make it a circular list
+            tail.next = head
+            
+            // Step 4: Find the new tail (length - k - 1 steps from start)
+            var newTail = head
+            for _ in 0..<(length - k - 1) {
+                newTail = newTail.next!
+            }
+            
+            // Step 5: New head is next of newTail
+            let newHead = newTail.next
+            newTail.next = nil // break the circle
+            
+            return newHead
+        }
+        func demo_rotateList() {
+            // Build input list [1,2,3,4,5]
+            let head = ListNode(1)
+            head.next = ListNode(2)
+            head.next?.next = ListNode(3)
+            head.next?.next?.next = ListNode(4)
+            head.next?.next?.next?.next = ListNode(5)
+            
+            let rotated = rotateRight(head, 2) // expect [4,5,1,2,3]
+            
+            // Print result
+            var node = rotated
+            var result: [Int] = []
+            while let n = node {
+                result.append(n.val)
+                node = n.next
+            }
+            print(result) // [4, 5, 1, 2, 3]
+        }
+
+    }
+
+    /*
      60. Permutation Sequence
      Hard
      Topics
