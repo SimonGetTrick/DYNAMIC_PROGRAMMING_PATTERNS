@@ -8,6 +8,54 @@
 import Foundation
 class Solution {
     /*
+     64. Minimum Path Sum
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path.
+     Note: You can only move either down or right at any point in time.
+     Example 1:
+     Input: grid = [[1,3,1],[1,5,1],[4,2,1]]
+     Output: 7
+     Explanation: Because the path 1 → 3 → 1 → 1 → 1 minimizes the sum.
+     Example 2:
+     Input: grid = [[1,2,3],[4,5,6]]
+     Output: 12
+     Constraints:
+     m == grid.length
+     n == grid[i].length
+     1 <= m, n <= 200
+     0 <= grid[i][j] <= 200
+     */
+    func minPathSum(_ grid: [[Int]]) -> Int {
+        let m = grid.count
+        let n = grid[0].count
+        
+        // Use 1D DP array to store minimum path sums for the current row
+        var dp = Array(repeating: 0, count: n)
+        
+        for i in 0..<m {
+            for j in 0..<n {
+                if i == 0 && j == 0 {
+                    // Start position
+                    dp[j] = grid[0][0]
+                } else if i == 0 {
+                    // First row → can only come from the left
+                    dp[j] = dp[j - 1] + grid[i][j]
+                } else if j == 0 {
+                    // First column → can only come from above
+                    dp[j] = dp[j] + grid[i][j]
+                } else {
+                    // Choose the minimum path between top and left
+                    dp[j] = min(dp[j], dp[j - 1]) + grid[i][j]
+                }
+            }
+        }
+        
+        return dp[n - 1]
+    }
+    /*
      63. Unique Paths II
      Medium
      Topics
