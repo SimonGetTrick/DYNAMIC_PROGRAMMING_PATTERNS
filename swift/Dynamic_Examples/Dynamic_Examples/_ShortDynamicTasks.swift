@@ -8,6 +8,84 @@
 import Foundation
 class Solution {
     /*
+     65. Valid Number
+     Hard
+     Topics
+     premium lock icon
+     Companies
+     Given a string s, return whether s is a valid number.
+     For example, all the following are valid numbers: "2", "0089", "-0.1", "+3.14", "4.", "-.9", "2e10", "-90E3", "3e+7", "+6e-1", "53.5e93", "-123.456e789", while the following are not valid numbers: "abc", "1a", "1e", "e3", "99e2.5", "--6", "-+3", "95a54e53".
+     Formally, a valid number is defined using one of the following definitions:
+     An integer number followed by an optional exponent.
+     A decimal number followed by an optional exponent.
+     An integer number is defined with an optional sign '-' or '+' followed by digits.
+     A decimal number is defined with an optional sign '-' or '+' followed by one of the following definitions:
+     Digits followed by a dot '.'.
+     Digits followed by a dot '.' followed by digits.
+     A dot '.' followed by digits.
+     An exponent is defined with an exponent notation 'e' or 'E' followed by an integer number.
+     The digits are defined as one or more digits.
+     Example 1:
+     Input: s = "0"
+     Output: true
+     Example 2:
+     Input: s = "e"
+     Output: false
+     Example 3:
+     Input: s = "."
+     Output: false
+     Constraints:
+     1 <= s.length <= 20
+     s consists of only English letters (both uppercase and lowercase), digits (0-9), plus '+', minus '-', or dot '.'.
+     */
+    
+    func isNumberRegEx(_ s: String) -> Bool {
+        let pattern = #"^[+-]?((\d+(\.\d*)?)|(\.\d+))(e[+-]?\d+)?$"#
+        let regex = try! NSRegularExpression(pattern: pattern, options: [.caseInsensitive])
+        let range = NSRange(location: 0, length: s.utf16.count)
+        return regex.firstMatch(in: s, options: [], range: range) != nil
+    }
+    func isNumber(_ s: String) -> Bool {
+        let s = s.trimmingCharacters(in: .whitespaces)
+        var hasNum = false
+        var hasDot = false
+        var hasExp = false
+        
+        let chars = Array(s)
+        
+        for i in 0..<chars.count {
+            let c = chars[i]
+            
+            if c.isNumber {
+                hasNum = true
+            } else if c == "." {
+                // Dot is allowed only if there's no dot and no exponent yet
+                if hasDot || hasExp {
+                    return false
+                }
+                hasDot = true
+            } else if c == "e" || c == "E" {
+                // Exponent is allowed only if there's a number before and not seen before
+                if hasExp || !hasNum {
+                    return false
+                }
+                hasExp = true
+                hasNum = false // Must have a number after exponent
+            } else if c == "+" || c == "-" {
+                // Sign is allowed only at the start OR right after e/E
+                if i != 0 && chars[i - 1] != "e" && chars[i - 1] != "E" {
+                    return false
+                }
+            } else {
+                // Any other symbol is invalid
+                return false
+            }
+        }
+        
+        return hasNum
+    }
+    
+    /*
      64. Minimum Path Sum
      Medium
      Topics
