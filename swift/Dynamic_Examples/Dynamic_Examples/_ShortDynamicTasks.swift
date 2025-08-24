@@ -7,6 +7,102 @@
 
 import Foundation
 class Solution {
+    /* 68. Text Justification
+     Given an array of strings words and a width maxWidth, format the text such that each line has exactly maxWidth characters and is fully (left and right) justified.
+     You should pack your words in a greedy approach; that is, pack as many words as you can in each line. Pad extra spaces ' ' when necessary so that each line has exactly maxWidth characters.
+     Extra spaces between words should be distributed as evenly as possible. If the number of spaces on a line does not divide evenly between words, the empty slots on the left will be assigned more spaces than the slots on the right.
+     For the last line of text, it should be left-justified, and no extra space is inserted between words.
+     Note:
+     A word is defined as a character sequence consisting of non-space characters only.
+     Each word's length is guaranteed to be greater than 0 and not exceed maxWidth.
+     The input array words contains at least one word.
+     Example 1:
+     Input: words = ["This", "is", "an", "example", "of", "text", "justification."], maxWidth = 16
+     Output:
+     [
+        "This    is    an",
+        "example  of text",
+        "justification.  "
+     ]
+     Example 2:
+     Input: words = ["What","must","be","acknowledgment","shall","be"], maxWidth = 16
+     Output:
+     [
+       "What   must   be",
+       "acknowledgment  ",
+       "shall be        "
+     ]
+     Explanation: Note that the last line is "shall be    " instead of "shall     be", because the last line must be left-justified instead of fully-justified.
+     Note that the second line is also left-justified because it contains only one word.
+     Example 3:
+     Input: words = ["Science","is","what","we","understand","well","enough","to","explain","to","a","computer.","Art","is","everything","else","we","do"], maxWidth = 20
+     Output:
+     [
+       "Science  is  what we",
+       "understand      well",
+       "enough to explain to",
+       "a  computer.  Art is",
+       "everything  else  we",
+       "do                  "
+     ]
+     Constraints:
+     1 <= words.length <= 300
+     1 <= words[i].length <= 20
+     words[i] consists of only English letters and symbols.
+     1 <= maxWidth <= 100
+     words[i].length <= maxWidth
+     */
+    func fullJustify(_ words: [String], _ maxWidth: Int) -> [String] {
+        var result = [String]()
+        var index = 0
+        
+        while index < words.count {
+            var lineLen = words[index].count
+            var last = index + 1
+            
+            // Find the last word that can fit in the current line
+            while last < words.count {
+                if lineLen + 1 + words[last].count > maxWidth { // +1 for a space
+                    break
+                }
+                lineLen += 1 + words[last].count
+                last += 1
+            }
+            
+            var line = ""
+            let numWords = last - index
+            let numSpaces = maxWidth - lineLen + (numWords - 1) // spaces to distribute
+            
+            // Case 1: Last line OR single-word line → left-justified
+            if last == words.count || numWords == 1 {
+                line = words[index]
+                for i in index + 1..<last {
+                    line += " " + words[i]
+                }
+                // Pad remaining spaces at the end
+                let remaining = maxWidth - line.count
+                line += String(repeating: " ", count: remaining)
+            } else {
+                // Case 2: Fully justified line
+                let totalSpaces = maxWidth - (lineLen - (numWords - 1)) // total spaces
+                let spacesBetween = totalSpaces / (numWords - 1)
+                var extraSpaces = totalSpaces % (numWords - 1)
+                
+                line = words[index]
+                for i in index + 1..<last {
+                    // Distribute extra spaces to the left slots first
+                    let spaces = spacesBetween + (extraSpaces > 0 ? 1 : 0)
+                    line += String(repeating: " ", count: spaces) + words[i]
+                    if extraSpaces > 0 { extraSpaces -= 1 }
+                }
+            }
+            
+            result.append(line)
+            index = last
+        }
+        
+        return result
+    }
     /*
      65. Valid Number
      Hard
