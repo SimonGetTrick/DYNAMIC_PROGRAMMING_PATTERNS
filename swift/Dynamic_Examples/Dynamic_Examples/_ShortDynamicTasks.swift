@@ -8,6 +8,89 @@
 import Foundation
 class Solution {
     /*
+     73. Set Matrix Zeroes
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Hint
+     Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
+     You must do it in place.
+     Example 1:
+     Input: matrix = [  [1,1,1],
+                        [1,0,1],
+                        [1,1,1]]
+     
+     Output: [          [1,0,1],
+                        [0,0,0],
+                        [1,0,1]]
+     Example 2:
+     Input: matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
+     Output: [[0,0,0,0],[0,4,5,0],[0,3,1,0]]
+     Constraints:
+     m == matrix.length
+     n == matrix[0].length
+     1 <= m, n <= 200
+     -231 <= matrix[i][j] <= 231 - 1
+     */
+    func setZeroes(_ matrix: inout [[Int]]) {
+        let m = matrix.count
+        let n = matrix[0].count
+        
+        var firstRowZero = false
+        var firstColZero = false
+        
+        // Check if first row needs to be zeroed
+        for j in 0..<n {
+            if matrix[0][j] == 0 {
+                firstRowZero = true
+                break
+            }
+        }
+        
+        // Check if first column needs to be zeroed
+        for i in 0..<m {
+            if matrix[i][0] == 0 {
+                firstColZero = true
+                break
+            }
+        }
+        
+        // Use first row and column as markers
+        for i in 1..<m {
+            for j in 1..<n {
+                if matrix[i][j] == 0 {
+                    matrix[i][0] = 0
+                    matrix[0][j] = 0
+                }
+            }
+        }
+        
+        // Set zeroes based on markers
+        for i in 1..<m {
+            for j in 1..<n {
+                if matrix[i][0] == 0 || matrix[0][j] == 0 {
+                    matrix[i][j] = 0
+                }
+            }
+        }
+        
+        // Zero out first row if needed
+        if firstRowZero {
+            for j in 0..<n {
+                matrix[0][j] = 0
+            }
+        }
+        
+        // Zero out first column if needed
+        if firstColZero {
+            for i in 0..<m {
+                matrix[i][0] = 0
+            }
+        }
+    }
+    
+    /*
      71. Simplify Path
      Medium
      Topics
@@ -142,7 +225,7 @@ class Solution {
             
             var line = ""
             let numWords = last - index
-            let numSpaces = maxWidth - lineLen + (numWords - 1) // spaces to distribute
+            _ = maxWidth - lineLen + (numWords - 1) // spaces to distribute
             
             // Case 1: Last line OR single-word line → left-justified
             if last == words.count || numWords == 1 {
