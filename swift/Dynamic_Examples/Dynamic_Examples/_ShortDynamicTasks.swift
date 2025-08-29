@@ -8,6 +8,80 @@
 import Foundation
 class Solution {
     /*
+     76. Minimum Window Substring
+     Given two strings s and t of lengths m and n respectively, return the minimum window substring of s such that every character in t (including duplicates) is included in the window. If there is no such substring, return the empty string "".
+     The testcases will be generated such that the answer is unique.
+     Example 1:
+     Input: s = "ADOBECODEBANC", t = "ABC"
+     Output: "BANC"
+     Explanation: The minimum window substring "BANC" includes 'A', 'B', and 'C' from string t.
+     Example 2:
+     Input: s = "a", t = "a"
+     Output: "a"
+     Explanation: The entire string s is the minimum window.
+     Example 3:
+     Input: s = "a", t = "aa"
+     Output: ""
+     Explanation: Both 'a's from t must be included in the window.
+     Since the largest window of s only has one 'a', return empty string.
+     Constraints:
+     m == s.length
+     n == t.length
+     1 <= m, n <= 105
+     s and t consist of uppercase and lowercase English letters.
+     Follow up: Could you find an algorithm that runs in O(m + n) time?
+     */
+    func minWindow(_ s: String, _ t: String) -> String {
+        // Quick check: if either string is empty, return empty result
+        if s.isEmpty || t.isEmpty { return "" }
+        
+        let sArr = Array(s) // Convert string to array for O(1) indexing
+        var need: [Character: Int] = [:] // Dictionary to track required characters
+        
+        // Count how many times each character is needed from t
+        for ch in t {
+            need[ch, default: 0] += 1
+        }
+        
+        var missing = t.count // Total number of characters we still need to match
+        var left = 0          // Left boundary of the sliding window
+        var start = 0         // Start index of the minimum window
+        var end = 0           // End index (exclusive) of the minimum window
+        
+        // Expand the right boundary of the window
+        for right in 0..<sArr.count {
+            let char = sArr[right]
+            
+            // If this char is still needed, reduce the missing counter
+            if let count = need[char], count > 0 {
+                missing -= 1
+            }
+            // Decrease count of the current character in the need dictionary
+            need[char, default: 0] -= 1
+            
+            // When we have matched all required characters
+            while missing == 0 {
+                // Update the minimum window if it's smaller than the previous one
+                if end == 0 || right - left + 1 < end - start {
+                    start = left
+                    end = right + 1 // right is inclusive, so +1 for slicing
+                }
+                
+                // Try to shrink the window from the left
+                let leftChar = sArr[left]
+                need[leftChar, default: 0] += 1
+                // If this char is required and now missing again, increase missing
+                if let count = need[leftChar], count > 0 {
+                    missing += 1
+                }
+                left += 1
+            }
+        }
+        
+        // If no valid window was found, return empty string
+        return end == 0 ? "" : String(sArr[start..<end])
+    }
+    /*
      75. Sort Colors Medium Topics premium lock icon Companies Hint Given an array nums with n objects colored red, white, or blue, sort them in-place so that objects of the same color are adjacent, with the colors in the order red, white, and blue. We will use the integers 0, 1, and 2 to represent the color red, white, and blue, respectively. You must solve this problem without using the library's sort function. Example 1: Input: nums = [2,0,2,1,1,0] Output: [0,0,1,1,2,2] Example 2: Input: nums = [2,0,1] Output: [0,1,2] Constraints: n == nums.length 1 <= n <= 300 nums[i] is either 0, 1, or 2. Follow up: Could you come up with a one-pass algorithm using only constant extra space?
      */
     func sortColors(_ nums: inout [Int]) {
