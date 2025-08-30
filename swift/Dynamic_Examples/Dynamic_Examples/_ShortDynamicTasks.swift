@@ -8,6 +8,36 @@
 import Foundation
 class Solution {
     /*
+     77. Combinations Medium Topics premium lock icon Companies Given two integers n and k, return all possible combinations of k numbers chosen from the range [1, n]. You may return the answer in any order. Example 1: Input: n = 4, k = 2 Output: [[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]] Explanation: There are 4 choose 2 = 6 total combinations. Note that combinations are unordered, i.e., [1,2] and [2,1] are considered to be the same combination. Example 2: Input: n = 1, k = 1 Output: [[1]] Explanation: There is 1 choose 1 = 1 total combination.
+     */
+    func combine(_ n: Int, _ k: Int) -> [[Int]] {
+        var result = [[Int]]()   // Final list of combinations
+        var combination = [Int]() // Temporary combination
+        
+        func backtrack(_ start: Int) {
+            // If the current combination has exactly k numbers → add it to result
+            if combination.count == k {
+                result.append(combination)
+                return
+            }
+            
+            // Iterate through numbers from "start" to "n"
+            for i in start...n {
+                // Choose number i
+                combination.append(i)
+                
+                // Recurse with the next number
+                backtrack(i + 1)
+                
+                // Backtrack: remove the last chosen number
+                combination.removeLast()
+            }
+        }
+        
+        backtrack(1)  // Start building combinations from 1
+        return result
+    }
+    /*
      76. Minimum Window Substring
      Given two strings s and t of lengths m and n respectively, return the minimum window substring of s such that every character in t (including duplicates) is included in the window. If there is no such substring, return the empty string "".
      The testcases will be generated such that the answer is unique.
