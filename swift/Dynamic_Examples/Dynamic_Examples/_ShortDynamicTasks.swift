@@ -8,6 +8,125 @@
 import Foundation
 class Solution {
     /*
+     79. Word Search
+     Given an m x n grid of characters board and a string word, return true if word exists in the grid.
+     The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.
+     Example 1:
+     Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
+     Output: true
+     Example 2:
+     Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"
+     Output: true
+     Example 3:
+     Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
+     Output: false
+     Constraints:
+     m == board.length
+     n = board[i].length
+     1 <= m, n <= 6
+     1 <= word.length <= 15
+     board and word consists of only lowercase and uppercase English letters.
+     Follow up: Could you use search pruning to make your solution faster with a larger board?
+     Method    Time Complexity    Space Complexity    Advantages    Disadvantages
+     Recursive DFS    O(m * n * 4^L)    O(L)    Clean, easy to read    May hit recursion limit
+     Iterative DFS    O(m * n * 4^L)    O(L)    No stack overflow    Code is harder
+     */
+    // MARK: - Recursive DFS solution (Backtracking)
+    func wordSearch_recursive(_ board: [[Character]], _ word: String) -> Bool {
+        var board = board
+        let rows = board.count
+        let cols = board[0].count
+        let wordArray = Array(word)
+        
+        // Recursive DFS function
+        func dfs(_ row: Int, _ col: Int, _ index: Int) -> Bool {
+            // Base case: we found the whole word
+            if index == wordArray.count {
+                return true
+            }
+            
+            // Out of bounds OR current char does not match
+            if row < 0 || col < 0 || row >= rows || col >= cols || board[row][col] != wordArray[index] {
+                return false
+            }
+            
+            // Save the current character and mark the cell as visited
+            let temp = board[row][col]
+            board[row][col] = "#"
+            
+            // Explore four possible directions
+            let found = dfs(row + 1, col, index + 1) ||
+                        dfs(row - 1, col, index + 1) ||
+                        dfs(row, col + 1, index + 1) ||
+                        dfs(row, col - 1, index + 1)
+            
+            // Backtrack: restore the character
+            board[row][col] = temp
+            return found
+        }
+        
+        // Try to start DFS from every cell
+        for r in 0..<rows {
+            for c in 0..<cols {
+                if dfs(r, c, 0) {
+                    return true
+                }
+            }
+        }
+        
+        return false
+    }
+
+    // MARK: - Iterative DFS solution (Using stack)
+    func wordSearch_iterative(_ board: [[Character]], _ word: String) -> Bool {
+        let rows = board.count
+        let cols = board[0].count
+        let wordArray = Array(word)
+        
+        // Stack stores: (row, col, index, visitedSet)
+        typealias State = (Int, Int, Int, Set<[Int]>)
+        
+        for r in 0..<rows {
+            for c in 0..<cols {
+                // Start DFS only if the first character matches
+                if board[r][c] == wordArray[0] {
+                    var stack: [State] = [(r, c, 0, [[r, c]])]
+                    
+                    while !stack.isEmpty {
+                        let (row, col, index, visited) = stack.removeLast()
+                        
+                        // If we reached the last character, return true
+                        if index == wordArray.count - 1 {
+                            return true
+                        }
+                        
+                        // Try four possible directions
+                        let directions = [(1,0), (-1,0), (0,1), (0,-1)]
+                        
+                        for (dr, dc) in directions {
+                            let nr = row + dr
+                            let nc = col + dc
+                            
+                            // Check bounds, visited status, and next character match
+                            if nr >= 0 && nr < rows &&
+                               nc >= 0 && nc < cols &&
+                               !visited.contains([nr, nc]) &&
+                               board[nr][nc] == wordArray[index + 1] {
+                                
+                                var newVisited = visited
+                                newVisited.insert([nr, nc])
+                                stack.append((nr, nc, index + 1, newVisited))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return false
+    }
+
+    /*
      78. Subsets Medium Topics premium lock icon Companies Given an integer array nums of unique elements, return all possible subsets (the power set). The solution set must not contain duplicate subsets. Return the solution in any order. Example 1: Input: nums = [1,2,3] Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]] Example 2: Input: nums = [0] Output: [[],[0]] Constraints: 1 <= nums.length <= 10 -10 <= nums[i] <= 10 All the numbers of nums are unique.
      */
     func subsets(_ nums: [Int]) -> [[Int]] {
