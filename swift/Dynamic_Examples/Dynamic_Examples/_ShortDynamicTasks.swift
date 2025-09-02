@@ -8,6 +8,84 @@
 import Foundation
 class Solution {
     /*
+     84. Largest Rectangle in Histogram
+     Hard
+     Topics
+     premium lock icon
+     Companies
+     Given an array of integers heights representing the histogram's bar height where the width of each bar is 1, return the area of the largest rectangle in the histogram.
+     Example 1:
+     Input: heights = [2,1,5,6,2,3]
+     Output: 10
+     Explanation: The above is a histogram where width of each bar is 1.
+     The largest rectangle is shown in the red area, which has an area = 10 units.
+     Example 2:
+     Input: heights = [2,4]
+     Output: 4
+     Constraints:
+     1 <= heights.length <= 105
+     0 <= heights[i] <= 104
+     */
+    class LargestRectangleHistogram {
+        
+        // MARK: - Brute Force Solution
+        // Time Complexity: O(n^2)
+        // Space Complexity: O(1)
+        static func largestRectangleAreaBruteForce(_ heights: [Int]) -> Int {
+            let n = heights.count
+            var maxArea = 0
+            
+            // For each bar, expand left and right to find the largest rectangle
+            for i in 0..<n {
+                let height = heights[i]
+                var left = i
+                var right = i
+                
+                // Expand to the left while height is greater or equal
+                while left > 0 && heights[left - 1] >= height {
+                    left -= 1
+                }
+                
+                // Expand to the right while height is greater or equal
+                while right < n - 1 && heights[right + 1] >= height {
+                    right += 1
+                }
+                
+                let width = right - left + 1
+                maxArea = max(maxArea, height * width)
+            }
+            
+            return maxArea
+        }
+        
+        // MARK: - Optimal Stack Solution
+        // Time Complexity: O(n)
+        // Space Complexity: O(n)
+        static func largestRectangleAreaStack(_ heights: [Int]) -> Int {
+            var stack: [Int] = []    // Will store indices of increasing heights
+            var maxArea = 0
+            let n = heights.count
+            
+            // Iterate through all bars + 1 extra for cleanup
+            for i in 0...n {
+                let currHeight = i < n ? heights[i] : 0  // Sentinel height at the end
+                
+                // Pop from stack while current height is smaller than top of stack
+                while let last = stack.last, currHeight < heights[last] {
+                    let height = heights[stack.removeLast()]
+                    let width = stack.isEmpty ? i : i - stack.last! - 1
+                    maxArea = max(maxArea, height * width)
+                }
+                
+                // Push current index into stack
+                stack.append(i)
+            }
+            
+            return maxArea
+        }
+    }
+
+    /*
      79. Word Search
      Given an m x n grid of characters board and a string word, return true if word exists in the grid.
      The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.
