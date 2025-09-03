@@ -8,6 +8,132 @@
 import Foundation
 class Solution {
     /*
+     85. Maximal Rectangle     Hard
+     Given a rows x cols binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+     Example 1:
+     Input: matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+     Output: 6
+     Explanation: The maximal rectangle is shown in the above picture.
+     Example 2:
+     Input: matrix = [["0"]]
+     Output: 0
+     Example 3:
+     Input: matrix = [["1"]]
+     Output: 1
+     Constraints:
+     rows == matrix.length
+     cols == matrix[i].length
+     1 <= row, cols <= 200
+     matrix[i][j] is '0' or '1'.
+     */
+    class MaximalRectangleSolver {
+        
+        // MARK: - Brute Force Solution
+        // Time Complexity: O((m*n)^2)
+        // Space Complexity: O(1)
+        static func maximalRectangleBruteForce(_ matrix: [[Character]]) -> Int {
+            let rows = matrix.count
+            let cols = matrix[0].count
+            var maxArea = 0
+            
+            // Iterate over all top-left corners of rectangles
+            for i in 0..<rows {
+                for j in 0..<cols {
+                    // If we encounter '1', try to expand rectangle
+                    if matrix[i][j] == "1" {
+                        var minWidth = Int.max
+                        for k in i..<rows {
+                            if matrix[k][j] == "0" {
+                                break
+                            }
+                            
+                            // Calculate current row width of consecutive '1's
+                            var width = 0
+                            var col = j
+                            while col < cols && matrix[k][col] == "1" {
+                                width += 1
+                                col += 1
+                            }
+                            
+                            minWidth = min(minWidth, width)
+                            let height = k - i + 1
+                            maxArea = max(maxArea, minWidth * height)
+                        }
+                    }
+                }
+            }
+            
+            return maxArea
+        }
+        
+        // MARK: - Optimal Stack Solution (Histogram Approach)
+        // Time Complexity: O(m * n)
+        // Space Complexity: O(n)
+        static func maximalRectangle(_ matrix: [[Character]]) -> Int {
+            guard !matrix.isEmpty else { return 0 }
+            
+            let rows = matrix.count
+            let cols = matrix[0].count
+            
+            // Heights array for histogram per row
+            var heights = Array(repeating: 0, count: cols)
+            var maxArea = 0
+            
+            for i in 0..<rows {
+                // Build histogram heights
+                for j in 0..<cols {
+                    heights[j] = matrix[i][j] == "1" ? heights[j] + 1 : 0
+                }
+                
+                // Apply Largest Rectangle in Histogram algorithm
+                maxArea = max(maxArea, largestRectangleInHistogram(heights))
+            }
+            
+            return maxArea
+        }
+        
+        // Helper function: Largest Rectangle in Histogram using stack
+        private static func largestRectangleInHistogram(_ heights: [Int]) -> Int {
+            var stack: [Int] = []
+            var maxArea = 0
+            let n = heights.count
+            
+            for i in 0...n {
+                let currentHeight = i < n ? heights[i] : 0
+                
+                // Process bars while current bar is lower than the top of the stack
+                while let last = stack.last, currentHeight < heights[last] {
+                    let height = heights[stack.removeLast()]
+                    let width = stack.isEmpty ? i : i - stack.last! - 1
+                    maxArea = max(maxArea, height * width)
+                }
+                
+                stack.append(i)
+            }
+            
+            return maxArea
+        }
+    }
+
+    func demo_MximalRectagle() {
+        let matrix1: [[Character]] = [
+            ["1","0","1","0","0"],
+            ["1","0","1","1","1"],
+            ["1","1","1","1","1"],
+            ["1","0","0","1","0"]
+        ]
+
+        print(MaximalRectangleSolver.maximalRectangleBruteForce(matrix1)) // 6
+        print(MaximalRectangleSolver.maximalRectangle(matrix1))          // 6
+
+        let matrix2: [[Character]] = [["0"]]
+        print(MaximalRectangleSolver.maximalRectangle(matrix2))          // 0
+
+        let matrix3: [[Character]] = [["1"]]
+        print(MaximalRectangleSolver.maximalRectangle(matrix3))          // 1
+    }
+    
+    /*
      84. Largest Rectangle in Histogram
      Hard
      Topics
