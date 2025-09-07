@@ -7,78 +7,153 @@
 
 import Foundation
 class Solution {
-/*
-90. Subsets II
-Medium
-Topics
-premium lock icon
-Companies
-Given an integer array nums that may contain duplicates, return all possible subsets (the power set).
-
-The solution set must not contain duplicate subsets. Return the solution in any order.
-
- 
-
-Example 1:
-
-Input: nums = [1,2,2]
-Output: [[],[1],[1,2],[1,2,2],[2],[2,2]]
-Example 2:
-
-Input: nums = [0]
-Output: [[],[0]]
- 
-
-Constraints:
-
-1 <= nums.length <= 10
--10 <= nums[i] <= 10
- 
-
-Accepted
-1,304,634/2.2M
-Acceptance Rate
-60.1%
-Topics
-icon
-Companies
-Similar Questions
-Discussion (152)
-*/
-class SubsetsII {
-    /// Generates all unique subsets of nums, even when duplicates exist.
-    static func subsetsWithDup(_ nums: [Int]) -> [[Int]] {
-        var result: [[Int]] = []
-        var subset: [Int] = []
-        let sortedNums = nums.sorted()
-        
-        func dfs(_ start: Int) {
-            // Add current subset to the result
-            result.append(subset)
+    /*
+     91. Decode Ways
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     You have intercepted a secret message encoded as a string of numbers. The message is decoded via the following mapping:
+     "1" -> 'A'
+     "2" -> 'B'
+     ...
+     "25" -> 'Y'
+     "26" -> 'Z'
+     However, while decoding the message, you realize that there are many different ways you can decode the message because some codes are contained in other codes ("2" and "5" vs "25").
+     For example, "11106" can be decoded into:
+     "AAJF" with the grouping (1, 1, 10, 6)
+     "KJF" with the grouping (11, 10, 6)
+     The grouping (1, 11, 06) is invalid because "06" is not a valid code (only "6" is valid).
+     Note: there may be strings that are impossible to decode.
+     Given a string s containing only digits, return the number of ways to decode it. If the entire string cannot be decoded in any valid way, return 0.
+     The test cases are generated so that the answer fits in a 32-bit integer.
+     Example 1:
+     Input: s = "12"
+     Output: 2
+     Explanation:
+     "12" could be decoded as "AB" (1 2) or "L" (12).
+     Example 2:
+     Input: s = "226"
+     Output: 3
+     Explanation:
+     "226" could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
+     Example 3:
+     Input: s = "06"
+     Output: 0
+     Explanation:
+     "06" cannot be mapped to "F" because of the leading zero ("6" is different from "06"). In this case, the string is not a valid encoding, so return 0.
+     Constraints:
+     1 <= s.length <= 100
+     s contains only digits and may contain leading zero(s).
+     */
+    class DecodeWays {
+        /// Returns the number of ways to decode the given string using mapping 1 -> 'A' ... 26 -> 'Z'
+        static func numDecodings(_ s: String) -> Int {
+            let chars = Array(s)
+            let n = chars.count
             
-            // Explore further numbers
-            for i in start..<sortedNums.count {
-                // Skip duplicates: if current num equals previous AND previous was not included
-                if i > start && sortedNums[i] == sortedNums[i - 1] {
-                    continue
+            // If the string is empty or starts with '0', it's invalid
+            if n == 0 || chars[0] == "0" {
+                return 0
+            }
+            
+            // DP array to store decoding counts
+            var dp = Array(repeating: 0, count: n + 1)
+            
+            // Base cases
+            dp[0] = 1 // Empty string
+            dp[1] = 1 // First character is valid since it's not zero
+            
+            // Fill dp table
+            for i in 2...n {
+                // Check single digit
+                if chars[i - 1] != "0" {
+                    dp[i] += dp[i - 1]
                 }
                 
-                // Choose the current number
-                subset.append(sortedNums[i])
-                
-                // Recurse with next index
-                dfs(i + 1)
-                
-                // Backtrack: remove last added number
-                subset.removeLast()
+                // Check two digits
+                let twoDigit = Int(String(chars[i - 2...i - 1]))!
+                if twoDigit >= 10 && twoDigit <= 26 {
+                    dp[i] += dp[i - 2]
+                }
             }
+            
+            return dp[n]
         }
-        
-        dfs(0)
-        return result
     }
-}
 
+    /*
+     90. Subsets II
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Given an integer array nums that may contain duplicates, return all possible subsets (the power set).
+     
+     The solution set must not contain duplicate subsets. Return the solution in any order.
+     
+     
+     
+     Example 1:
+     
+     Input: nums = [1,2,2]
+     Output: [[],[1],[1,2],[1,2,2],[2],[2,2]]
+     Example 2:
+     
+     Input: nums = [0]
+     Output: [[],[0]]
+     
+     
+     Constraints:
+     
+     1 <= nums.length <= 10
+     -10 <= nums[i] <= 10
+     
+     
+     Accepted
+     1,304,634/2.2M
+     Acceptance Rate
+     60.1%
+     Topics
+     icon
+     Companies
+     Similar Questions
+     Discussion (152)
+     */
+    class SubsetsII {
+        /// Generates all unique subsets of nums, even when duplicates exist.
+        static func subsetsWithDup(_ nums: [Int]) -> [[Int]] {
+            var result: [[Int]] = []
+            var subset: [Int] = []
+            let sortedNums = nums.sorted()
+            
+            func dfs(_ start: Int) {
+                // Add current subset to the result
+                result.append(subset)
+                
+                // Explore further numbers
+                for i in start..<sortedNums.count {
+                    // Skip duplicates: if current num equals previous AND previous was not included
+                    if i > start && sortedNums[i] == sortedNums[i - 1] {
+                        continue
+                    }
+                    
+                    // Choose the current number
+                    subset.append(sortedNums[i])
+                    
+                    // Recurse with next index
+                    dfs(i + 1)
+                    
+                    // Backtrack: remove last added number
+                    subset.removeLast()
+                }
+            }
+            
+            dfs(0)
+            return result
+        }
+    }
+    
     /*
      89. Gray Code Medium Topics premium lock icon Companies An n-bit gray code sequence is a sequence of 2n integers where: Every integer is in the inclusive range [0, 2n - 1], The first integer is 0, An integer appears no more than once in the sequence, The binary representation of every pair of adjacent integers differs by exactly one bit, and The binary representation of the first and last integers differs by exactly one bit. Given an integer n, return any valid n-bit gray code sequence. Example 1: Input: n = 2 Output: [0,1,3,2] Explanation: The binary representation of [0,1,3,2] is [00,01,11,10]. - 00 and 01 differ by one bit - 01 and 11 differ by one bit - 11 and 10 differ by one bit - 10 and 00 differ by one bit [0,2,3,1] is also a valid gray code sequence, whose binary representation is [00,10,11,01]. - 00 and 10 differ by one bit - 10 and 11 differ by one bit - 11 and 01 differ by one bit - 01 and 00 differ by one bit Example 2: Input: n = 1 Output: [0,1] Constraints: 1 <= n <= 16
      */
