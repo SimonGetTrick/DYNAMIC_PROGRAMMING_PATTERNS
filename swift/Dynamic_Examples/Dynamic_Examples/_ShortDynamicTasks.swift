@@ -8,6 +8,70 @@
 import Foundation
 class Solution {
     /*
+     93. Restore IP Addresses
+     A valid IP address consists of exactly four integers separated by single dots. Each integer is between 0 and 255 (inclusive) and cannot have leading zeros.
+
+     For example, "0.1.2.201" and "192.168.1.1" are valid IP addresses, but "0.011.255.245", "192.168.1.312" and "192.168@1.1" are invalid IP addresses.
+     Given a string s containing only digits, return all possible valid IP addresses that can be formed by inserting dots into s. You are not allowed to reorder or remove any digits in s. You may return the valid IP addresses in any order.
+     Example 1:
+     Input: s = "25525511135"
+     Output: ["255.255.11.135","255.255.111.35"]
+     Example 2:
+     Input: s = "0000"
+     Output: ["0.0.0.0"]
+     Example 3:
+     Input: s = "101023"
+     Output: ["1.0.10.23","1.0.102.3","10.1.0.23","10.10.2.3","101.0.2.3"]
+     Constraints:
+     1 <= s.length <= 20
+     s consists of digits only.
+     */
+    class RestoreIPAddresses {
+        /// Restores all possible valid IP addresses from the given string
+        static func restoreIpAddresses(_ s: String) -> [String] {
+            var result = [String]()
+            let chars = Array(s)
+            let n = chars.count
+            
+            func backtrack(_ start: Int, _ path: [String]) {
+                // If we already have 4 parts and reached the end -> valid IP
+                if path.count == 4 {
+                    if start == n {
+                        result.append(path.joined(separator: "."))
+                    }
+                    return
+                }
+                
+                // If there are not enough or too many chars left, prune search
+                let remaining = n - start
+                let minNeeded = 4 - path.count
+                if remaining < minNeeded || remaining > minNeeded * 3 {
+                    return
+                }
+                
+                // Try segments of length 1 to 3
+                for len in 1...3 {
+                    if start + len > n { break }
+                    let substring = String(chars[start..<start + len])
+                    
+                    // Skip segments with leading zero unless it's "0"
+                    if substring.hasPrefix("0") && substring.count > 1 {
+                        continue
+                    }
+                    
+                    // Skip segments greater than 255
+                    if let value = Int(substring), value <= 255 {
+                        backtrack(start + len, path + [substring])
+                    }
+                }
+            }
+            
+            backtrack(0, [])
+            return result
+        }
+    }
+
+    /*
      91. Decode Ways
      Medium
      Topics
