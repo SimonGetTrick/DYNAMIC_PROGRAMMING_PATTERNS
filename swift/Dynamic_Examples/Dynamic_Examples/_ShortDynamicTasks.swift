@@ -8,6 +8,61 @@
 import Foundation
 class Solution {
     /*
+     95. Unique Binary Search Trees II
+     Given an integer n, return all the structurally unique BST's (binary search trees), which has exactly n nodes of unique values from 1 to n. Return the answer in any order.
+     Example 1:
+     Input: n = 3
+     Output: [[1,null,2,null,3],[1,null,3,2],[2,1,3],[3,1,null,null,2],[3,2,null,1]]
+     Example 2:
+     Input: n = 1
+     Output: [[1]]
+     */
+    class UniqueBSTGenerator {
+        // Public function that returns all unique BSTs for given n
+        static func generateTrees(_ n: Int) -> [TreeNode?] {
+            if n == 0 { return [] } // Edge case
+            var memo = [String: [TreeNode?]]()  // Memoization cache
+            return buildTrees(1, n, &memo)
+        }
+
+        // Recursive function to build BSTs for range [start...end]
+        private static func buildTrees(_ start: Int, _ end: Int, _ memo: inout [String: [TreeNode?]]) -> [TreeNode?] {
+            let key = "\(start)-\(end)"
+            if let cached = memo[key] { return cached }  // Use cached result if exists
+
+            var result = [TreeNode?]()
+
+            // Base case: empty subtree
+            if start > end {
+                result.append(nil)
+                memo[key] = result
+                return result
+            }
+
+            // Choose root for each number in range
+            for rootVal in start...end {
+                // Recursively build all possible left and right subtrees
+                let leftTrees = buildTrees(start, rootVal - 1, &memo)
+                let rightTrees = buildTrees(rootVal + 1, end, &memo)
+
+                // Combine left and right subtrees with current root
+                for left in leftTrees {
+                    for right in rightTrees {
+                        let root = TreeNode(rootVal)
+                        root.left = left
+                        root.right = right
+                        result.append(root)
+                    }
+                }
+            }
+
+            // Save computed result to cache
+            memo[key] = result
+            return result
+        }
+    }
+
+    /*
      93. Restore IP Addresses
      A valid IP address consists of exactly four integers separated by single dots. Each integer is between 0 and 255 (inclusive) and cannot have leading zeros.
 
@@ -4670,6 +4725,12 @@ class Solution {
             self.val = val
             self.left = nil
             self.right = nil
+        }
+        public init() { self.val = 0; self.left = nil; self.right = nil }
+        public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+            self.val = val
+            self.left = left
+            self.right = right
         }
     }
     
