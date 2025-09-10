@@ -8,6 +8,39 @@
 import Foundation
 class Solution {
     /*
+     96. Unique Binary Search Trees
+     Given an integer n, return the number of structurally unique BST's (binary search trees) which has exactly n nodes of unique values from 1 to n.
+     Example 1:
+     Input: n = 3
+     Output: 5
+     Example 2:
+     Input: n = 1
+     Output: 1
+     */
+    class UniqueBinarySearchTrees {
+        // Dynamic Programming approach
+        func numTrees(_ n: Int) -> Int {
+            // DP array to store number of unique BSTs for each i
+            var dp = Array(repeating: 0, count: n + 1)
+            
+            // Base cases: 0 nodes => 1 tree (empty), 1 node => 1 tree
+            dp[0] = 1
+            dp[1] = 1
+            
+            // Fill DP table
+            if n >= 2 {
+                for nodes in 2...n {
+                    for root in 1...nodes {
+                        dp[nodes] += dp[root - 1] * dp[nodes - root]
+                    }
+                }
+            }
+            
+            return dp[n]
+        }
+    }
+    
+    /*
      95. Unique Binary Search Trees II
      Given an integer n, return all the structurally unique BST's (binary search trees), which has exactly n nodes of unique values from 1 to n. Return the answer in any order.
      Example 1:
