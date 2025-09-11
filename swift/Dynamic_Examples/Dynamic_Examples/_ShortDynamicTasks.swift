@@ -8,6 +8,71 @@
 import Foundation
 class Solution {
     /*
+     97. Interleaving String
+     Given strings s1, s2, and s3, find whether s3 is formed by an interleaving of s1 and s2.
+     An interleaving of two strings s and t is a configuration where s and t are divided into n and m substrings respectively, such that:
+     s = s1 + s2 + ... + sn
+     t = t1 + t2 + ... + tm
+     |n - m| <= 1
+     The interleaving is s1 + t1 + s2 + t2 + s3 + t3 + ... or t1 + s1 + t2 + s2 + t3 + s3 + ...
+     Note: a + b is the concatenation of strings a and b.
+     Example 1:
+     Input: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"
+     Output: true
+     Explanation: One way to obtain s3 is:
+     Split s1 into s1 = "aa" + "bc" + "c", and s2 into s2 = "dbbc" + "a".
+     Interleaving the two splits, we get "aa" + "dbbc" + "bc" + "a" + "c" = "aadbbcbcac".
+     Since s3 can be obtained by interleaving s1 and s2, we return true.
+     Example 2:
+     Input: s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc"
+     Output: false
+     Explanation: Notice how it is impossible to interleave s2 with any other string to obtain s3.
+     Example 3:
+     Input: s1 = "", s2 = "", s3 = ""
+     Output: true
+     */
+    class InterleavingString {
+        func isInterleave(_ s1: String, _ s2: String, _ s3: String) -> Bool {
+            let n = s1.count, m = s2.count, t = s3.count
+            
+            // If lengths don't match, impossible
+            if n + m != t { return false }
+            
+            // Convert strings to arrays of characters for easy indexing
+            let arr1 = Array(s1)
+            let arr2 = Array(s2)
+            let arr3 = Array(s3)
+            
+            // DP table: dp[i][j] means if first i chars of s1 and first j chars of s2 form first (i+j) chars of s3
+            var dp = Array(repeating: Array(repeating: false, count: m + 1), count: n + 1)
+            
+            // Base case: empty strings can form empty s3
+            dp[0][0] = true
+            
+            // Fill first row (only s2 contributes)
+            for j in 1...m {
+                dp[0][j] = dp[0][j-1] && arr2[j-1] == arr3[j-1]
+            }
+            
+            // Fill first column (only s1 contributes)
+            for i in 1...n {
+                dp[i][0] = dp[i-1][0] && arr1[i-1] == arr3[i-1]
+            }
+            
+            // Fill the DP table
+            for i in 1...n {
+                for j in 1...m {
+                    let fromS1 = dp[i-1][j] && arr1[i-1] == arr3[i+j-1]
+                    let fromS2 = dp[i][j-1] && arr2[j-1] == arr3[i+j-1]
+                    dp[i][j] = fromS1 || fromS2
+                }
+            }
+            
+            return dp[n][m]
+        }
+    }
+
+    /*
      96. Unique Binary Search Trees
      Given an integer n, return the number of structurally unique BST's (binary search trees) which has exactly n nodes of unique values from 1 to n.
      Example 1:
