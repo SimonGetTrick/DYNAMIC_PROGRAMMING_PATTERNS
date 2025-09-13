@@ -8,6 +8,44 @@
 import Foundation
 class Solution {
     /*
+     98. Validate Binary Search Tree
+     Given the root of a binary tree, determine if it is a valid binary search tree (BST).
+     A valid BST is defined as follows:
+     The left subtree of a node contains only nodes with keys strictly less than the node's key.
+     The right subtree of a node contains only nodes with keys strictly greater than the node's key.
+     Both the left and right subtrees must also be binary search trees.
+     Example 1:
+     Input: root = [2,1,3]
+     Output: true
+     Example 2:
+     Input: root = [5,1,4,null,null,3,6]
+     Output: false
+     Explanation: The root node's value is 5 but its right child's value is 4.
+     */
+    class BinarySearch {
+        func isValidBST(_ root: TreeNode?) -> Bool {
+            // Start recursion with no bounds
+            return validate(root, min: nil, max: nil)
+        }
+
+        private func validate(_ node: TreeNode?, min: Int?, max: Int?) -> Bool {
+            // Empty node is valid
+            guard let node = node else { return true }
+
+            // Check BST property with min/max constraints
+            if let min = min, node.val <= min {
+                return false
+            }
+            if let max = max, node.val >= max {
+                return false
+            }
+
+            // Recursively check left and right subtrees
+            return validate(node.left, min: min, max: node.val) &&
+                   validate(node.right, min: node.val, max: max)
+        }
+    }
+    /*
      97. Interleaving String
      Given strings s1, s2, and s3, find whether s3 is formed by an interleaving of s1 and s2.
      An interleaving of two strings s and t is a configuration where s and t are divided into n and m substrings respectively, such that:
