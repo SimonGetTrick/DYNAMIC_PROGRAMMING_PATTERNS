@@ -8,6 +8,73 @@
 import Foundation
 class Solution {
     /*
+     99. Recover Binary Search Tree
+     You are given the root of a binary search tree (BST), where the values of exactly two nodes of the tree were swapped by mistake. Recover the tree without changing its structure.
+     Example 1:
+     Input: root = [1,3,null,null,2]
+     Output: [3,1,null,null,2]
+     Explanation: 3 cannot be a left child of 1 because 3 > 1. Swapping 1 and 3 makes the BST valid.
+     Example 2:
+     Input: root = [3,1,4,null,null,2]
+     Output: [2,1,4,null,null,3]
+     Explanation: 2 cannot be in the right subtree of 3 because 2 < 3. Swapping 2 and 3 makes the BST valid.
+     Constraints:
+     The number of nodes in the tree is in the range [2, 1000].
+     -231 <= Node.val <= 231 - 1
+     Follow up: A solution using O(n) space is pretty straight-forward. Could you devise a constant O(1) space solution?
+     */
+    func recoverBinaryTree(_ root: TreeNode?) {
+        var first: TreeNode? = nil
+        var second: TreeNode? = nil
+        var prev: TreeNode? = nil
+        var current = root
+
+        // Morris inorder traversal
+        while current != nil {
+            if current!.left == nil {
+                // Process current node
+                if let prev = prev, current!.val < prev.val {
+                    if first == nil {
+                        first = prev
+                    }
+                    second = current
+                }
+                prev = current
+                current = current!.right
+            } else {
+                // Find predecessor
+                var pre = current!.left
+                while pre?.right != nil && pre?.right !== current {
+                    pre = pre?.right
+                }
+
+                if pre?.right == nil {
+                    // Create temporary thread
+                    pre?.right = current
+                    current = current!.left
+                } else {
+                    // Remove thread and process current
+                    pre?.right = nil
+                    if let prev = prev, current!.val < prev.val {
+                        if first == nil {
+                            first = prev
+                        }
+                        second = current
+                    }
+                    prev = current
+                    current = current!.right
+                }
+            }
+        }
+
+        // Swap values of misplaced nodes
+        if let f = first, let s = second {
+            let tmp = f.val
+            f.val = s.val
+            s.val = tmp
+        }
+    }
+    /*
      98. Validate Binary Search Tree
      Given the root of a binary tree, determine if it is a valid binary search tree (BST).
      A valid BST is defined as follows:
