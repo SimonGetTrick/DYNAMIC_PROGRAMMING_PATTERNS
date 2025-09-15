@@ -8,6 +8,46 @@
 import Foundation
 class Solution {
     /*
+     102. Binary Tree Level Order Traversal
+     Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
+     Example 1:
+     Input: root = [3,9,20,null,null,15,7]
+     Output: [[3],[9,20],[15,7]]
+     Example 2:
+     Input: root = [1]
+     Output: [[1]]
+     Example 3:
+     Input: root = []
+     Output: []
+     */
+    func levelOrder(_ root: TreeNode?) -> [[Int]] {
+        var result = [[Int]]()
+        guard let root = root else { return result }
+        
+        var queue: [TreeNode] = [root]
+        
+        while !queue.isEmpty {
+            let levelSize = queue.count
+            var level = [Int]()
+            
+            for _ in 0..<levelSize {
+                let node = queue.removeFirst()
+                level.append(node.val)
+                
+                if let left = node.left {
+                    queue.append(left)
+                }
+                if let right = node.right {
+                    queue.append(right)
+                }
+            }
+            
+            result.append(level)
+        }
+        
+        return result
+    }
+    /*
      99. Recover Binary Search Tree
      You are given the root of a binary search tree (BST), where the values of exactly two nodes of the tree were swapped by mistake. Recover the tree without changing its structure.
      Example 1:
