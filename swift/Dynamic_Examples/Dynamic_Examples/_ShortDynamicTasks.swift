@@ -8,6 +8,68 @@
 import Foundation
 class Solution {
     /*
+     103. Binary Tree Zigzag Level Order Traversal Medium Topics premium lock icon Companies Given the root of a binary tree, return the zigzag level order traversal of its nodes' values. (i.e., from left to right, then right to left for the next level and alternate between). Example 1: Input: root = [3,9,20,null,null,15,7] Output: [[3],[20,9],[15,7]] Example 2: Input: root = [1] Output: [[1]] Example 3: Input: root = [] Output: []
+     */
+    func zigzagLevelOrder_recursion(_ root: TreeNode?) -> [[Int]] {
+        var result = [[Int]]()
+        dfs(root, 0, &result)
+        return result
+    }
+    
+    private func dfs(_ node: TreeNode?, _ level: Int, _ result: inout [[Int]]) {
+        guard let node = node else { return }
+        
+        // Ensure the array for this level exists
+        if result.count <= level {
+            result.append([])
+        }
+        
+        // If level is even → append normally
+        // If odd → insert at the beginning
+        if level % 2 == 0 {
+            result[level].append(node.val)
+        } else {
+            result[level].insert(node.val, at: 0)
+        }
+        
+        dfs(node.left, level + 1, &result)
+        dfs(node.right, level + 1, &result)
+    }
+    func zigzagLevelOrder_additionalMemmory(_ root: TreeNode?) -> [[Int]] {
+        var result = [[Int]]()
+        guard let root = root else { return result }
+        
+        var queue: [TreeNode] = [root]
+        var leftToRight = true
+        
+        while !queue.isEmpty {
+            let levelSize = queue.count
+            var level = [Int]()
+            
+            for _ in 0..<levelSize {
+                let node = queue.removeFirst()
+                level.append(node.val)
+                
+                if let left = node.left {
+                    queue.append(left)
+                }
+                if let right = node.right {
+                    queue.append(right)
+                }
+            }
+            
+            // If we need right-to-left, reverse the current level
+            if !leftToRight {
+                level.reverse()
+            }
+            
+            result.append(level)
+            leftToRight.toggle()
+        }
+        
+        return result
+    }
+    /*
      102. Binary Tree Level Order Traversal
      Given the root of a binary tree, return the level order traversal of its nodes' values. (i.e., from left to right, level by level).
      Example 1:
@@ -68,7 +130,7 @@ class Solution {
         var second: TreeNode? = nil
         var prev: TreeNode? = nil
         var current = root
-
+        
         // Morris inorder traversal
         while current != nil {
             if current!.left == nil {
@@ -87,7 +149,7 @@ class Solution {
                 while pre?.right != nil && pre?.right !== current {
                     pre = pre?.right
                 }
-
+                
                 if pre?.right == nil {
                     // Create temporary thread
                     pre?.right = current
@@ -106,7 +168,7 @@ class Solution {
                 }
             }
         }
-
+        
         // Swap values of misplaced nodes
         if let f = first, let s = second {
             let tmp = f.val
@@ -134,11 +196,11 @@ class Solution {
             // Start recursion with no bounds
             return validate(root, min: nil, max: nil)
         }
-
+        
         private func validate(_ node: TreeNode?, min: Int?, max: Int?) -> Bool {
             // Empty node is valid
             guard let node = node else { return true }
-
+            
             // Check BST property with min/max constraints
             if let min = min, node.val <= min {
                 return false
@@ -146,10 +208,10 @@ class Solution {
             if let max = max, node.val >= max {
                 return false
             }
-
+            
             // Recursively check left and right subtrees
             return validate(node.left, min: min, max: node.val) &&
-                   validate(node.right, min: node.val, max: max)
+            validate(node.right, min: node.val, max: max)
         }
     }
     /*
