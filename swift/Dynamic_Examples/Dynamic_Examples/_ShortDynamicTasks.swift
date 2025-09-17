@@ -8,6 +8,45 @@
 import Foundation
 class Solution {
     /*
+     105. Construct Binary Tree from Preorder and Inorder Traversal
+     Given two integer arrays preorder and inorder where preorder is the preorder traversal of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree. Example 1: Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7] Output: [3,9,20,null,null,15,7] Example 2: Input: preorder = [-1], inorder = [-1] Output: [-1]
+     */
+    class BinaryTreePreorderInorder {
+        func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+            // Map for quick lookup of index in inorder array
+            var inorderIndexMap = [Int: Int]()
+            for (index, value) in inorder.enumerated() {
+                inorderIndexMap[value] = index
+            }
+            
+            var preorderIndex = 0 // Pointer for preorder traversal
+            
+            func arrayToTree(_ left: Int, _ right: Int) -> TreeNode? {
+                // If there are no elements to construct the subtree
+                if left > right {
+                    return nil
+                }
+                
+                // Select the current element as the root and move preorder pointer
+                let rootVal = preorder[preorderIndex]
+                preorderIndex += 1
+                
+                let root = TreeNode(rootVal)
+                
+                // Build left and right subtrees
+                // Exclude inorderIndexMap[rootVal] element because it's the root
+                if let index = inorderIndexMap[rootVal] {
+                    root.left = arrayToTree(left, index - 1)
+                    root.right = arrayToTree(index + 1, right)
+                }
+                
+                return root
+            }
+            
+            return arrayToTree(0, inorder.count - 1)
+        }
+    }
+    /*
      103. Binary Tree Zigzag Level Order Traversal Medium Topics premium lock icon Companies Given the root of a binary tree, return the zigzag level order traversal of its nodes' values. (i.e., from left to right, then right to left for the next level and alternate between). Example 1: Input: root = [3,9,20,null,null,15,7] Output: [[3],[20,9],[15,7]] Example 2: Input: root = [1] Output: [[1]] Example 3: Input: root = [] Output: []
      */
     func zigzagLevelOrder_recursion(_ root: TreeNode?) -> [[Int]] {
