@@ -8,11 +8,51 @@
 import Foundation
 class Solution {
     /*
+     106. Construct Binary Tree from Inorder and Postorder Traversal
+     Given two integer arrays inorder and postorder where inorder is the inorder traversal of a binary tree and postorder is the postorder traversal of the same tree, construct and return the binary tree.
+     Example 1:
+     Input: inorder = [9,3,15,20,7], postorder = [9,15,7,20,3]
+     Output: [3,9,20,null,null,15,7]
+     */
+    /*
      105. Construct Binary Tree from Preorder and Inorder Traversal
      Given two integer arrays preorder and inorder where preorder is the preorder traversal of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree. Example 1: Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7] Output: [3,9,20,null,null,15,7] Example 2: Input: preorder = [-1], inorder = [-1] Output: [-1]
      */
     class BinaryTreePreorderInorder {
-        func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+        func buildTree106(_ inorder: [Int], _ postorder: [Int]) -> TreeNode? {//106
+             // Map for quick lookup of index in inorder array
+             var inorderIndexMap = [Int: Int]()
+             for (index, value) in inorder.enumerated() {
+                 inorderIndexMap[value] = index
+             }
+             
+             var postorderIndex = postorder.count - 1 // Start from the last element of postorder
+             
+             func arrayToTree(_ left: Int, _ right: Int) -> TreeNode? {
+                 // If there are no elements to construct the subtree
+                 if left > right {
+                     return nil
+                 }
+                 
+                 // Select the current element as the root and move postorder pointer
+                 let rootVal = postorder[postorderIndex]
+                 postorderIndex -= 1
+                 
+                 let root = TreeNode(rootVal)
+                 
+                 // Build right and left subtrees
+                 // Important: build right subtree first because we are moving backwards in postorder
+                 if let index = inorderIndexMap[rootVal] {
+                     root.right = arrayToTree(index + 1, right)
+                     root.left = arrayToTree(left, index - 1)
+                 }
+                 
+                 return root
+             }
+             
+             return arrayToTree(0, inorder.count - 1)
+         }
+        func buildTree105(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
             // Map for quick lookup of index in inorder array
             var inorderIndexMap = [Int: Int]()
             for (index, value) in inorder.enumerated() {
