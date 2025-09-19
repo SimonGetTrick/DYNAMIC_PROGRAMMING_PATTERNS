@@ -8,6 +8,12 @@
 import Foundation
 class Solution {
     /*
+     104. Maximum Depth of Binary Tree
+     108. Convert Sorted Array to Binary Search Tree
+     109. Convert Sorted List to Binary Search Tree
+     110. Balanced Binary Tree
+     111. Minimum Depth of Binary Tree
+     
      106. Construct Binary Tree from Inorder and Postorder Traversal
      Given two integer arrays inorder and postorder where inorder is the inorder traversal of a binary tree and postorder is the postorder traversal of the same tree, construct and return the binary tree.
      Example 1:
@@ -19,6 +25,72 @@ class Solution {
      Given two integer arrays preorder and inorder where preorder is the preorder traversal of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree. Example 1: Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7] Output: [3,9,20,null,null,15,7] Example 2: Input: preorder = [-1], inorder = [-1] Output: [-1]
      */
     class BinaryTreePreorderInorder {
+        // 104. Maximum Depth of Binary Tree
+            func maxDepth(_ root: TreeNode?) -> Int {
+                guard let node = root else { return 0 }
+                let leftDepth = maxDepth(node.left)
+                let rightDepth = maxDepth(node.right)
+                return 1 + max(leftDepth, rightDepth)
+            }
+            // 104
+            
+            // 108. Convert Sorted Array to Binary Search Tree
+            func sortedArrayToBST(_ nums: [Int]) -> TreeNode? {
+                func helper(_ left: Int, _ right: Int) -> TreeNode? {
+                    if left > right { return nil }
+                    let mid = (left + right) / 2
+                    let root = TreeNode(nums[mid])
+                    root.left = helper(left, mid - 1)
+                    root.right = helper(mid + 1, right)
+                    return root
+                }
+                return helper(0, nums.count - 1)
+            }
+            // 108
+            
+            // 109. Convert Sorted List to Binary Search Tree
+            func sortedListToBST(_ head: ListNode?) -> TreeNode? {
+                var values = [Int]()
+                var current = head
+                while let node = current {
+                    values.append(node.val)
+                    current = node.next
+                }
+                func helper(_ left: Int, _ right: Int) -> TreeNode? {
+                    if left > right { return nil }
+                    let mid = (left + right) / 2
+                    let root = TreeNode(values[mid])
+                    root.left = helper(left, mid - 1)
+                    root.right = helper(mid + 1, right)
+                    return root
+                }
+                return helper(0, values.count - 1)
+            }
+            // 109
+            
+            // 110. Balanced Binary Tree
+            func isBalanced(_ root: TreeNode?) -> Bool {
+                func checkHeight(_ node: TreeNode?) -> Int {
+                    guard let n = node else { return 0 }
+                    let left = checkHeight(n.left)
+                    if left == -1 { return -1 }
+                    let right = checkHeight(n.right)
+                    if right == -1 { return -1 }
+                    if abs(left - right) > 1 { return -1 }
+                    return 1 + max(left, right)
+                }
+                return checkHeight(root) != -1
+            }
+            // 110
+            
+            // 111. Minimum Depth of Binary Tree
+            func minDepth(_ root: TreeNode?) -> Int {
+                guard let node = root else { return 0 }
+                if node.left == nil { return 1 + minDepth(node.right) }
+                if node.right == nil { return 1 + minDepth(node.left) }
+                return 1 + min(minDepth(node.left), minDepth(node.right))
+            }
+            // 111
         func buildTree106(_ inorder: [Int], _ postorder: [Int]) -> TreeNode? {//106
              // Map for quick lookup of index in inorder array
              var inorderIndexMap = [Int: Int]()
