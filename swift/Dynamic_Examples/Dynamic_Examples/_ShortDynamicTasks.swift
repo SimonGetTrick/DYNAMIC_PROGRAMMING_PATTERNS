@@ -8,6 +8,21 @@
 import Foundation
 class Solution {
     /*
+     114. Flatten Binary Tree to Linked List
+     Given the root of a binary tree, flatten the tree into a "linked list":
+     The "linked list" should use the same TreeNode class where the right child pointer points to the next node in the list and the left child pointer is always null.
+     The "linked list" should be in the same order as a pre-order traversal of the binary tree.
+     Example 1:
+     Input: root = [1,2,5,3,4,null,6]
+     Output: [1,null,2,null,3,null,4,null,5,null,6]
+     Example 2:
+     Input: root = []
+     Output: []
+     Example 3:
+     Input: root = [0]
+     Output: [0]
+     */
+    /*
      104. Maximum Depth of Binary Tree
      108. Convert Sorted Array to Binary Search Tree
      109. Convert Sorted List to Binary Search Tree
@@ -25,6 +40,29 @@ class Solution {
      Given two integer arrays preorder and inorder where preorder is the preorder traversal of a binary tree and inorder is the inorder traversal of the same tree, construct and return the binary tree. Example 1: Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7] Output: [3,9,20,null,null,15,7] Example 2: Input: preorder = [-1], inorder = [-1] Output: [-1]
      */
     class BinaryTreePreorderInorder {
+        // 114. Flatten Binary Tree to Linked List
+        func flatten(_ root: TreeNode?) {
+            var current = root
+            
+            // Iterate over the tree nodes
+            while let node = current {
+                // If the node has a left subtree
+                if let left = node.left {
+                    // Find the rightmost node in the left subtree
+                    var rightMost = left
+                    while rightMost.right != nil {
+                        rightMost = rightMost.right!
+                    }
+                    // Attach the original right subtree to the rightmost node
+                    rightMost.right = node.right
+                    // Move the left subtree to the right
+                    node.right = left
+                    node.left = nil
+                }
+                // Move to the next node in the chain
+                current = node.right
+            }
+        }
         // 104. Maximum Depth of Binary Tree
             func maxDepth(_ root: TreeNode?) -> Int {
                 guard let node = root else { return 0 }
