@@ -8,6 +8,55 @@
 import Foundation
 class Solution {
     /*
+     116. Populating Next Right Pointers in Each Node Medium Topics premium lock icon Companies You are given a perfect binary tree where all leaves are on the same level, and every parent has two children. The binary tree has the following definition: struct Node { int val; Node *left; Node *right; Node *next; } Populate each next pointer to point to its next right node. If there is no next right node, the next pointer should be set to NULL. Initially, all next pointers are set to NULL. Example 1: Input: root = [1,2,3,4,5,6,7] Output: [1,#,2,3,#,4,5,6,7,#] Explanation: Given the above perfect binary tree (Figure A), your function should populate each next pointer to point to its next right node, just like in Figure B. The serialized output is in level order as connected by the next pointers, with '#' signifying the end of each level. Example 2: Input: root = [] Output: []
+     */
+    public class Node {
+        public var val: Int
+        public var left: Node?
+        public var right: Node?
+        public var next: Node?
+        public init(_ val: Int) {
+            self.val = val
+            self.left = nil
+            self.right = nil
+            self.next = nil
+        }
+    }
+
+    class NextRightConnector {
+        
+        // 116. Populating Next Right Pointers in Each Node
+        func connect(_ root: Node?) -> Node? {
+            guard let root = root else { return nil }
+            
+            var leftmost: Node? = root
+            
+            // Traverse level by level
+            while let left = leftmost?.left {
+                var head: Node? = leftmost
+                
+                // Connect nodes in the current level
+                while let node = head {
+                    // Connect left -> right
+                    node.left?.next = node.right
+                    
+                    // Connect right -> next.left (cross connection)
+                    if let nextNode = node.next {
+                        node.right?.next = nextNode.left
+                    }
+                    
+                    head = node.next
+                }
+                
+                // Move to the next level
+                leftmost = left
+            }
+            
+            return root
+        }
+    }
+
+    /*
      114. Flatten Binary Tree to Linked List
      Given the root of a binary tree, flatten the tree into a "linked list":
      The "linked list" should use the same TreeNode class where the right child pointer points to the next node in the list and the left child pointer is always null.
@@ -5624,32 +5673,15 @@ class Solution {
     
     // Function to demonstrate the solution
     func demo_DistinctSubsequences() {
-        /*
+        /*115. Distinct Subsequences
          Given two strings s and t, return the number of distinct subsequences of s which equals t.
-         
          The test cases are generated so that the answer fits on a 32-bit signed integer.
-         
-          
-         
          Example 1:
-         
          Input: s = "rabbbit", t = "rabbit"Output: 3Explanation:
-         
          As shown below, there are 3 ways you can generate "rabbit" from s.rabbbitrabbbitrabbbit
-         
          Example 2:
-         
          Input: s = "babgbag", t = "bag"Output: 5Explanation:
-         
          As shown below, there are 5 ways you can generate "bag" from s.babgbagbabgbagbabgbagbabgbagbabgbag
-         
-          
-         
-         Constraints:
-         
-         1 <= s.length, t.length <= 1000
-         
-         s and t consist of English letters.
          */
         let solution = self//Solution()
         
