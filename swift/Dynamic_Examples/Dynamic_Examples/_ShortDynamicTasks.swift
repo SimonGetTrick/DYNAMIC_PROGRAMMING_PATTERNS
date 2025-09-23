@@ -8,6 +8,45 @@
 import Foundation
 class Solution {
     /*
+     124. Binary Tree Maximum Path Sum
+     A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence at most once. Note that the path does not need to pass through the root.
+     The path sum of a path is the sum of the node's values in the path.
+     Given the root of a binary tree, return the maximum path sum of any non-empty path.
+     Example 1:
+     Input: root = [1,2,3]
+     Output: 6
+     Explanation: The optimal path is 2 -> 1 -> 3 with a path sum of 2 + 1 + 3 = 6.
+     Example 2:
+     Input: root = [-10,9,20,null,null,15,7]
+     Output: 42
+     Explanation: The optimal path is 15 -> 20 -> 7 with a path sum of 15 + 20 + 7 = 42.
+     */
+    class MaxPathSumSolver {
+        private var maxSum = Int.min
+        
+        func maxPathSum(_ root: TreeNode?) -> Int {
+            _ = dfs(root)
+            return maxSum
+        }
+        
+        private func dfs(_ node: TreeNode?) -> Int {
+            guard let node = node else { return 0 }
+            
+            // Recursively compute left and right max path (ignore negative paths)
+            let leftGain = max(dfs(node.left), 0)
+            let rightGain = max(dfs(node.right), 0)
+            
+            // Price of the new path passing through this node
+            let priceNewPath = node.val + leftGain + rightGain
+            
+            // Update global maximum
+            maxSum = max(maxSum, priceNewPath)
+            
+            // Return max branch value (node + one side)
+            return node.val + max(leftGain, rightGain)
+        }
+    }
+    /*
      123. Best Time to Buy and Sell Stock III
      You are given an array prices where prices[i] is the price of a given stock on the ith day.
      Find the maximum profit you can achieve. You may complete at most two transactions.
