@@ -8,6 +8,113 @@
 import Foundation
 class Solution {
     /*
+     126. Word Ladder II
+     A transformation sequence from word beginWord to word endWord using a dictionary wordList is a sequence of words beginWord -> s1 -> s2 -> ... -> sk such that:
+     Every adjacent pair of words differs by a single letter.
+     Every si for 1 <= i <= k is in wordList. Note that beginWord does not need to be in wordList.
+     sk == endWord
+     Given two words, beginWord and endWord, and a dictionary wordList, return all the shortest transformation sequences from beginWord to endWord, or an empty list if no such sequence exists. Each sequence should be returned as a list of the words [beginWord, s1, s2, ..., sk].
+     Example 1:
+     Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]
+     Output: [["hit","hot","dot","dog","cog"],["hit","hot","lot","log","cog"]]
+     Explanation: There are 2 shortest transformation sequences:
+     "hit" -> "hot" -> "dot" -> "dog" -> "cog"
+     "hit" -> "hot" -> "lot" -> "log" -> "cog"
+     Example 2:
+     Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log"]
+     Output: []
+     Explanation: The endWord "cog" is not in wordList, therefore there is no valid transformation sequence.
+     Constraints:
+     1 <= beginWord.length <= 5
+     endWord.length == beginWord.length
+     1 <= wordList.length <= 500
+     wordList[i].length == beginWord.length
+     beginWord, endWord, and wordList[i] consist of lowercase English letters.
+     beginWord != endWord
+     All the words in wordList are unique.
+     The sum of all shortest transformation sequences does not exceed 105.
+     */
+    class WordLadderII {
+        func findLadders(_ beginWord: String, _ endWord: String, _ wordList: [String]) -> [[String]] {
+            let wordSet = Set(wordList)
+            if !wordSet.contains(endWord) { return [] }
+            
+            // Adjacency list for shortest paths
+            var graph = [String: [String]]()
+            var levels = [String: Int]()  // distance (BFS level) from beginWord
+            
+            // BFS queue
+            var queue = [beginWord]
+            levels[beginWord] = 0
+            var foundEnd = false
+            var step = 0
+            
+            while !queue.isEmpty && !foundEnd {
+                step += 1
+                var nextQueue = [String]()
+                
+                for word in queue {
+                    var chars = Array(word)
+                    for i in 0..<chars.count {
+                        let oldChar = chars[i]
+                        for c in "abcdefghijklmnopqrstuvwxyz" {
+                            chars[i] = c
+                            let newWord = String(chars)
+                            if wordSet.contains(newWord) {
+                                if levels[newWord] == nil { // first time seen
+                                    levels[newWord] = step
+                                    nextQueue.append(newWord)
+                                }
+                                if levels[newWord] == step { // only connect same level
+                                    graph[word, default: []].append(newWord)
+                                }
+                                if newWord == endWord {
+                                    foundEnd = true
+                                }
+                            }
+                        }
+                        chars[i] = oldChar
+                    }
+                }
+                queue = nextQueue
+            }
+            
+            var results = [[String]]()
+            if foundEnd {
+                var path = [beginWord]
+                dfs(beginWord, endWord, &path, &results, graph)
+            }
+            
+            return results
+        }
+        
+        // DFS to collect all paths
+        private func dfs(_ word: String, _ endWord: String,
+                         _ path: inout [String],
+                         _ results: inout [[String]],
+                         _ graph: [String: [String]]) {
+            if word == endWord {
+                results.append(path)
+                return
+            }
+            guard let neighbors = graph[word] else { return }
+            
+            for next in neighbors {
+                path.append(next)
+                dfs(next, endWord, &path, &results, graph)
+                path.removeLast()
+            }
+        }
+        static func demo() {
+            let solver = WordLadderII()
+            print(solver.findLadders("hit", "cog", ["hot","dot","dog","lot","log","cog"]))
+            // [["hit","hot","dot","dog","cog"], ["hit","hot","lot","log","cog"]]
+            print(solver.findLadders("hit", "cog", ["hot","dot","dog","lot","log"]))
+            // []
+        }
+    }
+
+    /*
      124. Binary Tree Maximum Path Sum
      A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence at most once. Note that the path does not need to pass through the root.
      The path sum of a path is the sum of the node's values in the path.
