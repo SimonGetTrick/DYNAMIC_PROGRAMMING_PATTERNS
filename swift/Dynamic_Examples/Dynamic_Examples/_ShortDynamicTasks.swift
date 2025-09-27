@@ -8,6 +8,128 @@
 import Foundation
 class Solution {
     /*
+     130. Surrounded Regions
+     You are given an m x n matrix board containing letters 'X' and 'O', capture regions that are surrounded:
+    Connect: A cell is connected to adjacent cells horizontally or vertically.
+     Region: To form a region connect every 'O' cell.
+     Surround: The region is surrounded with 'X' cells if you can connect the region with 'X' cells and none of the region cells are on the edge of the board.
+     To capture a surrounded region, replace all 'O's with 'X's in-place within the original board. You do not need to return anything.
+     Example 1:
+     Input: board = [
+     ["X","X","X","X"],
+     ["X","O","O","X"],
+     ["X","X","O","X"],
+     ["X","O","X","X"]]
+     Output: [
+     ["X","X","X","X"],
+     ["X","X","X","X"],
+     ["X","X","X","X"],
+     ["X","O","X","X"]]
+     Explanation:
+     In the above diagram, the bottom region is not captured because it is on the edge of the board and cannot be surrounded.
+     Example 2:
+     Input: board = [["X"]]
+     Output: [["X"]]
+     Comparison:
+     DFS
+     Pros: Easy to implement, clean recursion.
+     Cons: Risk of stack overflow if m × n is very large (deep recursion).
+     Space: O(m × n) recursion stack in the worst case.
+     BFS
+     Pros: No recursion, safe from stack overflow.
+     Cons: Queue might hold many nodes (but still O(m × n)).
+     Space: O(m × n) for queue in the worst case.
+     Time Complexity (both): O(m × n).
+     */
+    class SurroundedRegions {
+        // MARK: - DFS Approach
+        func solveDFS(_ board: inout [[Character]]) {
+            guard !board.isEmpty else { return }
+            let m = board.count
+            let n = board[0].count
+            
+            // Recursive DFS helper
+            func dfs(_ row: Int, _ col: Int) {
+                if row < 0 || col < 0 || row >= m || col >= n || board[row][col] != "O" {
+                    return
+                }
+                board[row][col] = "S" // mark as safe
+                dfs(row + 1, col)
+                dfs(row - 1, col)
+                dfs(row, col + 1)
+                dfs(row, col - 1)
+            }
+            
+            // Step 1: Start DFS from border 'O's
+            for i in 0..<m {
+                dfs(i, 0)
+                dfs(i, n - 1)
+            }
+            for j in 0..<n {
+                dfs(0, j)
+                dfs(m - 1, j)
+            }
+            
+            // Step 2: Flip remaining 'O' → 'X', revert 'S' → 'O'
+            for i in 0..<m {
+                for j in 0..<n {
+                    if board[i][j] == "O" {
+                        board[i][j] = "X"
+                    } else if board[i][j] == "S" {
+                        board[i][j] = "O"
+                    }
+                }
+            }
+        }
+        
+        // MARK: - BFS Approach
+        func solveBFS(_ board: inout [[Character]]) {
+            guard !board.isEmpty else { return }
+            let m = board.count
+            let n = board[0].count
+            
+            var queue = [(Int, Int)]()
+            
+            // Helper to enqueue valid 'O' cells
+            func enqueue(_ row: Int, _ col: Int) {
+                if row >= 0 && col >= 0 && row < m && col < n && board[row][col] == "O" {
+                    board[row][col] = "S" // mark as safe
+                    queue.append((row, col))
+                }
+            }
+            
+            // Step 1: Add all border 'O's to the queue
+            for i in 0..<m {
+                enqueue(i, 0)
+                enqueue(i, n - 1)
+            }
+            for j in 0..<n {
+                enqueue(0, j)
+                enqueue(m - 1, j)
+            }
+            
+            // Step 2: BFS traversal
+            let directions = [(1,0), (-1,0), (0,1), (0,-1)]
+            while !queue.isEmpty {
+                let (row, col) = queue.removeFirst()
+                for (dr, dc) in directions {
+                    enqueue(row + dr, col + dc)
+                }
+            }
+            
+            // Step 3: Flip remaining 'O' → 'X', revert 'S' → 'O'
+            for i in 0..<m {
+                for j in 0..<n {
+                    if board[i][j] == "O" {
+                        board[i][j] = "X"
+                    } else if board[i][j] == "S" {
+                        board[i][j] = "O"
+                    }
+                }
+            }
+        }
+    }
+    /*
      129. Sum Root to Leaf Numbers
      You are given the root of a binary tree containing digits from 0 to 9 only.
      Each root-to-leaf path in the tree represents a number.
