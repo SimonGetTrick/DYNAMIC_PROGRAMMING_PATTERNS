@@ -8,6 +8,70 @@
 import Foundation
 class Solution {
     /*
+     131. Palindrome Partitioning
+     Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of s.
+     Example 1:
+     Input: s = "aab"
+     Output: [["a","a","b"],["aa","b"]]
+     Example 2:
+     Input: s = "a"
+     Output: [["a"]]
+     Constraints:
+     1 <= s.length <= 16
+     s contains only lowercase English letters.
+     */
+    class PalindromePartitioning {
+        // Main function
+        func partition(_ s: String) -> [[String]] {
+            var result = [[String]]()
+            var path = [String]()
+            let chars = Array(s)
+
+            // Backtracking helper
+            func backtrack(_ start: Int) {
+                if start == chars.count {
+                    result.append(path)
+                    return
+                }
+
+                for end in start..<chars.count {
+                    if isPalindrome(chars, start, end) {
+                        let substring = String(chars[start...end])
+                        path.append(substring)
+                        backtrack(end + 1)
+                        path.removeLast()
+                    }
+                }
+            }
+
+            backtrack(0)
+            return result
+        }
+
+        // Check if substring s[l...r] is palindrome
+        private func isPalindrome(_ chars: [Character], _ l: Int, _ r: Int) -> Bool {
+            var left = l
+            var right = r
+            while left < right {
+                if chars[left] != chars[right] {
+                    return false
+                }
+                left += 1
+                right -= 1
+            }
+            return true
+        }
+        
+        static func demo() {
+            let input = "aab"
+            let solution = PalindromePartitioning()
+            let result = solution.partition(input)
+            print("Palindrome Partitioning of \(input): \(result)")
+        }
+    }
+
+
+    /*
      130. Surrounded Regions
      You are given an m x n matrix board containing letters 'X' and 'O', capture regions that are surrounded:
     Connect: A cell is connected to adjacent cells horizontally or vertically.
