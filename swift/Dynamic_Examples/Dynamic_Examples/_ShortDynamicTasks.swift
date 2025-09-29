@@ -8,6 +8,74 @@
 import Foundation
 class Solution {
     /*
+     132. Palindrome Partitioning II
+     Given a string s, partition s such that every substring of the partition is a palindrome.
+     Return the minimum cuts needed for a palindrome partitioning of s.
+     Example 1:
+     Input: s = "aab"
+     Output: 1
+     Explanation: The palindrome partitioning ["aa","b"] could be produced using 1 cut.
+     Example 2:
+     Input: s = "a"
+     Output: 0
+     Example 3:
+     Input: s = "ab"
+     Output: 1
+     Constraints:
+     1 <= s.length <= 2000
+     s consists of lowercase English letters only.
+     */
+    class PalindromePartitioningII {
+        func minCut(_ s: String) -> Int {
+            let n = s.count
+            let chars = Array(s)
+            
+            // Precompute palindrome table
+            var isPal = Array(repeating: Array(repeating: false, count: n), count: n)
+            for len in 1...n {
+                for i in 0...(n - len) {
+                    let j = i + len - 1
+                    if chars[i] == chars[j] {
+                        if len <= 2 {
+                            isPal[i][j] = true
+                        } else {
+                            isPal[i][j] = isPal[i+1][j-1]
+                        }
+                    }
+                }
+            }
+            
+            // dp[i] = min cuts for s[0...i]
+            var dp = Array(repeating: Int.max, count: n)
+            for i in 0..<n {
+                if isPal[0][i] {
+                    dp[i] = 0
+                } else {
+                    for j in 0..<i {
+                        if isPal[j+1][i] {
+                            dp[i] = min(dp[i], dp[j] + 1)
+                        }
+                    }
+                }
+            }
+            
+            return dp[n-1]
+        }
+        static func run() {
+            let sol = Solution.PalindromePartitioningII()
+            print(sol.minCut("aab")) 
+            print(sol.minCut("a"))   
+            print(sol.minCut("ab"))   
+        }
+//    Complexity:
+//    Time: O(n^2)
+//      calculate polindrom        O(n^2)
+//      fill dp O(n^2)
+    }
+
+
+
+    /*
      131. Palindrome Partitioning
      Given a string s, partition s such that every substring of the partition is a palindrome. Return all possible palindrome partitioning of s.
      Example 1:
