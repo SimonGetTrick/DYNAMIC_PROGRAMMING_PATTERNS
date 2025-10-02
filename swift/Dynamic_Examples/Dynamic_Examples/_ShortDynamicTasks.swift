@@ -8,6 +8,63 @@
 import Foundation
 class Solution {
     /*
+     135. Candy
+     There are n children standing in a line. Each child is assigned a rating value given in the integer array ratings.
+     You are giving candies to these children subjected to the following requirements:
+     Each child must have at least one candy.
+     Children with a higher rating get more candies than their neighbors.
+     Return the minimum number of candies you need to have to distribute the candies to the children.
+     Example 1:
+     Input: ratings = [1,0,2]
+     Output: 5
+     Explanation: You can allocate to the first, second and third child with 2, 1, 2 candies respectively.
+     Example 2:
+     Input: ratings = [1,2,2]
+     Output: 4
+     Explanation: You can allocate to the first, second and third child with 1, 2, 1 candies respectively.
+     The third child gets 1 candy because it satisfies the above two conditions.
+     */
+    class Candy {
+        // Main function to calculate minimum candies
+        func candy(_ ratings: [Int]) -> Int {
+            let n = ratings.count
+            if n == 0 { return 0 }
+            
+            // Each child gets at least 1 candy initially
+            var candies = Array(repeating: 1, count: n)
+            
+            // Pass 1: left to right
+            // If current rating > previous rating, give 1 more candy than previous child
+            for i in 1..<n {
+                if ratings[i] > ratings[i - 1] {
+                    candies[i] = candies[i - 1] + 1
+                }
+            }
+            
+            // Pass 2: right to left
+            // If current rating > next rating, give max of current and (next + 1)
+            for i in stride(from: n - 2, through: 0, by: -1) {
+                if ratings[i] > ratings[i + 1] {
+                    candies[i] = max(candies[i], candies[i + 1] + 1)
+                }
+            }
+            
+            // Sum of all candies
+            return candies.reduce(0, +)
+        }
+        
+        // Demo with examples
+        static func runDemo() {
+            let solver = Candy()
+            
+            let ratings1 = [1,0,2]
+            print("Example 1:", solver.candy(ratings1)) // Expected 5
+            
+            let ratings2 = [1,2,2]
+            print("Example 2:", solver.candy(ratings2)) // Expected 4
+        }
+    }
+    /*
      134. Gas Station O(n) time и O(1) memory.
      There are n gas stations along a circular route, where the amount of gas at the ith station is gas[i].
      You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from the ith station to its next (i + 1)th station. You begin the journey with an empty tank at one of the gas stations.
