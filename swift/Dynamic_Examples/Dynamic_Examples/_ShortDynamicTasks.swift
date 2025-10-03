@@ -8,6 +8,50 @@
 import Foundation
 class Solution {
     /*
+     136. Single Number
+     Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+     You must implement a solution with a linear runtime complexity and use only constant extra space.
+     Example 1:
+     Input: nums = [2,2,1]
+     Output: 1
+     Example 2:
+     Input: nums = [4,1,2,1,2]
+     Output: 4
+     Example 3:
+     Input: nums = [1]
+     Output: 1
+     Constraints:
+     1 <= nums.length <= 3 * 104
+     -3 * 104 <= nums[i] <= 3 * 104
+     Each element in the array appears twice except for one element which appears only once.
+     */
+    class SingleNumber {
+        // Function to find the single number
+        // Uses XOR property: a^a = 0, a^0 = a
+        func singleNumber(_ nums: [Int]) -> Int {
+            var result = 0
+            for num in nums {
+                result ^= num  // cancel out pairs, only single stays
+            }
+            return result
+        }
+        
+        // Demo with examples
+        static func runDemo() {
+            let solver = SingleNumber()
+            
+            let nums1 = [2,2,1]
+            print("Example 1:", solver.singleNumber(nums1)) // Expected 1
+            
+            let nums2 = [4,1,2,1,2]
+            print("Example 2:", solver.singleNumber(nums2)) // Expected 4
+            
+            let nums3 = [1]
+            print("Example 3:", solver.singleNumber(nums3)) // Expected 1
+        }
+    }
+
+    /*
      135. Candy
      There are n children standing in a line. Each child is assigned a rating value given in the integer array ratings.
      You are giving candies to these children subjected to the following requirements:
