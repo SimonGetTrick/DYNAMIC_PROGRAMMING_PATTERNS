@@ -8,6 +8,48 @@
 import Foundation
 class Solution {
     /*
+     137. Single Number II
+     Given an integer array nums where every element appears three times except for one, which appears exactly once. Find the single element and return it.
+     You must implement a solution with a linear runtime complexity and use only constant extra space.
+     Example 1:
+     Input: nums = [2,2,3,2]
+     Output: 3
+     Example 2:
+     Input: nums = [0,1,0,1,0,1,99]
+     Output: 99
+     Constraints:
+     1 <= nums.length <= 3 * 104
+     -231 <= nums[i] <= 231 - 1
+     Each element in nums appears exactly three times except for one element which appears once.
+     */
+    class SingleNumberII {
+        // Bitwise logic: track bits that appear once and twice
+        func singleNumber(_ nums: [Int]) -> Int {
+            var ones = 0    // bits that appeared once
+            var twos = 0    // bits that appeared twice
+            
+            for num in nums {
+                // 'ones' keeps bits that have appeared 1st or 4th time
+                ones = (ones ^ num) & ~twos
+                // 'twos' keeps bits that have appeared 2nd or 5th time
+                twos = (twos ^ num) & ~ones
+            }
+            
+            return ones  // only bits that appeared once remain
+        }
+        
+        // Demo with test examples
+        static func runDemo() {
+            let solver = SingleNumberII()
+            
+            let nums1 = [2,2,3,2]
+            print("Example 1:", solver.singleNumber(nums1)) // Expected 3
+            
+            let nums2 = [0,1,0,1,0,1,99]
+            print("Example 2:", solver.singleNumber(nums2)) // Expected 99
+        }
+    }
+    /*
      136. Single Number
      Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
      You must implement a solution with a linear runtime complexity and use only constant extra space.
