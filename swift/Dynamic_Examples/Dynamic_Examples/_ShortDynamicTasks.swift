@@ -8,6 +8,108 @@
 import Foundation
 class Solution {
     /*
+     138. Copy List with Random Pointer
+     A linked list of length n is given such that each node contains an additional random pointer, which could point to any node in the list, or null.
+     Construct a deep copy of the list. The deep copy should consist of exactly n brand new nodes, where each new node has its value set to the value of its corresponding original node. Both the next and random pointer of the new nodes should point to new nodes in the copied list such that the pointers in the original list and copied list represent the same list state. None of the pointers in the new list should point to nodes in the original list.
+     For example, if there are two nodes X and Y in the original list, where X.random --> Y, then for the corresponding two nodes x and y in the copied list, x.random --> y.
+     Return the head of the copied linked list.
+     The linked list is represented in the input/output as a list of n nodes. Each node is represented as a pair of [val, random_index] where:
+     val: an integer representing Node.val
+     random_index: the index of the node (range from 0 to n-1) that the random pointer points to, or null if it does not point to any node.
+     Your code will only be given the head of the original linked list.
+     Example 1:
+     Input: head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
+     Output: [[7,null],[13,0],[11,4],[10,2],[1,0]]
+     Example 2:
+     Input: head = [[1,1],[2,1]]
+     Output: [[1,1],[2,1]]
+     Example 3:
+     Input: head = [[3,null],[3,0],[3,null]]
+     Output: [[3,null],[3,0],[3,null]]
+     Constraints:
+     0 <= n <= 1000
+     -104 <= Node.val <= 104
+     */
+    class CopyListWithRandomPointer {
+        
+        class Node {
+            var val: Int
+            var next: Node?
+            var random: Node?
+            init(_ val: Int) {
+                self.val = val
+                self.next = nil
+                self.random = nil
+            }
+        }
+        
+        // Main function: Deep copy of the list
+        func copyRandomList(_ head: Node?) -> Node? {
+            guard let head = head else { return nil }
+            
+            // Step 1: Create mapping old -> new node
+            var map = [ObjectIdentifier: Node]()
+            var current: Node? = head
+            while let node = current {
+                map[ObjectIdentifier(node)] = Node(node.val)
+                current = node.next
+            }
+            
+            // Step 2: Assign next and random pointers
+            current = head
+            while let node = current {
+                let newNode = map[ObjectIdentifier(node)]!
+                newNode.next = node.next != nil ? map[ObjectIdentifier(node.next!)] : nil
+                newNode.random = node.random != nil ? map[ObjectIdentifier(node.random!)] : nil
+                current = node.next
+            }
+            
+            // Step 3: Return copied head
+            return map[ObjectIdentifier(head)]
+        }
+        
+        // Demo method with a simple test
+        static func runDemo() {
+            let solver = CopyListWithRandomPointer()
+            
+            // Create sample list: 7 -> 13 -> 11 -> 10 -> 1
+            let n1 = Node(7)
+            let n2 = Node(13)
+            let n3 = Node(11)
+            let n4 = Node(10)
+            let n5 = Node(1)
+            n1.next = n2
+            n2.next = n3
+            n3.next = n4
+            n4.next = n5
+            
+            // Random pointers
+            n2.random = n1
+            n3.random = n5
+            n4.random = n3
+            n5.random = n1
+            
+            print("Original list:")
+            printList(n1)
+            
+            if let copiedHead = solver.copyRandomList(n1) {
+                print("\nCopied list:")
+                printList(copiedHead)
+            }
+        }
+        
+        // Helper to print list with random pointers
+        static func printList(_ head: Node?) {
+            var current = head
+            while let node = current {
+                let randVal = node.random?.val != nil ? "\(node.random!.val)" : "nil"
+                print("Node \(node.val) → random \(randVal)")
+                current = node.next
+            }
+        }
+    }
+
+    /*
      137. Single Number II
      Given an integer array nums where every element appears three times except for one, which appears exactly once. Find the single element and return it.
      You must implement a solution with a linear runtime complexity and use only constant extra space.
