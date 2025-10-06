@@ -8,6 +8,71 @@
 import Foundation
 class Solution {
     /*
+     139. Word Break
+     Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of one or more dictionary words.
+     Note that the same word in the dictionary may be reused multiple times in the segmentation.
+     Example 1:
+     Input: s = "leetcode", wordDict = ["leet","code"]
+     Output: true
+     Explanation: Return true because "leetcode" can be segmented as "leet code".
+     Example 2:
+     Input: s = "applepenapple", wordDict = ["apple","pen"]
+     Output: true
+     Explanation: Return true because "applepenapple" can be segmented as "apple pen apple".
+     Note that you are allowed to reuse a dictionary word.
+     Example 3:
+     Input: s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
+     Output: false
+     Constraints:
+     1 <= s.length <= 300
+     1 <= wordDict.length <= 1000
+     1 <= wordDict[i].length <= 20
+     s and wordDict[i] consist of only lowercase English letters.
+     All the strings of wordDict are unique.
+     */
+    class WordBreakSolver {
+        
+        // Main DP solution
+        func wordBreak(_ s: String, _ wordDict: [String]) -> Bool {
+            let n = s.count
+            let words = Set(wordDict)   // For O(1) lookup
+            let chars = Array(s)
+            
+            // dp[i] = true if substring s[0..<i] can be segmented
+            var dp = Array(repeating: false, count: n + 1)
+            dp[0] = true
+            
+            // Check all substrings
+            for i in 1...n {
+                for j in 0..<i {
+                    if dp[j], words.contains(String(chars[j..<i])) {
+                        dp[i] = true
+                        break
+                    }
+                }
+            }
+            return dp[n]
+        }
+        
+        // Demo method with test cases
+        static func runDemo() {
+            let solver = WordBreakSolver()
+            
+            let s1 = "leetcode"
+            let dict1 = ["leet", "code"]
+            print("Input: \(s1), dict: \(dict1) → \(solver.wordBreak(s1, dict1))") // true
+            
+            let s2 = "applepenapple"
+            let dict2 = ["apple", "pen"]
+            print("Input: \(s2), dict: \(dict2) → \(solver.wordBreak(s2, dict2))") // true
+            
+            let s3 = "catsandog"
+            let dict3 = ["cats", "dog", "sand", "and", "cat"]
+            print("Input: \(s3), dict: \(dict3) → \(solver.wordBreak(s3, dict3))") // false
+        }
+    }
+
+    /*
      138. Copy List with Random Pointer
      A linked list of length n is given such that each node contains an additional random pointer, which could point to any node in the list, or null.
      Construct a deep copy of the list. The deep copy should consist of exactly n brand new nodes, where each new node has its value set to the value of its corresponding original node. Both the next and random pointer of the new nodes should point to new nodes in the copied list such that the pointers in the original list and copied list represent the same list state. None of the pointers in the new list should point to nodes in the original list.
