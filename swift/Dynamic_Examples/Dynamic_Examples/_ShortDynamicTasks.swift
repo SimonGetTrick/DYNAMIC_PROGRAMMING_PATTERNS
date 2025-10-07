@@ -8,6 +8,93 @@
 import Foundation
 class Solution {
     /*
+     140. Word Break II
+     Given a string s and a dictionary of strings wordDict, add spaces in s to construct a sentence where each word is a valid dictionary word. Return all such possible sentences in any order.
+     Note that the same word in the dictionary may be reused multiple times in the segmentation.
+     Example 1:
+     Input: s = "catsanddog", wordDict = ["cat","cats","and","sand","dog"]
+     Output: ["cats and dog","cat sand dog"]
+     Example 2:
+     Input: s = "pineapplepenapple", wordDict = ["apple","pen","applepen","pine","pineapple"]
+     Output: ["pine apple pen apple","pineapple pen apple","pine applepen apple"]
+     Explanation: Note that you are allowed to reuse a dictionary word.
+     Example 3:
+     Input: s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
+     Output: []
+     Constraints:
+     1 <= s.length <= 20
+     1 <= wordDict.length <= 1000
+     1 <= wordDict[i].length <= 10
+     s and wordDict[i] consist of only lowercase English letters.
+     All the strings of wordDict are unique.
+     Input is generated in a way that the length of the answer doesn't exceed 105.     
+     #139    Bool                               DP (array dp[i])
+     #140    [String] — all possible option,    DFS +memory
+     */
+    class WordBreakII {
+        
+        func wordBreak(_ s: String, _ wordDict: [String]) -> [String] {
+            let words = Set(wordDict)
+            var memo = [String: [String]]()
+            return dfs(s, words, &memo)
+        }
+        
+        // DFS with memoization
+        private func dfs(_ s: String, _ dict: Set<String>, _ memo: inout [String: [String]]) -> [String] {
+            // If result already computed, return it
+            if let cached = memo[s] {
+                return cached
+            }
+            
+            // Base case — empty string
+            if s.isEmpty {
+                return [""]
+            }
+            
+            var result = [String]()
+            
+            // Try each word in the dictionary
+            for word in dict {
+                if s.hasPrefix(word) {
+                    // Recurse on the remaining substring
+                    let suffix = String(s.dropFirst(word.count))
+                    let subSentences = dfs(suffix, dict, &memo)
+                    
+                    // Combine current word with recursive results
+                    for sub in subSentences {
+                        let space = sub.isEmpty ? "" : " "
+                        result.append(word + space + sub)
+                    }
+                }
+            }
+            
+            memo[s] = result
+            return result
+        }
+        
+        // Demo method
+        static func runDemo() {
+            let solver = WordBreakII()
+            
+            let s1 = "catsanddog"
+            let dict1 = ["cat","cats","and","sand","dog"]
+            print("Input: \(s1)")
+            print("Output:", solver.wordBreak(s1, dict1)) // ["cats and dog", "cat sand dog"]
+            
+            let s2 = "pineapplepenapple"
+            let dict2 = ["apple","pen","applepen","pine","pineapple"]
+            print("Input: \(s2)")
+            print("Output:", solver.wordBreak(s2, dict2))
+            // ["pine apple pen apple", "pineapple pen apple", "pine applepen apple"]
+            
+            let s3 = "catsandog"
+            let dict3 = ["cats","dog","sand","and","cat"]
+            print("Input: \(s3)")
+            print("Output:", solver.wordBreak(s3, dict3)) // []
+        }
+    }
+
+    /*
      139. Word Break
      Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of one or more dictionary words.
      Note that the same word in the dictionary may be reused multiple times in the segmentation.
