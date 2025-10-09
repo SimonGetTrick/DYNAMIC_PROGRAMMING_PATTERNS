@@ -8,6 +8,21 @@
 import Foundation
 class Solution {
     /*
+     147. Insertion Sort List
+     Given the head of a singly linked list, sort the list using insertion sort, and return the sorted list's head.
+     The steps of the insertion sort algorithm:
+     Insertion sort iterates, consuming one input element each repetition and growing a sorted output list.
+     At each iteration, insertion sort removes one element from the input data, finds the location it belongs within the sorted list and inserts it there.
+     It repeats until no input elements remain.
+     The following is a graphical example of the insertion sort algorithm. The partially sorted list (black) initially contains only the first element in the list. One element (red) is removed from the input data and inserted in-place into the sorted list with each iteration.
+     Example 1:
+     Input: head = [4,2,1,3]
+     Output: [1,2,3,4]
+     Example 2:
+     Input: head = [-1,5,3,4,0]
+     Output: [-1,0,3,4,5]
+     */
+    /*
      146. LRU Cache
      Design a data structure that follows the constraints of a Least Recently Used (LRU) cache.
      Implement the LRUCache class:
@@ -33,104 +48,162 @@ class Solution {
      lRUCache.get(3);    // return 3
      lRUCache.get(4);    // return 4
      */
-    class LRUCache {
+    class LRUAndInsertionSortDemo {
         
-        // Doubly linked list node
-        class Node {
-            var key: Int
-            var value: Int
-            var prev: Node?
-            var next: Node?
-            
-            init(_ key: Int, _ value: Int) {
-                self.key = key
-                self.value = value
+        // MARK: - 146. LRU Cache
+        
+        class LRUCache {
+            private class Node {
+                var key: Int
+                var value: Int
+                var prev: Node?
+                var next: Node?
+                init(_ key: Int, _ value: Int) {
+                    self.key = key
+                    self.value = value
+                }
             }
-        }
-        
-        private var capacity: Int
-        private var cache = [Int: Node]()
-        private var head = Node(0, 0)
-        private var tail = Node(0, 0)
-        
-        init(_ capacity: Int) {
-            self.capacity = capacity
-            head.next = tail
-            tail.prev = head
-        }
-        
-        // Get value by key
-        func get(_ key: Int) -> Int {
-            if let node = cache[key] {
+            
+            private var capacity: Int
+            private var cache: [Int: Node] = [:]
+            private var head: Node
+            private var tail: Node
+            
+            init(_ capacity: Int) {
+                self.capacity = capacity
+                head = Node(0, 0)
+                tail = Node(0, 0)
+                head.next = tail
+                tail.prev = head
+            }
+            
+            func get(_ key: Int) -> Int {
+                guard let node = cache[key] else { return -1 }
                 moveToHead(node)
                 return node.value
             }
-            return -1
-        }
-        
-        // Put new key-value or update existing one
-        func put(_ key: Int, _ value: Int) {
-            if let node = cache[key] {
-                node.value = value
-                moveToHead(node)
-            } else {
-                let newNode = Node(key, value)
-                cache[key] = newNode
-                addNode(newNode)
-                
-                if cache.count > capacity {
-                    if let tailNode = popTail() {
-                        cache.removeValue(forKey: tailNode.key)
+            
+            func put(_ key: Int, _ value: Int) {
+                if let node = cache[key] {
+                    node.value = value
+                    moveToHead(node)
+                } else {
+                    let newNode = Node(key, value)
+                    cache[key] = newNode
+                    addToHead(newNode)
+                    if cache.count > capacity {
+                        if let removed = removeTail() {
+                            cache.removeValue(forKey: removed.key)
+                        }
                     }
                 }
             }
+            
+            // Move an existing node to the front (most recently used)
+            private func moveToHead(_ node: Node) {
+                removeNode(node)
+                addToHead(node)
+            }
+            
+            // Add new node right after head
+            private func addToHead(_ node: Node) {
+                node.prev = head
+                node.next = head.next
+                head.next?.prev = node
+                head.next = node
+            }
+            
+            // Remove node from its current position
+            private func removeNode(_ node: Node) {
+                let prev = node.prev
+                let next = node.next
+                prev?.next = next
+                next?.prev = prev
+            }
+            
+            // Remove least recently used (from tail)
+            private func removeTail() -> Node? {
+                guard let node = tail.prev, node !== head else { return nil }
+                removeNode(node)
+                return node
+            }
         }
         
-        // MARK: - Helper methods for linked list
+        // MARK: - 147. Insertion Sort List
         
-        private func addNode(_ node: Node) {
-            // Add node right after head
-            node.prev = head
-            node.next = head.next
-            head.next?.prev = node
-            head.next = node
+        class ListNode {
+            var val: Int
+            var next: ListNode?
+            init(_ val: Int) { self.val = val }
         }
         
-        private func removeNode(_ node: Node) {
-            let prev = node.prev
-            let next = node.next
-            prev?.next = next
-            next?.prev = prev
+        func insertionSortList(_ head: ListNode?) -> ListNode? {
+            let dummy = ListNode(0)
+            var current = head
+            
+            while let node = current {
+                var prev = dummy
+                var next = dummy.next
+                
+                // Find correct place for insertion
+                while let n = next, n.val < node.val {
+                    prev = n
+                    next = n.next
+                }
+                
+                // Insert node between prev and next
+                let nextUnsorted = node.next
+                node.next = next
+                prev.next = node
+                current = nextUnsorted
+            }
+            return dummy.next
         }
         
-        private func moveToHead(_ node: Node) {
-            removeNode(node)
-            addNode(node)
+        private func buildList(_ nums: [Int]) -> ListNode? {
+            let dummy = ListNode(0)
+            var current = dummy
+            for num in nums {
+                current.next = ListNode(num)
+                current = current.next!
+            }
+            return dummy.next
         }
         
-        private func popTail() -> Node? {
-            // Remove least recently used node
-            guard let node = tail.prev, node !== head else { return nil }
-            removeNode(node)
-            return node
+        private func toArray(_ head: ListNode?) -> [Int] {
+            var res = [Int]()
+            var curr = head
+            while let node = curr {
+                res.append(node.val)
+                curr = node.next
+            }
+            return res
         }
         
         // MARK: - Demo
         
         static func runDemo() {
-            let lruCache = LRUCache(2)
+            print("=== 146. LRU Cache Demo ===")
+            let lru = LRUCache(2)
+            lru.put(1, 1)
+            lru.put(2, 2)
+            print(lru.get(1)) // 1
+            lru.put(3, 3)     // evicts key 2
+            print(lru.get(2)) // -1
+            lru.put(4, 4)     // evicts key 1
+            print(lru.get(1)) // -1
+            print(lru.get(3)) // 3
+            print(lru.get(4)) // 4
             
-            lruCache.put(1, 1) // cache: {1=1}
-            lruCache.put(2, 2) // cache: {1=1, 2=2}
-            print(lruCache.get(1)) // return 1
+            print("\n=== 147. Insertion Sort List Demo ===")
+            let demo = LRUAndInsertionSortDemo()
+            let list1 = demo.buildList([4, 2, 1, 3])
+            let sorted1 = demo.insertionSortList(list1)
+            print(demo.toArray(sorted1)) // [1, 2, 3, 4]
             
-            lruCache.put(3, 3) // evicts key 2 → cache: {1=1, 3=3}
-            print(lruCache.get(2)) // return -1
-            
-            lruCache.put(4, 4) // evicts key 1 → cache: {4=4, 3=3}
-            print(lruCache.get(1)) // return -1
-            print(lruCache.get(3)) // return 3
-            print(lruCache.get(4)) // return 4
+            let list2 = demo.buildList([-1, 5, 3, 4, 0])
+            let sorted2 = demo.insertionSortList(list2)
+            print(demo.toArray(sorted2)) // [-1, 0, 3, 4, 5]
         }
     }
 
