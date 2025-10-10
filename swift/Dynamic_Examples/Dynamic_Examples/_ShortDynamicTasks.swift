@@ -8,6 +8,87 @@
 import Foundation
 class Solution {
     /*
+     149. Max Points on a Line
+     Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane, return the maximum number of points that lie on the same straight line.
+     Example 1:
+     Input: points = [[1,1],[2,2],[3,3]]
+     Output: 3
+     Example 2:
+     Input: points = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+     Output: 4
+     Constraints:
+     1 <= points.length <= 300
+     points[i].length == 2
+     -104 <= xi, yi <= 104
+     All the points are unique.
+     time: O(n²) (each point is compared with each other)
+     Memory: O(n) (for save slope-dicitonary)
+     */
+    class MaxPointsOnLineDemo {
+        
+        // MARK: - Core Algorithm
+        func maxPoints(_ points: [[Int]]) -> Int {
+            guard points.count > 2 else { return points.count }
+            var result = 0
+            
+            for i in 0..<points.count {
+                var slopes = [String: Int]() // store slope representation -> count
+                var duplicates = 1            // count of identical points
+                var verticals = 0             // count of vertical lines (same x)
+                
+                let (x1, y1) = (points[i][0], points[i][1])
+                
+                for j in i + 1..<points.count {
+                    let (x2, y2) = (points[j][0], points[j][1])
+                    
+                    if x1 == x2 && y1 == y2 {
+                        // identical points
+                        duplicates += 1
+                    } else if x1 == x2 {
+                        // vertical line (infinite slope)
+                        verticals += 1
+                    } else {
+                        // calculate slope as reduced fraction (dy/dx)
+                        let dy = y2 - y1
+                        let dx = x2 - x1
+                        let g = gcd(dy, dx)
+                        let key = "\(dy / g)/\(dx / g)"
+                        slopes[key, default: 0] += 1
+                    }
+                }
+                
+                // max count among all slopes and verticals
+                let localMax = max(verticals, slopes.values.max() ?? 0)
+                result = max(result, localMax + duplicates)
+            }
+            return result
+        }
+        
+        // Greatest Common Divisor helper
+        private func gcd(_ a: Int, _ b: Int) -> Int {
+            var a = abs(a), b = abs(b)
+            while b != 0 {
+                let temp = a % b
+                a = b
+                b = temp
+            }
+            return a
+        }
+        
+        // MARK: - Demo
+        static func runDemo() {
+            let demo = MaxPointsOnLineDemo()
+            
+            let points1 = [[1,1],[2,2],[3,3]]
+            print("Input:", points1)
+            print("Output:", demo.maxPoints(points1)) // 3
+            
+            let points2 = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+            print("\nInput:", points2)
+            print("Output:", demo.maxPoints(points2)) // 4
+        }
+    }
+    /*
      147. Insertion Sort List
      Given the head of a singly linked list, sort the list using insertion sort, and return the sorted list's head.
      The steps of the insertion sort algorithm:
