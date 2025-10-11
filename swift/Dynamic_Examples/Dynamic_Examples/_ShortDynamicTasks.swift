@@ -8,6 +8,88 @@
 import Foundation
 class Solution {
     /*
+     150. Evaluate Reverse Polish Notation
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     You are given an array of strings tokens that represents an arithmetic expression in a Reverse Polish Notation.
+     Evaluate the expression. Return an integer that represents the value of the expression.
+     Note that:
+     The valid operators are '+', '-', '*', and '/'.
+     Each operand may be an integer or another expression.
+     The division between two integers always truncates toward zero.
+     There will not be any division by zero.
+     The input represents a valid arithmetic expression in a reverse polish notation.
+     The answer and all the intermediate calculations can be represented in a 32-bit integer.
+     Example 1:
+     Input: tokens = ["2","1","+","3","*"]
+     Output: 9
+     Explanation: ((2 + 1) * 3) = 9
+     Example 2:
+     Input: tokens = ["4","13","5","/","+"]
+     Output: 6
+     Explanation: (4 + (13 / 5)) = 6
+     Example 3:
+     Input: tokens = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]
+     Output: 22
+     Explanation: ((10 * (6 / ((9 + 3) * -11))) + 17) + 5
+     = ((10 * (6 / (12 * -11))) + 17) + 5
+     = ((10 * (6 / -132)) + 17) + 5
+     = ((10 * 0) + 17) + 5
+     = (0 + 17) + 5
+     = 17 + 5
+     = 22
+     */
+    class EvaluateReversePolishDemo {
+        
+        // MARK: - Core Algorithm
+        func evalRPN(_ tokens: [String]) -> Int {
+            var stack = [Int]()
+            
+            for token in tokens {
+                switch token {
+                case "+":
+                    let b = stack.removeLast()
+                    let a = stack.removeLast()
+                    stack.append(a + b)
+                case "-":
+                    let b = stack.removeLast()
+                    let a = stack.removeLast()
+                    stack.append(a - b)
+                case "*":
+                    let b = stack.removeLast()
+                    let a = stack.removeLast()
+                    stack.append(a * b)
+                case "/":
+                    let b = stack.removeLast()
+                    let a = stack.removeLast()
+                    stack.append(a / b) // truncates toward zero automatically in Swift
+                default:
+                    stack.append(Int(token)!)
+                }
+            }
+            return stack.last!
+        }
+        
+        // MARK: - Demo
+        static func runDemo() {
+            let demo = EvaluateReversePolishDemo()
+            
+            let input1 = ["2","1","+","3","*"]
+            print("Input:", input1)
+            print("Output:", demo.evalRPN(input1)) // 9
+            
+            let input2 = ["4","13","5","/","+"]
+            print("\nInput:", input2)
+            print("Output:", demo.evalRPN(input2)) // 6
+            
+            let input3 = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]
+            print("\nInput:", input3)
+            print("Output:", demo.evalRPN(input3)) // 22
+        }
+    }
+    /*
      149. Max Points on a Line
      Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane, return the maximum number of points that lie on the same straight line.
      Example 1:
