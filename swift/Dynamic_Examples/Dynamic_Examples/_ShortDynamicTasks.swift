@@ -8,6 +8,82 @@
 import Foundation
 class Solution {
     /*
+     152. Maximum Product Subarray
+     Given an integer array nums, find a subarray that has the largest product, and return the product.
+     The test cases are generated so that the answer will fit in a 32-bit integer.
+     Example 1:
+     Input: nums = [2,3,-2,4]
+     Output: 6
+     Explanation: [2,3] has the largest product 6.
+     Example 2:
+     Input: nums = [-2,0,-1]
+     Output: 0
+     Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
+     Constraints:
+     1 <= nums.length <= 2 * 104
+     -10 <= nums[i] <= 10
+     The product of any subarray of nums is guaranteed to fit in a 32-bit integer.
+     */
+    class MaximumProductSubarrayDemo {
+        
+        // MARK: - Core solution
+        func maxProduct(_ nums: [Int]) -> Int {
+            // Edge case: if the array is empty
+            guard !nums.isEmpty else { return 0 }
+            
+            // Initialize the current max, min, and global max with the first element.
+            var currentMax = nums[0]
+            var currentMin = nums[0]
+            var result = nums[0]
+            
+            // Iterate through the array starting from the second element.
+            for i in 1..<nums.count {
+                let num = nums[i]
+                
+                // If the current number is negative, swap max and min
+                // because multiplying by a negative flips signs.
+                if num < 0 {
+                    swap(&currentMax, &currentMin)
+                }
+                
+                // Update current max and min considering the current number.
+                currentMax = max(num, currentMax * num)
+                currentMin = min(num, currentMin * num)
+                
+                // Update the global maximum product found so far.
+                result = max(result, currentMax)
+            }
+            
+            return result
+        }
+        
+        // MARK: - Time and Space Complexity
+        /*
+         Time Complexity:  O(n)
+           - We iterate through the array once, performing O(1) work per element.
+         
+         Space Complexity: O(1)
+           - Only a few variables are used regardless of input size.
+        */
+        
+        // MARK: - Demo
+        static func runDemo() {
+            let demo = MaximumProductSubarrayDemo()
+            
+            let nums1 = [2, 3, -2, 4]
+            print("Input:", nums1)
+            print("Output:", demo.maxProduct(nums1)) // Expected: 6
+            
+            let nums2 = [-2, 0, -1]
+            print("\nInput:", nums2)
+            print("Output:", demo.maxProduct(nums2)) // Expected: 0
+            
+            let nums3 = [-2, 3, -4]
+            print("\nInput:", nums3)
+            print("Output:", demo.maxProduct(nums3)) // Expected: 24
+        }
+    }
+    /*
      151. Reverse Words in a String
      Given an input string s, reverse the order of the words.
      A word is defined as a sequence of non-space characters. The words in s will be separated by at least one space.
