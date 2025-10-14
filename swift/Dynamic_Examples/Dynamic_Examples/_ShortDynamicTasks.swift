@@ -8,6 +8,70 @@
 import Foundation
 class Solution {
     /*
+     153. Find Minimum in Rotated Sorted Array
+     Suppose an array of length n sorted in ascending order is rotated between 1 and n times. For example, the array nums = [0,1,2,4,5,6,7] might become:
+     [4,5,6,7,0,1,2] if it was rotated 4 times.
+     [0,1,2,4,5,6,7] if it was rotated 7 times.
+     Notice that rotating an array [a[0], a[1], a[2], ..., a[n-1]] 1 time results in the array [a[n-1], a[0], a[1], a[2], ..., a[n-2]].
+     Given the sorted rotated array nums of unique elements, return the minimum element of this array.
+     You must write an algorithm that runs in O(log n) time.
+     Example 1:
+     Input: nums = [3,4,5,1,2]
+     Output: 1
+     Explanation: The original array was [1,2,3,4,5] rotated 3 times.
+     Example 2:
+     Input: nums = [4,5,6,7,0,1,2]
+     Output: 0
+     Explanation: The original array was [0,1,2,4,5,6,7] and it was rotated 4 times.
+     Example 3:
+     Input: nums = [11,13,15,17]
+     Output: 11
+     Explanation: The original array was [11,13,15,17] and it was rotated 4 times.
+     Constraints:
+     n == nums.length
+     1 <= n <= 5000
+     -5000 <= nums[i] <= 5000
+     All the integers of nums are unique.
+     */
+    class FindMinimumInRotatedSortedArray {
+        // Returns the minimum element in a rotated sorted array using binary search
+        func findMin(_ nums: [Int]) -> Int {
+            var left = 0
+            var right = nums.count - 1
+
+            // Binary search to find the point of rotation
+            while left < right {
+                let mid = (left + right) / 2
+                
+                // If middle element is greater than the rightmost,
+                // then the smallest is to the right of mid
+                if nums[mid] > nums[right] {
+                    left = mid + 1
+                } else {
+                    // Otherwise, the smallest is at mid or to the left
+                    right = mid
+                }
+            }
+
+            // After loop, left == right, pointing to the minimum element
+            return nums[left]
+        }
+
+        // Demo to test the solution
+        static func runDemo() {
+            let solver = FindMinimumInRotatedSortedArray()
+
+            let nums1 = [3,4,5,1,2]
+            let nums2 = [4,5,6,7,0,1,2]
+            let nums3 = [11,13,15,17]
+
+            print(solver.findMin(nums1)) // Output: 1
+            print(solver.findMin(nums2)) // Output: 0
+            print(solver.findMin(nums3)) // Output: 11
+        }
+    }
+
+    /*
      152. Maximum Product Subarray
      Given an integer array nums, find a subarray that has the largest product, and return the product.
      The test cases are generated so that the answer will fit in a 32-bit integer.
