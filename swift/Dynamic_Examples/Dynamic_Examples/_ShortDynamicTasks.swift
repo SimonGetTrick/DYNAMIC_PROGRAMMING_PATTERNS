@@ -8,6 +8,104 @@
 import Foundation
 class Solution {
     /*
+     166. Fraction to Recurring Decimal
+     Given two integers representing the numerator and denominator of a fraction, return the fraction in string format.
+     If the fractional part is repeating, enclose the repeating part in parentheses
+     If multiple answers are possible, return any of them.
+     It is guaranteed that the length of the answer string is less than 104 for all the given inputs.
+     Note that if the fraction can be represented as a finite length string, you must return it.
+     Example 1:
+     Input: numerator = 1, denominator = 2
+     Output: "0.5"
+     Example 2:
+     Input: numerator = 2, denominator = 1
+     Output: "2"
+     Example 3:
+     Input: numerator = 4, denominator = 333
+     Output: "0.(012)"
+     */
+    class Leetcode166_FractionToRecurringDecimal {
+        // Convert fraction to decimal with recurring part in parentheses
+        // Time Complexity: O(n), where n = length of recurring cycle (max 10^4 by problem statement)
+        // Space Complexity: O(n) for hash map storing remainders
+        
+        static func fractionToDecimal(_ numerator: Int, _ denominator: Int) -> String {
+            // Handle division by zero
+            if denominator == 0 { return "NaN" }
+            if numerator == 0 { return "0" }
+            
+            var num = numerator
+            var den = denominator
+            
+            // Handle negative sign
+            var result = ""
+            if (num < 0) != (den < 0) {
+                result += "-"
+            }
+            
+            // Work with absolute values
+            num = abs(num)
+            den = abs(den)
+            
+            // Integer part
+            let integerPart = num / den
+            result += String(integerPart)
+            
+            // Remainder
+            var remainder = num % den
+            if remainder == 0 {
+                return result  // no fractional part
+            }
+            
+            result += "."
+            
+            // Dictionary to store remainder positions (for cycle detection)
+            var remainderIndex: [Int: Int] = [:]
+            var fractionPart = ""
+            
+            while remainder != 0 {
+                if let index = remainderIndex[remainder] {
+                    // Found a repeating remainder → insert parentheses
+                    let start = fractionPart.index(fractionPart.startIndex, offsetBy: index)
+                    let repeating = "(" + fractionPart[start...] + ")"
+                    let nonRepeating = fractionPart[..<start]
+                    result += nonRepeating + repeating
+                    return result
+                }
+                
+                // Record position of remainder
+                remainderIndex[remainder] = fractionPart.count
+                
+                remainder *= 10
+                let digit = remainder / den
+                fractionPart += String(digit)
+                remainder %= den
+            }
+            
+            // No repeating part
+            result += fractionPart
+            return result
+        }
+        
+        // Demo
+        static func runDemo() {
+            let tests = [
+                (1, 2),
+                (2, 1),
+                (4, 333),
+                (1, 6),
+                (-50, 8),
+                (1, 333),
+                (-22, 7)
+            ]
+            
+            for (num, den) in tests {
+                let result = fractionToDecimal(num, den)
+                print("\(num)/\(den) = \(result)")
+            }
+        }
+    }
+    /*
      165. Compare Version Numbers
      Given two version strings, version1 and version2, compare them. A version string consists of revisions separated by dots '.'. The value of the revision is its integer conversion ignoring leading zeros.
      To compare version strings, compare their revision values in left-to-right order. If one of the version strings has fewer revisions, treat the missing revision values as 0.
