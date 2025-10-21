@@ -7,6 +7,50 @@
 
 import Foundation
 class Solution {
+    class Leetcode168_ExcelSheetColumnTitle {
+        // Convert a given column number to its corresponding Excel column title.
+        //
+        // Example:
+        // 1 -> "A"
+        // 28 -> "AB"
+        // 701 -> "ZY"
+        //
+        // Approach:
+        // Excel columns are like base-26 numbers, but not exactly:
+        // 'A' = 1 ... 'Z' = 26 (no zero, unlike normal base-26)
+        //
+        // To handle this, we repeatedly take (columnNumber - 1) % 26 to get the last character,
+        // then divide columnNumber by 26 until it becomes zero.
+        //
+        // Time Complexity: O(log₍26₎N)
+        // Space Complexity: O(1)
+        
+        static func convertToTitle(_ columnNumber: Int) -> String {
+            var num = columnNumber
+            var result = ""
+            
+            while num > 0 {
+                // Subtract 1 because Excel column indexing starts from 1, not 0
+                num -= 1
+                let char = Character(UnicodeScalar(65 + (num % 26))!) // 'A' = 65 in ASCII
+                result.insert(char, at: result.startIndex)
+                num /= 26
+            }
+            
+            return result
+        }
+        
+        // Demo
+        static func runDemo() {
+            let tests = [1, 28, 701, 52, 2147483647]
+            
+            for num in tests {
+                let title = convertToTitle(num)
+                print("Input: \(num) -> Output: \"\(title)\"")
+            }
+        }
+    }
+    
     /*
      167. Two Sum II - Input Array Is Sorted
      Given a 1-indexed array of integers numbers that is already sorted in non-decreasing order, find two numbers such that they add up to a specific target number. Let these two numbers be numbers[index1] and numbers[index2] where 1 <= index1 < index2 <= numbers.length.
