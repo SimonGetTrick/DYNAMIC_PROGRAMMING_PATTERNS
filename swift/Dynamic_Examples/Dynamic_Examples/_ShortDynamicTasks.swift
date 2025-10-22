@@ -24,6 +24,40 @@ class Solution {
      Input: dungeon = [[0]]
      Output: 1
      */
+    class DungeonGame {
+        static func calculateMinimumHP(_ dungeon: [[Int]]) -> Int {
+            let m = dungeon.count
+            let n = dungeon[0].count
+            
+            // DP table to store the minimum health needed at each cell
+            var dp = Array(repeating: Array(repeating: Int.max, count: n + 1), count: m + 1)
+            
+            // Base case: health needed to reach princess (bottom-right)
+            dp[m][n - 1] = 1
+            dp[m - 1][n] = 1
+            
+            // Fill DP table from bottom-right to top-left
+            for i in stride(from: m - 1, through: 0, by: -1) {
+                for j in stride(from: n - 1, through: 0, by: -1) {
+                    let minHealthOnExit = min(dp[i + 1][j], dp[i][j + 1])
+                    dp[i][j] = max(1, minHealthOnExit - dungeon[i][j])
+                }
+            }
+            
+            return dp[0][0] // Minimum health needed to start
+        }
+        
+        static func runDemo() {
+            let dungeon1 = [[-2, -3, 3],
+                            [-5, -10, 1],
+                            [10, 30, -5]]
+            print("Dungeon 1 minimum HP: \(calculateMinimumHP(dungeon1))") // 7
+            
+            let dungeon2 = [[0]]
+            print("Dungeon 2 minimum HP: \(calculateMinimumHP(dungeon2))") // 1
+        }
+    }
+
     class Leetcode168_ExcelSheetColumnTitle {
         // Convert a given column number to its corresponding Excel column title.
         //
