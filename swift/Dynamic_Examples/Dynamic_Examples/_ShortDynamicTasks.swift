@@ -8,6 +8,82 @@
 import Foundation
 class Solution {
     /*
+     176. Second Highest Salary
+     SQL Schema
+     Pandas Schema
+     Table: Employee
+     +-------------+------+
+     | Column Name | Type |
+     +-------------+------+
+     | id          | int  |
+     | salary      | int  |
+     +-------------+------+
+     id is the primary key (column with unique values) for this table.
+     Each row of this table contains information about the salary of an employee.
+     Write a solution to find the second highest distinct salary from the Employee table. If there is no second highest salary, return null (return None in Pandas).
+
+     The result format is in the following example.
+     Example 1:
+     Input:
+     Employee table:
+     +----+--------+
+     | id | salary |
+     +----+--------+
+     | 1  | 100    |
+     | 2  | 200    |
+     | 3  | 300    |
+     +----+--------+
+     Output:
+     +---------------------+
+     | SecondHighestSalary |
+     +---------------------+
+     | 200                 |
+     +---------------------+
+     Example 2:
+     Input:
+     Employee table:
+     +----+--------+
+     | id | salary |
+     +----+--------+
+     | 1  | 100    |
+     +----+--------+
+     Output:
+     +---------------------+
+     | SecondHighestSalary |
+     +---------------------+
+     | null                |
+     +---------------------+
+     */    
+    struct Employee {
+        let id: Int
+        let salary: Int
+    }
+
+    class SecondHighestSalaryDemo {
+        
+        static func runDemo() {
+            // Simulate Employee table
+            let employees = [
+                Employee(id: 1, salary: 100),
+                Employee(id: 2, salary: 200),
+                Employee(id: 3, salary: 300)
+            ]
+            
+            // Extract unique salaries and sort descending
+            let uniqueSalaries = Array(Set(employees.map { $0.salary })).sorted(by: >)
+            
+            // Get second highest if exists
+            let secondHighest = uniqueSalaries.count > 1 ? uniqueSalaries[1] : nil
+            
+            // Print result
+            if let value = secondHighest {
+                print("SecondHighestSalary | \(value)")
+            } else {
+                print("SecondHighestSalary | NULL")
+            }
+        }
+    }
+    /*
      175. Combine Two Tables
      SQL Schema
      Pandas Schema
