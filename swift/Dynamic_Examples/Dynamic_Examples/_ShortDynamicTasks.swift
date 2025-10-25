@@ -8,6 +8,116 @@
 import Foundation
 class Solution {
     /*
+     177. Nth Highest Salary
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     SQL Schema
+     Pandas Schema
+     Table: Employee
+
+     +-------------+------+
+     | Column Name | Type |
+     +-------------+------+
+     | id          | int  |
+     | salary      | int  |
+     +-------------+------+
+     id is the primary key (column with unique values) for this table.
+     Each row of this table contains information about the salary of an employee.
+      
+
+     Write a solution to find the nth highest distinct salary from the Employee table. If there are less than n distinct salaries, return null.
+
+     The result format is in the following example.
+
+      
+
+     Example 1:
+
+     Input:
+     Employee table:
+     +----+--------+
+     | id | salary |
+     +----+--------+
+     | 1  | 100    |
+     | 2  | 200    |
+     | 3  | 300    |
+     +----+--------+
+     n = 2
+     Output:
+     +------------------------+
+     | getNthHighestSalary(2) |
+     +------------------------+
+     | 200                    |
+     +------------------------+
+     Example 2:
+
+     Input:
+     Employee table:
+     +----+--------+
+     | id | salary |
+     +----+--------+
+     | 1  | 100    |
+     +----+--------+
+     n = 2
+     Output:
+     +------------------------+
+     | getNthHighestSalary(2) |
+     +------------------------+
+     | null                   |
+     +------------------------+
+     CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT AS
+     BEGIN
+       RETURN (
+           SELECT DISTINCT salary
+           FROM Employee
+           ORDER BY salary DESC
+           LIMIT 1 OFFSET N-1
+       );
+     END
+     */
+    class NthHighestSalaryDemo {
+        
+        // Function to get nth highest salary
+        static func getNthHighestSalary(_ employees: [Employee], _ n: Int) -> Int? {
+            // Extract unique salaries
+            let uniqueSalaries = Array(Set(employees.map { $0.salary }))
+            
+            // Sort salaries descending
+            let sortedSalaries = uniqueSalaries.sorted(by: >)
+            
+            // Return nth salary if exists, else nil
+            if n <= sortedSalaries.count {
+                return sortedSalaries[n - 1]
+            } else {
+                return nil
+            }
+        }
+        
+        static func runDemo() {
+            // Sample Employee table
+            let employees = [
+                Employee(id: 1, salary: 100),
+                Employee(id: 2, salary: 200),
+                Employee(id: 3, salary: 300)
+            ]
+            
+            // Choose n
+            let n = 2
+            
+            // Get nth highest salary
+            let result = getNthHighestSalary(employees, n)
+            
+            // Print result
+            if let value = result {
+                print("getNthHighestSalary(\(n)) | \(value)")
+            } else {
+                print("getNthHighestSalary(\(n)) | NULL")
+            }
+        }
+    }
+    /*
      176. Second Highest Salary
      SQL Schema
      Pandas Schema
