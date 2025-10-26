@@ -8,6 +8,119 @@
 import Foundation
 class Solution {
     /*
+     178. Rank Scores
+     SQL Schema
+     Pandas Schema
+     Table: Scores
+
+     +-------------+---------+
+     | Column Name | Type    |
+     +-------------+---------+
+     | id          | int     |
+     | score       | decimal |
+     +-------------+---------+
+     id is the primary key (column with unique values) for this table.
+     Each row of this table contains the score of a game. Score is a floating point value with two decimal places.
+      
+
+     Write a solution to find the rank of the scores. The ranking should be calculated according to the following rules:
+
+     The scores should be ranked from the highest to the lowest.
+     If there is a tie between two scores, both should have the same ranking.
+     After a tie, the next ranking number should be the next consecutive integer value. In other words, there should be no holes between ranks.
+     Return the result table ordered by score in descending order.
+
+     The result format is in the following example.
+
+      
+
+     Example 1:
+
+     Input:
+     Scores table:
+     +----+-------+
+     | id | score |
+     +----+-------+
+     | 1  | 3.50  |
+     | 2  | 3.65  |
+     | 3  | 4.00  |
+     | 4  | 3.85  |
+     | 5  | 4.00  |
+     | 6  | 3.65  |
+     +----+-------+
+     Output:
+     +-------+------+
+     | score | rank |
+     +-------+------+
+     | 4.00  | 1    |
+     | 4.00  | 1    |
+     | 3.85  | 2    |
+     | 3.65  | 3    |
+     | 3.65  | 3    |
+     | 3.50  | 4    |
+     
+     SELECT
+         score,
+         DENSE_RANK() OVER (ORDER BY score DESC) AS rank
+     FROM Scores;
+     */
+    struct Score {
+        let id: Int
+        let score: Double
+    }
+
+    class RankScoresDemo {
+        
+        // Function to calculate ranks
+        static func rankScores(_ scores: [Score]) -> [(score: Double, rank: Int)] {
+            // Sort scores descending
+            let sortedScores = scores.sorted { $0.score > $1.score }
+            
+            var results: [(Double, Int)] = []
+            var rank = 1
+            var prevScore: Double? = nil
+            var rankOffset = 0
+            
+            for (index, item) in sortedScores.enumerated() {
+                // If same score as previous -> same rank
+                if let prev = prevScore, prev == item.score {
+                    rankOffset += 1
+                } else {
+                    rank += rankOffset
+                    rankOffset = 1
+                }
+                results.append((item.score, rank))
+                prevScore = item.score
+            }
+            
+            return results
+        }
+        
+        static func runDemo() {
+            // Sample data
+            let scores = [
+                Score(id: 1, score: 3.50),
+                Score(id: 2, score: 3.65),
+                Score(id: 3, score: 4.00),
+                Score(id: 4, score: 3.85),
+                Score(id: 5, score: 4.00),
+                Score(id: 6, score: 3.65)
+            ]
+            
+            // Get ranks
+            let ranked = rankScores(scores)
+            
+            // Print results
+            print("+-------+------+\n| score | rank |\n+-------+------+")
+
+            for (score, rank) in ranked {
+                print(String(format: "| %.2f  | %d    |", score, rank))
+            }
+            print("+-------+------+")
+        }
+    }
+    
+    /*
      177. Nth Highest Salary
      Medium
      Topics
