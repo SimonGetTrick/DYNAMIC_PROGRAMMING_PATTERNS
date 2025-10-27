@@ -8,6 +8,43 @@
 import Foundation
 class Solution {
     /*
+     179. Largest Number
+     Given a list of non-negative integers nums, arrange them such that they form the largest number and return it. Since the result may be very large, so you need to return a string instead of an integer. Example 1: Input: nums = [10,2] Output: "210" Example 2: Input: nums = [3,30,34,5,9] Output: "9534330" Constraints: 1 <= nums.length <= 100 0 <= nums[i] <= 109
+     */
+    class LargestNumberDemo {
+        
+        static func largestNumber(_ nums: [Int]) -> String {
+            // Convert numbers to strings
+            let strs = nums.map { String($0) }
+            
+            // Custom sort: compare concatenations
+            let sorted = strs.sorted { a, b in
+                return a + b > b + a
+            }
+            
+            // Join into a single string
+            let result = sorted.joined()
+            
+            // Handle case when all numbers are zero (e.g. [0,0])
+            if result.first == "0" {
+                return "0"
+            }
+            
+            return result
+        }
+        
+        static func runDemo() {
+            let nums1 = [10, 2]
+            let nums2 = [3, 30, 34, 5, 9]
+            let nums3 = [0, 0, 0]
+            
+            print("Input: \(nums1) → Output: \(largestNumber(nums1))")
+            print("Input: \(nums2) → Output: \(largestNumber(nums2))")
+            print("Input: \(nums3) → Output: \(largestNumber(nums3))")
+        }
+    }
+
+    /*
      178. Rank Scores
      SQL Schema
      Pandas Schema
