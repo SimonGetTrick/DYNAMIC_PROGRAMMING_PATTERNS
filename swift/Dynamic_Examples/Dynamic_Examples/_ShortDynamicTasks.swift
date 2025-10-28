@@ -8,6 +8,97 @@
 import Foundation
 class Solution {
     /*
+     180. Consecutive Numbers
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     SQL Schema
+     Pandas Schema
+     Table: Logs
+
+     +-------------+---------+
+     | Column Name | Type    |
+     +-------------+---------+
+     | id          | int     |
+     | num         | varchar |
+     +-------------+---------+
+     In SQL, id is the primary key for this table.
+     id is an autoincrement column starting from 1.
+      
+
+     Find all numbers that appear at least three times consecutively.
+
+     Return the result table in any order.
+
+     The result format is in the following example.
+
+      
+
+     Example 1:
+
+     Input:
+     Logs table:
+     +----+-----+
+     | id | num |
+     +----+-----+
+     | 1  | 1   |
+     | 2  | 1   |
+     | 3  | 1   |
+     | 4  | 2   |
+     | 5  | 1   |
+     | 6  | 2   |
+     | 7  | 2   |
+     +----+-----+
+     Output:
+     +-----------------+
+     | ConsecutiveNums |
+     +-----------------+
+     | 1               |
+     +-----------------+
+     Explanation: 1 is the only number that appears consecutively for at least three times.
+     SELECT DISTINCT a.num AS ConsecutiveNums
+     FROM Logs a
+     JOIN Logs b ON a.id = b.id - 1
+     JOIN Logs c ON b.id = c.id - 1
+     WHERE a.num = b.num AND b.num = c.num;
+     */
+    /// Function to find all numbers that appear at least 3 times consecutively
+    func findConsecutiveNumbers(_ logs: [(id: Int, num: Int)]) -> [Int] {
+        // Sort by id to ensure order (just in case)
+        let sortedLogs = logs.sorted { $0.id < $1.id }
+        
+        var result = Set<Int>()  // Use Set to avoid duplicates
+        var count = 1            // Count of current consecutive sequence
+        
+        for i in 1..<sortedLogs.count {
+            if sortedLogs[i].num == sortedLogs[i - 1].num {
+                count += 1
+                if count >= 3 {
+                    result.insert(sortedLogs[i].num)
+                }
+            } else {
+                count = 1  // Reset counter when number changes
+            }
+        }
+        
+        return Array(result)
+    }
+    func demo180() {
+        /// Example usage
+        let logs: [(Int, Int)] = [
+            (1, 1),
+            (2, 1),
+            (3, 1),
+            (4, 2),
+            (5, 1),
+            (6, 2),
+            (7, 2)
+        ]
+        let consecutiveNums = findConsecutiveNumbers(logs)
+        print("Consecutive numbers appearing 3+ times:", consecutiveNums)
+    }
+    /*
      179. Largest Number
      Given a list of non-negative integers nums, arrange them such that they form the largest number and return it. Since the result may be very large, so you need to return a string instead of an integer. Example 1: Input: nums = [10,2] Output: "210" Example 2: Input: nums = [3,30,34,5,9] Output: "9534330" Constraints: 1 <= nums.length <= 100 0 <= nums[i] <= 109
      */
@@ -118,7 +209,7 @@ class Solution {
             var prevScore: Double? = nil
             var rankOffset = 0
             
-            for (index, item) in sortedScores.enumerated() {
+            for (_, item) in sortedScores.enumerated() {
                 // If same score as previous -> same rank
                 if let prev = prevScore, prev == item.score {
                     rankOffset += 1
