@@ -8,6 +8,85 @@
 import Foundation
 class Solution {
     /*
+     181. Employees Earning More Than Their Managers
+     SQL Schema
+     Pandas Schema
+     Table: Employee
+
+     +-------------+---------+
+     | Column Name | Type    |
+     +-------------+---------+
+     | id          | int     |
+     | name        | varchar |
+     | salary      | int     |
+     | managerId   | int     |
+     +-------------+---------+
+     id is the primary key (column with unique values) for this table.
+     Each row of this table indicates the ID of an employee, their name, salary, and the ID of their manager.
+     Write a solution to find the employees who earn more than their managers.
+     Return the result table in any order.
+     The result format is in the following example.
+     Example 1:
+     Input:
+     Employee table:
+     +----+-------+--------+-----------+
+     | id | name  | salary | managerId |
+     +----+-------+--------+-----------+
+     | 1  | Joe   | 70000  | 3         |
+     | 2  | Henry | 80000  | 4         |
+     | 3  | Sam   | 60000  | Null      |
+     | 4  | Max   | 90000  | Null      |
+     +----+-------+--------+-----------+
+     Output:
+     +----------+
+     | Employee |
+     +----------+
+     | Joe      |
+     +----------+
+     Explanation: Joe is the only employee who earns more than his manager.
+     */
+
+    struct Employee181 {
+        let id: Int
+        let name: String
+        let salary: Int
+        let managerId: Int?
+    }
+
+    class Solution181 {
+        static func employeesEarningMoreThanManagers(_ employees: [Employee181]) -> [String] {
+            var byId = [Int: Employee181]()
+            for e in employees {
+                byId[e.id] = e
+            }
+            
+            var result = [String]()
+            
+            for e in employees {
+                if let managerId = e.managerId,
+                   let manager = byId[managerId],
+                   e.salary > manager.salary {
+                    result.append(e.name)
+                }
+            }
+            
+            return result
+        }
+    }
+
+    func runDemo() {
+        let employees = [
+            Employee181(id: 1, name: "Joe", salary: 70000, managerId: 3),
+            Employee181(id: 2, name: "Henry", salary: 80000, managerId: 4),
+            Employee181(id: 3, name: "Sam", salary: 60000, managerId: nil),
+            Employee181(id: 4, name: "Max", salary: 90000, managerId: nil)
+        ]
+        
+        let result = Solution181.employeesEarningMoreThanManagers(employees)
+        print(result) // ["Joe"]
+    }
+
+    /*
      180. Consecutive Numbers
      Medium
      Topics
