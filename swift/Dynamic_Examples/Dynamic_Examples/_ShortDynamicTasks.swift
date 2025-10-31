@@ -8,6 +8,134 @@
 import Foundation
 class Solution {
     /*
+     183. Customers Who Never Order
+     Easy
+     Topics
+     premium lock icon
+     Companies
+     SQL Schema
+     Pandas Schema
+     Table: Customers
+
+     +-------------+---------+
+     | Column Name | Type    |
+     +-------------+---------+
+     | id          | int     |
+     | name        | varchar |
+     +-------------+---------+
+     id is the primary key (column with unique values) for this table.
+     Each row of this table indicates the ID and name of a customer.
+      
+
+     Table: Orders
+
+     +-------------+------+
+     | Column Name | Type |
+     +-------------+------+
+     | id          | int  |
+     | customerId  | int  |
+     +-------------+------+
+     id is the primary key (column with unique values) for this table.
+     customerId is a foreign key (reference columns) of the ID from the Customers table.
+     Each row of this table indicates the ID of an order and the ID of the customer who ordered it.
+      
+
+     Write a solution to find all customers who never order anything.
+
+     Return the result table in any order.
+
+     The result format is in the following example.
+
+      
+
+     Example 1:
+
+     Input:
+     Customers table:
+     +----+-------+
+     | id | name  |
+     +----+-------+
+     | 1  | Joe   |
+     | 2  | Henry |
+     | 3  | Sam   |
+     | 4  | Max   |
+     +----+-------+
+     Orders table:
+     +----+------------+
+     | id | customerId |
+     +----+------------+
+     | 1  | 3          |
+     | 2  | 1          |
+     +----+------------+
+     Output:
+     +-----------+
+     | Customers |
+     +-----------+
+     | Henry     |
+     | Max       |
+     +-----------+
+     */
+    // Unique struct names for this specific problem (183)
+    struct Customer183 {
+        let id: Int
+        let name: String
+    }
+
+    struct Order183 {
+        let id: Int
+        let customerId: Int
+    }
+
+    // Solution class with a unique name
+    class Solution183 {
+        static func customersWhoNeverOrder(customers: [Customer183], orders: [Order183]) -> [String] {
+            // Collect all customer IDs that have at least one order
+            let orderedCustomerIds = Set(orders.map { $0.customerId })
+            
+            // Filter out customers who have placed orders
+            let result = customers
+                .filter { !orderedCustomerIds.contains($0.id) }
+                .map { $0.name }
+          //SELECT name AS Customers
+//            FROM Customers
+//            WHERE id NOT IN (
+//                SELECT customerId
+//                FROM Orders
+//            );
+            return result
+        }
+        
+        // Demo method to show how it works
+        static func runDemo() {
+            let customers = [
+                Customer183(id: 1, name: "Joe"),
+                Customer183(id: 2, name: "Henry"),
+                Customer183(id: 3, name: "Sam"),
+                Customer183(id: 4, name: "Max")
+            ]
+            
+            let orders = [
+                Order183(id: 1, customerId: 3),
+                Order183(id: 2, customerId: 1)
+            ]
+            
+            let result = customersWhoNeverOrder(customers: customers, orders: orders)
+            print(result) // ["Henry", "Max"]
+        }
+    }
+
+    /*
+     SQL equivalent (LeetCode style):
+
+     SELECT name AS Customers
+     FROM Customers
+     WHERE id NOT IN (
+         SELECT customerId
+         FROM Orders
+     );
+    */
+
+    /*
      182. Duplicate Emails
      SQL Schema
      Pandas Schema
