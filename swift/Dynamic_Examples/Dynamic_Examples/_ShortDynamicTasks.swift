@@ -8,6 +8,153 @@
 import Foundation
 class Solution {
     /*
+     184. Department Highest Salary
+     SQL Schema
+     Pandas Schema
+     Table: Employee
+
+     +--------------+---------+
+     | Column Name  | Type    |
+     +--------------+---------+
+     | id           | int     |
+     | name         | varchar |
+     | salary       | int     |
+     | departmentId | int     |
+     +--------------+---------+
+     id is the primary key (column with unique values) for this table.
+     departmentId is a foreign key (reference columns) of the ID from the Department table.
+     Each row of this table indicates the ID, name, and salary of an employee. It also contains the ID of their department.
+      
+
+     Table: Department
+
+     +-------------+---------+
+     | Column Name | Type    |
+     +-------------+---------+
+     | id          | int     |
+     | name        | varchar |
+     +-------------+---------+
+     id is the primary key (column with unique values) for this table. It is guaranteed that department name is not NULL.
+     Each row of this table indicates the ID of a department and its name.
+      
+
+     Write a solution to find employees who have the highest salary in each of the departments.
+
+     Return the result table in any order.
+
+     The result format is in the following example.
+
+      
+
+     Example 1:
+
+     Input:
+     Employee table:
+     +----+-------+--------+--------------+
+     | id | name  | salary | departmentId |
+     +----+-------+--------+--------------+
+     | 1  | Joe   | 70000  | 1            |
+     | 2  | Jim   | 90000  | 1            |
+     | 3  | Henry | 80000  | 2            |
+     | 4  | Sam   | 60000  | 2            |
+     | 5  | Max   | 90000  | 1            |
+     +----+-------+--------+--------------+
+     Department table:
+     +----+-------+
+     | id | name  |
+     +----+-------+
+     | 1  | IT    |
+     | 2  | Sales |
+     +----+-------+
+     Output:
+     +------------+----------+--------+
+     | Department | Employee | Salary |
+     +------------+----------+--------+
+     | IT         | Jim      | 90000  |
+     | Sales      | Henry    | 80000  |
+     | IT         | Max      | 90000  |
+     +------------+----------+--------+
+     Explanation: Max and Jim both have the highest salary in the IT department and Henry has the highest salary in the Sales department.
+     */
+    // Unique struct names for problem 184
+    struct Employee184 {
+        let id: Int
+        let name: String
+        let salary: Int
+        let departmentId: Int
+    }
+
+    struct Department184 {
+        let id: Int
+        let name: String
+    }
+
+    struct DepartmentHighestSalary184 {
+        let department: String
+        let employee: String
+        let salary: Int
+    }
+
+    class Solution184 {
+        static func departmentHighestSalary(employees: [Employee184], departments: [Department184]) -> [DepartmentHighestSalary184] {
+//            SELECT d.name AS Department, e.name AS Employee, e.salary AS Salary
+//            FROM Employee e
+//            JOIN Department d ON e.departmentId = d.id
+//            WHERE e.salary = (
+//                SELECT MAX(salary)
+//                FROM Employee
+//                WHERE departmentId = e.departmentId
+//            );
+            // Step 1: Group employees by departmentId
+            var deptToEmployees = [Int: [Employee184]]()
+            for e in employees {
+                deptToEmployees[e.departmentId, default: []].append(e)
+            }
+            
+            var result = [DepartmentHighestSalary184]()
+            
+            // Step 2: For each department, find the max salary and corresponding employees
+            for dept in departments {
+                guard let emps = deptToEmployees[dept.id], !emps.isEmpty else { continue }
+                
+                // Find the highest salary in this department
+                let maxSalary = emps.map { $0.salary }.max()!
+                
+                // Get all employees who have the max salary
+                let topEmployees = emps.filter { $0.salary == maxSalary }
+                
+                // Add to result
+                for emp in topEmployees {
+                    result.append(DepartmentHighestSalary184(department: dept.name, employee: emp.name, salary: emp.salary))
+                }
+            }
+            
+            return result
+        }
+        
+        // Demo method
+        static func runDemo() {
+            let employees = [
+                Employee184(id: 1, name: "Joe", salary: 70000, departmentId: 1),
+                Employee184(id: 2, name: "Jim", salary: 90000, departmentId: 1),
+                Employee184(id: 3, name: "Henry", salary: 80000, departmentId: 2),
+                Employee184(id: 4, name: "Sam", salary: 60000, departmentId: 2),
+                Employee184(id: 5, name: "Max", salary: 90000, departmentId: 1)
+            ]
+            
+            let departments = [
+                Department184(id: 1, name: "IT"),
+                Department184(id: 2, name: "Sales")
+            ]
+            
+            let result = departmentHighestSalary(employees: employees, departments: departments)
+            for r in result {
+                print("\(r.department) - \(r.employee) - \(r.salary)")
+            }
+        }
+    }
+
+    /*
      183. Customers Who Never Order
      Easy
      Topics
