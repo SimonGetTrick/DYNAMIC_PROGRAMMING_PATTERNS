@@ -8,6 +8,196 @@
 import Foundation
 class Solution {
     /*
+     185. Department Top Three Salaries
+     SQL Schema
+     Pandas Schema
+     Table: Employee
+
+     +--------------+---------+
+     | Column Name  | Type    |
+     +--------------+---------+
+     | id           | int     |
+     | name         | varchar |
+     | salary       | int     |
+     | departmentId | int     |
+     +--------------+---------+
+     id is the primary key (column with unique values) for this table.
+     departmentId is a foreign key (reference column) of the ID from the Department table.
+     Each row of this table indicates the ID, name, and salary of an employee. It also contains the ID of their department.
+      
+
+     Table: Department
+
+     +-------------+---------+
+     | Column Name | Type    |
+     +-------------+---------+
+     | id          | int     |
+     | name        | varchar |
+     +-------------+---------+
+     id is the primary key (column with unique values) for this table.
+     Each row of this table indicates the ID of a department and its name.
+      
+
+     A company's executives are interested in seeing who earns the most money in each of the company's departments. A high earner in a department is an employee who has a salary in the top three unique salaries for that department.
+
+     Write a solution to find the employees who are high earners in each of the departments.
+
+     Return the result table in any order.
+
+     The result format is in the following example.
+
+      
+
+     Example 1:
+
+     Input:
+     Employee table:
+     +----+-------+--------+--------------+
+     | id | name  | salary | departmentId |
+     +----+-------+--------+--------------+
+     | 1  | Joe   | 85000  | 1            |
+     | 2  | Henry | 80000  | 2            |
+     | 3  | Sam   | 60000  | 2            |
+     | 4  | Max   | 90000  | 1            |
+     | 5  | Janet | 69000  | 1            |
+     | 6  | Randy | 85000  | 1            |
+     | 7  | Will  | 70000  | 1            |
+     +----+-------+--------+--------------+
+     Department table:
+     +----+-------+
+     | id | name  |
+     +----+-------+
+     | 1  | IT    |
+     | 2  | Sales |
+     +----+-------+
+     Output:
+     +------------+----------+--------+
+     | Department | Employee | Salary |
+     +------------+----------+--------+
+     | IT         | Max      | 90000  |
+     | IT         | Joe      | 85000  |
+     | IT         | Randy    | 85000  |
+     | IT         | Will     | 70000  |
+     | Sales      | Henry    | 80000  |
+     | Sales      | Sam      | 60000  |
+     +------------+----------+--------+
+     Explanation:
+     In the IT department:
+     - Max earns the highest unique salary
+     - Both Randy and Joe earn the second-highest unique salary
+     - Will earns the third-highest unique salary
+
+     In the Sales department:
+     - Henry earns the highest salary
+     - Sam earns the second-highest salary
+     - There is no third-highest salary as there are only two employees
+      
+
+     Constraints:
+
+     There are no employees with the exact same name, salary and department.
+     */
+    import Foundation
+
+    // Unique structs for problem 185
+    struct Employee185 {
+        let id: Int
+        let name: String
+        let salary: Int
+        let departmentId: Int
+    }
+
+    struct Department185 {
+        let id: Int
+        let name: String
+    }
+
+    struct DepartmentTopSalary185 {
+        let department: String
+        let employee: String
+        let salary: Int
+    }
+
+    class Solution185 {
+        static func departmentTopThreeSalaries(
+            employees: [Employee185],
+            departments: [Department185]
+        ) -> [DepartmentTopSalary185] {
+//            SELECT
+//                d.name AS Department,
+//                e.name AS Employee,
+//                e.salary AS Salary
+//            FROM Employee e
+//            JOIN Department d ON e.departmentId = d.id
+//            WHERE e.salary IN (
+//                SELECT DISTINCT e2.salary
+//                FROM Employee e2
+//                WHERE e2.departmentId = e.departmentId
+//                ORDER BY e2.salary DESC
+//                LIMIT 3
+//            )
+//            ORDER BY Department, Salary DESC;
+
+            // Step 1: Group employees by departmentId
+            var deptToEmployees = [Int: [Employee185]]()
+            for e in employees {
+                deptToEmployees[e.departmentId, default: []].append(e)
+            }
+            
+            var result = [DepartmentTopSalary185]()
+            
+            // Step 2: For each department, find the top 3 unique salaries
+            for dept in departments {
+                guard let emps = deptToEmployees[dept.id], !emps.isEmpty else { continue }
+                
+                // Extract unique salaries in descending order
+                let uniqueSalaries = Array(Set(emps.map { $0.salary })).sorted(by: >)
+                
+                // Take top 3 unique salaries
+                let topThreeSalaries = Array(uniqueSalaries.prefix(3))
+                
+                // Filter employees who have one of the top three salaries
+                let topEarners = emps.filter { topThreeSalaries.contains($0.salary) }
+                
+                // Add results
+                for e in topEarners {
+                    result.append(DepartmentTopSalary185(
+                        department: dept.name,
+                        employee: e.name,
+                        salary: e.salary
+                    ))
+                }
+            }
+            
+            return result
+        }
+        
+        // Demo method
+        static func runDemo() {
+            let employees = [
+                Employee185(id: 1, name: "Joe", salary: 85000, departmentId: 1),
+                Employee185(id: 2, name: "Henry", salary: 80000, departmentId: 2),
+                Employee185(id: 3, name: "Sam", salary: 60000, departmentId: 2),
+                Employee185(id: 4, name: "Max", salary: 90000, departmentId: 1),
+                Employee185(id: 5, name: "Janet", salary: 69000, departmentId: 1),
+                Employee185(id: 6, name: "Randy", salary: 85000, departmentId: 1),
+                Employee185(id: 7, name: "Will", salary: 70000, departmentId: 1)
+            ]
+            
+            let departments = [
+                Department185(id: 1, name: "IT"),
+                Department185(id: 2, name: "Sales")
+            ]
+            
+            let result = departmentTopThreeSalaries(employees: employees, departments: departments)
+            
+            for r in result {
+                print("\(r.department) - \(r.employee) - \(r.salary)")
+            }
+        }
+    }
+
+    /*
      184. Department Highest Salary
      SQL Schema
      Pandas Schema
