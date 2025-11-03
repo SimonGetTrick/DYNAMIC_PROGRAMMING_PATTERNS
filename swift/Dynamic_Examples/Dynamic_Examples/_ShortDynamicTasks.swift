@@ -8,11 +8,62 @@
 import Foundation
 class Solution {
     /*
+     187. Repeated DNA Sequences
+     The DNA sequence is composed of a series of nucleotides abbreviated as 'A', 'C', 'G', and 'T'.
+     For example, "ACGAATTCCG" is a DNA sequence.
+     When studying DNA, it is useful to identify repeated sequences within the DNA.
+     Given a string s that represents a DNA sequence, return all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule. You may return the answer in any order.
+     Example 1:
+     Input: s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
+     Output: ["AAAAACCCCC","CCCCCAAAAA"]
+     Example 2:
+     Input: s = "AAAAAAAAAAAAA"
+     Output: ["AAAAAAAAAA"]
+     Constraints:
+     1 <= s.length <= 105
+     s[i] is either 'A', 'C', 'G', or 'T'.
+     Time: O(n) — we visit each 10-letter window once.
+     Space: O(n) — due to the sets storing substrings.
+     */
+    class Solution187 {
+        static func findRepeatedDnaSequences(_ s: String) -> [String] {
+            let n = s.count
+            guard n > 10 else { return [] }
+            
+            var seen = Set<String>()        // to store all 10-letter sequences we've seen once
+            var repeated = Set<String>()    // to store sequences seen more than once
+            
+            let chars = Array(s)
+            
+            // Iterate over all possible 10-letter substrings
+            for i in 0...(n - 10) {
+                let sub = String(chars[i..<i+10])
+                if !seen.insert(sub).inserted {
+                    // If insertion failed, it means we've seen it before
+                    repeated.insert(sub)
+                }
+            }
+            
+            return Array(repeated)
+        }
+        
+        // Demo method
+        static func runDemo() {
+            let s1 = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
+            let result1 = findRepeatedDnaSequences(s1)
+            print(result1)  // ["AAAAACCCCC", "CCCCCAAAAA"]
+            
+            let s2 = "AAAAAAAAAAAAA"
+            let result2 = findRepeatedDnaSequences(s2)
+            print(result2)  // ["AAAAAAAAAA"]
+        }
+    }
+    /*
      185. Department Top Three Salaries
      SQL Schema
      Pandas Schema
      Table: Employee
-
+     
      +--------------+---------+
      | Column Name  | Type    |
      +--------------+---------+
@@ -24,10 +75,10 @@ class Solution {
      id is the primary key (column with unique values) for this table.
      departmentId is a foreign key (reference column) of the ID from the Department table.
      Each row of this table indicates the ID, name, and salary of an employee. It also contains the ID of their department.
-      
-
+     
+     
      Table: Department
-
+     
      +-------------+---------+
      | Column Name | Type    |
      +-------------+---------+
@@ -36,20 +87,20 @@ class Solution {
      +-------------+---------+
      id is the primary key (column with unique values) for this table.
      Each row of this table indicates the ID of a department and its name.
-      
-
+     
+     
      A company's executives are interested in seeing who earns the most money in each of the company's departments. A high earner in a department is an employee who has a salary in the top three unique salaries for that department.
-
+     
      Write a solution to find the employees who are high earners in each of the departments.
-
+     
      Return the result table in any order.
-
+     
      The result format is in the following example.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input:
      Employee table:
      +----+-------+--------+--------------+
@@ -86,19 +137,17 @@ class Solution {
      - Max earns the highest unique salary
      - Both Randy and Joe earn the second-highest unique salary
      - Will earns the third-highest unique salary
-
+     
      In the Sales department:
      - Henry earns the highest salary
      - Sam earns the second-highest salary
      - There is no third-highest salary as there are only two employees
-      
-
+     
+     
      Constraints:
-
+     
      There are no employees with the exact same name, salary and department.
      */
-    import Foundation
-
     // Unique structs for problem 185
     struct Employee185 {
         let id: Int
@@ -106,38 +155,38 @@ class Solution {
         let salary: Int
         let departmentId: Int
     }
-
+    
     struct Department185 {
         let id: Int
         let name: String
     }
-
+    
     struct DepartmentTopSalary185 {
         let department: String
         let employee: String
         let salary: Int
     }
-
+    
     class Solution185 {
         static func departmentTopThreeSalaries(
             employees: [Employee185],
             departments: [Department185]
         ) -> [DepartmentTopSalary185] {
-//            SELECT
-//                d.name AS Department,
-//                e.name AS Employee,
-//                e.salary AS Salary
-//            FROM Employee e
-//            JOIN Department d ON e.departmentId = d.id
-//            WHERE e.salary IN (
-//                SELECT DISTINCT e2.salary
-//                FROM Employee e2
-//                WHERE e2.departmentId = e.departmentId
-//                ORDER BY e2.salary DESC
-//                LIMIT 3
-//            )
-//            ORDER BY Department, Salary DESC;
-
+            //            SELECT
+            //                d.name AS Department,
+            //                e.name AS Employee,
+            //                e.salary AS Salary
+            //            FROM Employee e
+            //            JOIN Department d ON e.departmentId = d.id
+            //            WHERE e.salary IN (
+            //                SELECT DISTINCT e2.salary
+            //                FROM Employee e2
+            //                WHERE e2.departmentId = e.departmentId
+            //                ORDER BY e2.salary DESC
+            //                LIMIT 3
+            //            )
+            //            ORDER BY Department, Salary DESC;
+            
             // Step 1: Group employees by departmentId
             var deptToEmployees = [Int: [Employee185]]()
             for e in employees {
