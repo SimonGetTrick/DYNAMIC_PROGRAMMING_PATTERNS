@@ -8,6 +8,117 @@
 import Foundation
 class Solution {
     /*
+     188. Best Time to Buy and Sell Stock IV
+     You are given an integer array prices where prices[i] is the price of a given stock on the ith day, and an integer k.
+
+     Find the maximum profit you can achieve. You may complete at most k transactions: i.e. you may buy at most k times and sell at most k times.
+     Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
+     Example 1:
+     Input: k = 2, prices = [2,4,1]
+     Output: 2
+     Explanation: Buy on day 1 (price = 2) and sell on day 2 (price = 4), profit = 4-2 = 2.
+     Example 2:
+
+     Input: k = 2, prices = [3,2,6,5,0,3]
+     Output: 7
+     Explanation: Buy on day 2 (price = 2) and sell on day 3 (price = 6), profit = 6-2 = 4. Then buy on day 5 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.
+      
+
+     Constraints:
+
+     1 <= k <= 100
+     1 <= prices.length <= 1000
+     0 <= prices[i] <= 1000
+     */
+    class Solution188 {
+        // O(n)
+        static func maxProfitOpt(_ k: Int, _ prices: [Int]) -> Int {
+              let n = prices.count
+              if n == 0 { return 0 }
+              
+              // If k is large enough, treat as infinite transactions
+              if k >= n / 2 {
+                  var profit = 0
+                  for i in 1..<n {
+                      if prices[i] > prices[i - 1] {
+                          profit += prices[i] - prices[i - 1]
+                      }
+                  }
+                  return profit
+              }
+              
+              // prev[j] = dp[i-1][j]
+              // curr[j] = dp[i][j]
+              var prev = Array(repeating: 0, count: n)
+              var curr = Array(repeating: 0, count: n)
+              
+              for i in 1...k {
+                  var maxDiff = -prices[0]
+                  
+                  for j in 1..<n {
+                      // Option 1: do nothing (carry profit)
+                      // Option 2: sell today (use maxDiff)
+                      curr[j] = max(curr[j - 1], prices[j] + maxDiff)
+                      
+                      // Update maxDiff for the next day
+                      maxDiff = max(maxDiff, prev[j] - prices[j])
+                  }
+                  
+                  // Move current row to previous for next transaction
+                  prev = curr
+              }
+              
+              return prev[n - 1]
+          }
+        // O(k × n)
+        static func maxProfit(_ k: Int, _ prices: [Int]) -> Int {
+            let n = prices.count
+            if n == 0 { return 0 }
+            
+            // If k is large enough, it becomes equivalent to unlimited transactions
+            if k >= n / 2 {
+                var profit = 0
+                for i in 1..<n {
+                    if prices[i] > prices[i - 1] {
+                        profit += prices[i] - prices[i - 1]
+                    }
+                }
+                return profit
+            }
+            
+            // DP approach
+            // dp[i][j] = max profit on day j with at most i transactions
+            var dp = Array(repeating: Array(repeating: 0, count: n), count: k + 1)
+            
+            for i in 1...k {
+                var maxDiff = -prices[0]
+                for j in 1..<n {
+                    // either we don't sell today, or we sell today (using the best buy before)
+                    dp[i][j] = max(dp[i][j - 1], prices[j] + maxDiff)
+                    
+                    // update maxDiff: best (dp[i-1][p] - price[p]) up to day j
+                    maxDiff = max(maxDiff, dp[i - 1][j] - prices[j])
+                }
+            }
+            
+            return dp[k][n - 1]
+        }
+        
+        // Demo method
+        static func runDemo() {
+            let k1 = 2
+            let prices1 = [2, 4, 1]
+            let result1 = maxProfit(k1, prices1)
+            print(result1)  // 2
+            
+            let k2 = 2
+            let prices2 = [3, 2, 6, 5, 0, 3]
+            let result2 = maxProfit(k2, prices2)
+            print(result2)  // 7
+        }
+    }
+
+    /*
      187. Repeated DNA Sequences
      The DNA sequence is composed of a series of nucleotides abbreviated as 'A', 'C', 'G', and 'T'.
      For example, "ACGAATTCCG" is a DNA sequence.
