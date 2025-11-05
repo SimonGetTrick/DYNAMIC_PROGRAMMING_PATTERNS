@@ -8,6 +8,126 @@
 import Foundation
 class Solution {
     /*
+     189. Rotate Array
+     Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
+     Example 1:
+     Input: nums = [1,2,3,4,5,6,7], k = 3
+     Output: [5,6,7,1,2,3,4]
+     Explanation:
+     rotate 1 steps to the right: [7,1,2,3,4,5,6]
+     rotate 2 steps to the right: [6,7,1,2,3,4,5]
+     rotate 3 steps to the right: [5,6,7,1,2,3,4]
+     Example 2:
+     Input: nums = [-1,-100,3,99], k = 2
+     Output: [3,99,-1,-100]
+     Explanation:
+     rotate 1 steps to the right: [99,-1,-100,3]
+     rotate 2 steps to the right: [3,99,-1,-100]
+     Constraints:
+     1 <= nums.length <= 105
+     -231 <= nums[i] <= 231 - 1
+     0 <= k <= 105
+     Follow up:
+     Try to come up with as many solutions as you can. There are at least three different ways to solve this problem.
+     Could you do it in-place with O(1) extra space?
+     */
+    class Solution189 {
+        // MARK: - Method 1: Extra Array
+        // Time Complexity: O(n)
+        // Space Complexity: O(n)
+        // Approach: Create a new array and copy elements to rotated positions.
+        static func rotateUsingExtraArray(_ nums: inout [Int], _ k: Int) {
+            let n = nums.count
+            guard n > 0 else { return }
+            let shift = k % n
+            guard shift > 0 else { return }
+
+            // Copy last k elements + first n-k elements
+            let rotated = Array(nums[n - shift..<n]) + Array(nums[0..<n - shift])
+
+            // Copy back to original array
+            for i in 0..<n {
+                nums[i] = rotated[i]
+            }
+        }
+
+        // MARK: - Method 2: Reverse Array In-Place
+        // Time Complexity: O(n)
+        // Space Complexity: O(1)
+        // Approach: Reverse entire array, then reverse two segments.
+        static func rotateUsingReverse(_ nums: inout [Int], _ k: Int) {
+            let n = nums.count
+            guard n > 0 else { return }
+            let shift = k % n
+            guard shift > 0 else { return }
+
+            func reverse(_ start: Int, _ end: Int) {
+                var l = start, r = end
+                while l < r {
+                    nums.swapAt(l, r)
+                    l += 1
+                    r -= 1
+                }
+            }
+
+            reverse(0, n - 1)
+            reverse(0, shift - 1)
+            reverse(shift, n - 1)
+        }
+
+        // MARK: - Method 3: Cyclic Replacements
+        // Time Complexity: O(n)
+        // Space Complexity: O(1)
+        // Approach: Move each element to (i + k) % n in cycles.
+        static func rotateUsingCycle(_ nums: inout [Int], _ k: Int) {
+            let n = nums.count
+            guard n > 0 else { return }
+            let shift = k % n
+            guard shift > 0 else { return }
+
+            var count = 0
+            var start = 0
+
+            // Process cycles until all elements are moved
+            while count < n {
+                var current = start
+                var prev = nums[start]
+
+                repeat {
+                    let next = (current + shift) % n
+                    let temp = nums[next]
+                    nums[next] = prev
+                    prev = temp
+                    current = next
+                    count += 1
+                } while start != current
+
+                start += 1
+            }
+        }
+
+        // MARK: - Demo Runner
+        static func runDemo() {
+            var nums1 = [1, 2, 3, 4, 5, 6, 7]
+            var nums2 = [1, 2, 3, 4, 5, 6, 7]
+            var nums3 = [1, 2, 3, 4, 5, 6, 7]
+            let k = 3
+
+            rotateUsingExtraArray(&nums1, k)
+            print("Method 1 (Extra Array): \(nums1)")
+
+            rotateUsingReverse(&nums2, k)
+            print("Method 2 (Reverse In-Place): \(nums2)")
+
+            rotateUsingCycle(&nums3, k)
+            print("Method 3 (Cyclic Replacement): \(nums3)")
+        }
+    }
+
+    // Uncomment to test in Playground
+    // Solution189.runDemo()
+
+    /*
      188. Best Time to Buy and Sell Stock IV
      You are given an integer array prices where prices[i] is the price of a given stock on the ith day, and an integer k.
 
@@ -52,7 +172,7 @@ class Solution {
               var prev = Array(repeating: 0, count: n)
               var curr = Array(repeating: 0, count: n)
               
-              for i in 1...k {
+            for _ in 1...k {
                   var maxDiff = -prices[0]
                   
                   for j in 1..<n {
