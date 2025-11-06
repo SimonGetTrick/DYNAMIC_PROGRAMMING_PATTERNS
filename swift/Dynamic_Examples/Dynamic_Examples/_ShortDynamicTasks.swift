@@ -6,7 +6,80 @@
 //
 
 import Foundation
+// MARK: - Helper for binary formatting
+extension String {
+    func leftPad(toLength: Int, withPad character: Character = "0") -> String {
+        let paddingCount = max(0, toLength - self.count)
+        return String(repeating: String(character), count: paddingCount) + self
+    }
+}
+
 class Solution {
+    /*
+     190. Reverse Bits
+     Reverse bits of a given 32 bits signed integer.
+     Example 1:
+     Input: n = 43261596
+     Output: 964176192
+     Explanation:
+     Integer    Binary
+     43261596    00000010100101000001111010011100
+     964176192    00111001011110000010100101000000
+     Example 2:
+     Input: n = 2147483644
+     Output: 1073741822
+     Explanation:
+     Integer    Binary
+     2147483644    01111111111111111111111111111100
+     1073741822    00111111111111111111111111111110
+     Constraints:
+     0 <= n <= 231 - 2
+     n is even.
+     */
+    class Solution190 {
+        // MARK: - Reverse Bits of 32-bit Integer
+        //
+        // Time Complexity: O(1)   (always 32 iterations)
+        // Space Complexity: O(1)
+        //
+        // Approach:
+        // 1. Iterate through all 32 bits of the integer.
+        // 2. Shift the result left, add the least significant bit (LSB) of n.
+        // 3. Shift n right to process the next bit.
+        // 4. Return the reversed 32-bit value.
+        static func reverseBits(_ n: UInt32) -> UInt32 {
+            var result: UInt32 = 0
+            var num = n
+            
+            for _ in 0..<32 {
+                // Shift result left to make space for next bit
+                result = (result << 1) | (num & 1)
+                // Move to the next bit
+                num >>= 1
+            }
+            return result
+        }
+
+        // MARK: - Demo Runner
+        static func runDemo() {
+            let n1: UInt32 = 43261596
+            let n2: UInt32 = 2147483644
+
+            let reversed1 = reverseBits(n1)
+            let reversed2 = reverseBits(n2)
+
+            print("Input 1: \(n1) → Output: \(reversed1)")
+            print("Input 2: \(n2) → Output: \(reversed2)")
+
+            // For binary clarity
+            print("\nBinary comparison:")
+            print(String(n1, radix: 2).leftPad(toLength: 32))
+            print(String(reversed1, radix: 2).leftPad(toLength: 32))
+        }
+    }
+    // Uncomment to test in Playground
+    // Solution190.runDemo()
+
     /*
      189. Rotate Array
      Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
