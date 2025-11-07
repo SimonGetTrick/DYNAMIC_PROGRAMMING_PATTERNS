@@ -16,6 +16,88 @@ extension String {
 
 class Solution {
     /*
+     191. Number of 1 Bits
+     Given a positive integer n, write a function that returns the number of set bits in its binary representation (also known as the Hamming weight).
+     Example 1:
+     Input: n = 11
+     Output: 3
+     Explanation:
+     The input binary string 1011 has a total of three set bits.
+     Example 2:
+     Input: n = 128
+     Output: 1
+     Explanation:
+     The input binary string 10000000 has a total of one set bit.
+     Example 3:
+     Input: n = 2147483645
+     Output: 30
+     Explanation:
+     The input binary string 1111111111111111111111111111101 has a total of thirty set bits.
+     */
+    class Solution191 {
+        // MARK: - Count the number of '1' bits (Hamming weight)
+        //
+        // Time Complexity: O(1)   → fixed 32 iterations for a 32-bit integer
+        // Space Complexity: O(1)
+        //
+        // Approach:
+        // 1. Iterate through all 32 bits of n.
+        // 2. Check the least significant bit using (n & 1).
+        // 3. Add it to the counter.
+        // 4. Shift n right to check the next bit.
+        static func hammingWeight(_ n: UInt32) -> Int {
+            var num = n
+            var count = 0
+
+            for _ in 0..<32 {
+                count += Int(num & 1)
+                num >>= 1
+            }
+
+            return count
+        }
+
+        // MARK: - Optimized Method (Brian Kernighan’s Algorithm)
+        //
+        // Time Complexity: O(k), where k = number of 1 bits.
+        // Space Complexity: O(1)
+        //
+        // Approach:
+        // 1. Each iteration removes the lowest set bit using n = n & (n - 1).
+        // 2. Loop runs only as many times as there are 1 bits.
+        static func hammingWeightOptimized(_ n: UInt32) -> Int {
+            var num = n
+            var count = 0
+
+            while num != 0 {
+                num &= (num - 1)  // clear the lowest set bit
+                count += 1
+            }
+
+            return count
+        }
+
+        // MARK: - Demo Runner
+        static func runDemo() {
+            let examples: [UInt32] = [11, 128, 2147483645]
+
+            for n in examples {
+                let simple = hammingWeight(n)
+                let optimized = hammingWeightOptimized(n)
+
+                print("Input: \(n)")
+                print("→ Simple Count: \(simple)")
+                print("→ Optimized (Kernighan): \(optimized)")
+                print("Binary:", String(n, radix: 2))
+                print("––––––––––––––––––––––––––––––––––")
+            }
+        }
+    }
+
+    // Uncomment to test in Playground
+    // Solution191.runDemo()
+
+    /*
      190. Reverse Bits
      Reverse bits of a given 32 bits signed integer.
      Example 1:
