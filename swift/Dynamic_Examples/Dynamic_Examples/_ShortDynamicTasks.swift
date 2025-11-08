@@ -16,6 +16,73 @@ extension String {
 
 class Solution {
     /*
+     192. Word Frequency
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Write a bash script to calculate the frequency of each word in a text file words.txt.
+
+     For simplicity sake, you may assume:
+
+     words.txt contains only lowercase characters and space ' ' characters.
+     Each word must consist of lowercase characters only.
+     Words are separated by one or more whitespace characters.
+     Example:
+
+     Assume that words.txt has the following content:
+
+     the day is sunny the the
+     the sunny is is
+     Your script should output the following, sorted by descending frequency:
+
+     the 4
+     is 3
+     sunny 2
+     day 1
+     Note:
+
+     Don't worry about handling ties, it is guaranteed that each word's frequency count is unique.
+     Could you write it in one-line using Unix pipes?
+     */
+    class Solution192 {
+        /// Reads the content of a text file and prints the frequency of each word
+        /// sorted by descending frequency.
+        ///
+        /// Time Complexity: O(N log N) — N = number of words (sorting step)
+        /// Space Complexity: O(N) — to store frequency dictionary
+        static func wordFrequency(fromFile path: String) {
+            do {
+                // Read the content of the file
+                let content = try String(contentsOfFile: path, encoding: .utf8)
+                
+                // Split text into lowercase words (filter out empty substrings)
+                let words = content
+                    .lowercased()
+                    .components(separatedBy: .whitespacesAndNewlines)
+                    .filter { !$0.isEmpty }
+                
+                // Count occurrences using a dictionary
+                var frequency: [String: Int] = [:]
+                for word in words {
+                    frequency[word, default: 0] += 1
+                }
+                
+                // Sort by descending frequency
+                let sorted = frequency.sorted { $0.value > $1.value }
+                
+                // Print each word with its frequency
+                for (word, count) in sorted {
+                    print("\(word) \(count)")
+                }
+                
+            } catch {
+                print("Error reading file: \(error)")
+            }
+        }
+    }
+
+    /*
      191. Number of 1 Bits
      Given a positive integer n, write a function that returns the number of set bits in its binary representation (also known as the Hamming weight).
      Example 1:
