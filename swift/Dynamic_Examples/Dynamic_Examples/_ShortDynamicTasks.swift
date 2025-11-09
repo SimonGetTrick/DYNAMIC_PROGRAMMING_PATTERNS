@@ -16,6 +16,63 @@ extension String {
 
 class Solution {
     /*
+     193. Valid Phone Numbers
+     Given a text file file.txt that contains a list of phone numbers (one per line), write a one-liner bash script to print all valid phone numbers.
+
+     You may assume that a valid phone number must appear in one of the following two formats: (xxx) xxx-xxxx or xxx-xxx-xxxx. (x means a digit)
+
+     You may also assume each line in the text file must not contain leading or trailing white spaces.
+
+     Example:
+
+     Assume that file.txt has the following content:
+
+     987-123-4567
+     123 456 7890
+     (123) 456-7890
+     Your script should output the following valid phone numbers:
+
+     987-123-4567
+     (123) 456-7890
+     */
+    class Solution193 {
+        /// Reads a text file line by line and prints only valid phone numbers.
+        ///
+        /// Valid formats:
+        /// - (xxx) xxx-xxxx
+        /// - xxx-xxx-xxxx
+        ///
+        /// Time Complexity: O(N) — where N is the number of lines
+        /// Space Complexity: O(1) — no extra data structures except for regex
+        static func printValidPhoneNumbers(fromFile path: String) {
+            // Define the regular expression for valid phone numbers
+            let pattern = #"^(\(\d{3}\)\s|\d{3}-)\d{3}-\d{4}$"#
+            
+            guard let regex = try? NSRegularExpression(pattern: pattern) else {
+                print("Invalid regex pattern.")
+                return
+            }
+            
+            do {
+                // Read the file content and split by newlines
+                let content = try String(contentsOfFile: path, encoding: .utf8)
+                let lines = content.components(separatedBy: .newlines)
+                
+                for line in lines {
+                    let trimmed = line.trimmingCharacters(in: .whitespaces)
+                    // Check if the line matches the regex pattern
+                    let range = NSRange(location: 0, length: trimmed.utf16.count)
+                    if regex.firstMatch(in: trimmed, options: [], range: range) != nil {
+                        print(trimmed)
+                    }
+                }
+            } catch {
+                print("Error reading file: \(error)")
+            }
+        }
+    }
+
+    /*
      192. Word Frequency
      Medium
      Topics
