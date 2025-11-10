@@ -16,6 +16,55 @@ extension String {
 
 class Solution {
     /*
+     194. Transpose File
+     Given a text file file.txt, transpose its content.
+     You may assume that each row has the same number of columns, and each field is separated by the ' ' character.
+     Example:
+     If file.txt has the following content:
+     name age
+     alice 21
+     ryan 30
+     Output the following:
+     name alice ryan
+     age 21 30
+     */
+    class Solution194 {
+        /// Transposes the contents of a space-separated text file.
+        ///
+        /// Time Complexity: O(R * C) — where R = number of rows, C = number of columns
+        /// Space Complexity: O(R * C) — to store all values before transposing
+        static func transposeFile(fromFile path: String) {
+            do {
+                // Read the file content
+                let content = try String(contentsOfFile: path, encoding: .utf8)
+                
+                // Split into lines, removing any empty lines
+                let lines = content
+                    .components(separatedBy: .newlines)
+                    .filter { !$0.isEmpty }
+                
+                // Split each line by spaces to create a 2D matrix
+                let matrix = lines.map { $0.components(separatedBy: .whitespaces).filter { !$0.isEmpty } }
+                
+                guard let firstRow = matrix.first else { return }
+                let numCols = firstRow.count
+                let numRows = matrix.count
+                
+                // Transpose and print
+                for col in 0..<numCols {
+                    var transposedRow = [String]()
+                    for row in 0..<numRows {
+                        transposedRow.append(matrix[row][col])
+                    }
+                    print(transposedRow.joined(separator: " "))
+                }
+            } catch {
+                print("Error reading file: \(error)")
+            }
+        }
+    }
+
+    /*
      193. Valid Phone Numbers
      Given a text file file.txt that contains a list of phone numbers (one per line), write a one-liner bash script to print all valid phone numbers.
 
