@@ -16,6 +16,52 @@ extension String {
 
 class Solution {
     /*
+     195. Tenth Line
+     Given a text file file.txt, print just the 10th line of the file.
+     Example:
+     Assume that file.txt has the following content:
+     Line 1
+....
+     Line 10
+     Your script should output the tenth line, which is:
+     Line 10
+     Note:
+     1. If the file contains less than 10 lines, what should you output?
+     2. There's at least three different solutions. Try to explore all possibilities.
+     */
+    class Solution195 {
+        /// Prints the Nth line from a given text file.
+        ///
+        /// - Parameters:
+        ///   - path: Path to the text file.
+        ///   - lineNumber: The line number to print (1-based index).
+        ///
+        /// If the file contains fewer than N lines, prints nothing.
+        ///
+        /// Time Complexity: O(N) — reads up to `lineNumber` lines
+        /// Space Complexity: O(1) — stores only the current line
+        static func printLine(fromFile path: String, lineNumber: Int) {
+            guard lineNumber > 0 else {
+                print("Line number must be greater than 0.")
+                return
+            }
+            
+            do {
+                // Read the entire file content
+                let content = try String(contentsOfFile: path, encoding: .utf8)
+                let lines = content.components(separatedBy: .newlines)
+                
+                // Check if the file has enough lines
+                if lines.count >= lineNumber {
+                    print(lines[lineNumber - 1])
+                }
+            } catch {
+                print("Error reading file: \(error)")
+            }
+        }
+    }
+
+    /*
      194. Transpose File
      Given a text file file.txt, transpose its content.
      You may assume that each row has the same number of columns, and each field is separated by the ' ' character.
