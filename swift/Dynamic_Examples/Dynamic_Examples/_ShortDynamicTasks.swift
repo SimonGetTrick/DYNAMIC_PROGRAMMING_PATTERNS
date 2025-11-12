@@ -16,6 +16,92 @@ extension String {
 
 class Solution {
     /*
+     196. Delete Duplicate Emails
+     SQL Schema
+     Pandas Schema
+     Table: Person
+
+     +-------------+---------+
+     | Column Name | Type    |
+     +-------------+---------+
+     | id          | int     |
+     | email       | varchar |
+     +-------------+---------+
+     id is the primary key (column with unique values) for this table.
+     Each row of this table contains an email. The emails will not contain uppercase letters.
+      
+
+     Write a solution to delete all duplicate emails, keeping only one unique email with the smallest id.
+
+     For SQL users, please note that you are supposed to write a DELETE statement and not a SELECT one.
+
+     For Pandas users, please note that you are supposed to modify Person in place.
+
+     After running your script, the answer shown is the Person table. The driver will first compile and run your piece of code and then show the Person table. The final order of the Person table does not matter.
+
+     The result format is in the following example.
+
+      
+
+     Example 1:
+
+     Input:
+     Person table:
+     +----+------------------+
+     | id | email            |
+     +----+------------------+
+     | 1  | john@example.com |
+     | 2  | bob@example.com  |
+     | 3  | john@example.com |
+     +----+------------------+
+     Output:
+     +----+------------------+
+     | id | email            |
+     +----+------------------+
+     | 1  | john@example.com |
+     | 2  | bob@example.com  |
+     +----+------------------+
+     Explanation: john@example.com is repeated two times. We keep the row with the smallest Id = 1.
+     DELETE p1
+     FROM Person p1
+     JOIN Person p2
+     ON p1.email = p2.email
+     WHERE p1.id > p2.id;
+     */
+
+    struct Person196 {
+        let id: Int
+        let email: String
+    }
+
+    class Solution196 {
+        /// Removes duplicate emails, keeping only the record with the smallest ID for each email.
+        ///
+        /// - Parameter persons: An array of `Person196` records.
+        /// - Returns: A filtered array with duplicates removed.
+        ///
+        /// Time Complexity: O(N)
+        /// Space Complexity: O(N) — uses a dictionary to track seen emails
+        static func deleteDuplicateEmails(from persons: [Person196]) -> [Person196] {
+            var seenEmails = Set<String>()
+            var uniquePersons = [Person196]()
+            
+            // Sort by ID to ensure smallest ID is processed first
+            let sortedPersons = persons.sorted { $0.id < $1.id }
+            
+            for person in sortedPersons {
+                // If email not seen before, add to result
+                if !seenEmails.contains(person.email) {
+                    uniquePersons.append(person)
+                    seenEmails.insert(person.email)
+                }
+            }
+            
+            return uniquePersons
+        }
+    }
+
+    /*
      195. Tenth Line
      Given a text file file.txt, print just the 10th line of the file.
      Example:
