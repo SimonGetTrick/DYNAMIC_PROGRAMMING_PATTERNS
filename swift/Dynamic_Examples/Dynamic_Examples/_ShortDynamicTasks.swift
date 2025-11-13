@@ -16,6 +16,90 @@ extension String {
 
 class Solution {
     /*
+     197. Rising Temperature
+     Pandas Schema
+     Table: Weather
+
+     +---------------+---------+
+     | Column Name   | Type    |
+     +---------------+---------+
+     | id            | int     |
+     | recordDate    | date    |
+     | temperature   | int     |
+     +---------------+---------+
+     id is the column with unique values for this table.
+     There are no different rows with the same recordDate.
+     This table contains information about the temperature on a certain day.
+      
+
+     Write a solution to find all dates' id with higher temperatures compared to its previous dates (yesterday).
+
+     Return the result table in any order.
+
+     The result format is in the following example.
+
+      
+
+     Example 1:
+
+     Input:
+     Weather table:
+     +----+------------+-------------+
+     | id | recordDate | temperature |
+     +----+------------+-------------+
+     | 1  | 2015-01-01 | 10          |
+     | 2  | 2015-01-02 | 25          |
+     | 3  | 2015-01-03 | 20          |
+     | 4  | 2015-01-04 | 30          |
+     +----+------------+-------------+
+     Output:
+     +----+
+     | id |
+     +----+
+     | 2  |
+     | 4  |
+     +----+
+     Explanation:
+     In 2015-01-02, the temperature was higher than the previous day (10 -> 25).
+     In 2015-01-04, the temperature was higher than the previous day (20 -> 30).
+     SELECT w1.id
+     FROM Weather w1
+     JOIN Weather w2
+     ON DATEDIFF(w1.recordDate, w2.recordDate) = 1
+     WHERE w1.temperature > w2.temperature;
+     */
+    struct Weather197 {
+        let id: Int
+        let recordDate: Date
+        let temperature: Int
+    }
+
+    class Solution197 {
+        /// Finds all IDs where the temperature is higher than the previous day.
+        ///
+        /// Time Complexity: O(N log N) — due to sorting by date
+        /// Space Complexity: O(1)
+        static func risingTemperature(from data: [Weather197]) -> [Int] {
+            // Sort by recordDate to ensure chronological order
+            let sortedData = data.sorted { $0.recordDate < $1.recordDate }
+            var result = [Int]()
+            
+            // Compare each day with the previous one
+            for i in 1..<sortedData.count {
+                let today = sortedData[i]
+                let yesterday = sortedData[i - 1]
+                
+                // Check if days are consecutive and temperature rose
+                let daysBetween = Calendar.current.dateComponents([.day], from: yesterday.recordDate, to: today.recordDate).day ?? 0
+                if daysBetween == 1 && today.temperature > yesterday.temperature {
+                    result.append(today.id)
+                }
+            }
+            
+            return result
+        }
+    }
+    /*
      196. Delete Duplicate Emails
      SQL Schema
      Pandas Schema
