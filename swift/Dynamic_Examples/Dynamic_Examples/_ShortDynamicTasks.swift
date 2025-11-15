@@ -16,6 +16,83 @@ extension String {
 
 class Solution {
     /*
+     199. Binary Tree Right Side View
+     Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+     Example 1:
+     Input: root = [1,2,3,null,5,null,4]
+     Output: [1,3,4]
+     Example 2:
+     Input: root = [1,2,3,4,null,null,null,5]
+     Output: [1,3,4,5]
+      Example 3:
+     Input: root = [1,null,3]
+     Output: [1,3]
+     Example 4:
+     Input: root = []
+     Output: []
+     */
+    // Definition for a binary tree node.
+    public class TreeNode199 {
+        public var val: Int
+        public var left: TreeNode199?
+        public var right: TreeNode199?
+        public init() { self.val = 0; self.left = nil; self.right = nil; }
+        public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+        public init(_ val: Int, _ left: TreeNode199?, _ right: TreeNode199?) {
+            self.val = val
+            self.left = left
+            self.right = right
+        }
+    }
+
+    class Solution199 {
+        /// Returns the right side view of a binary tree.
+        ///
+        /// Approach: BFS (level order traversal) and take the last node at each level
+        ///
+        /// Time Complexity: O(N) — each node is visited once
+        /// Space Complexity: O(N) — queue may contain up to O(N) nodes
+        static func rightSideView(_ root: TreeNode199?) -> [Int] {
+            guard let root = root else { return [] }
+            
+            var result = [Int]()
+            var queue = [TreeNode199]()
+            queue.append(root)
+            
+            while !queue.isEmpty {
+                let levelSize = queue.count
+                for i in 0..<levelSize {
+                    let node = queue.removeFirst()
+                    
+                    // If this is the last node in the current level, add to result
+                    if i == levelSize - 1 {
+                        result.append(node.val)
+                    }
+                    
+                    if let left = node.left {
+                        queue.append(left)
+                    }
+                    if let right = node.right {
+                        queue.append(right)
+                    }
+                }
+            }
+            
+            return result
+        }
+        
+        /// Optional demo runner
+        static func runDemo() {
+            let root = TreeNode199(1,
+                                    TreeNode199(2, nil, TreeNode199(5)),
+                                    TreeNode199(3, nil, TreeNode199(4)))
+            print(rightSideView(root)) // [1, 3, 4]
+        }
+    }
+
+    // Uncomment to test
+    // Solution199.runDemo()
+    /*
      198. House Robber
      You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed, the only constraint stopping you from robbing each of them is that adjacent houses have security systems connected and it will automatically contact the police if two adjacent houses were broken into on the same night.
      Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.
