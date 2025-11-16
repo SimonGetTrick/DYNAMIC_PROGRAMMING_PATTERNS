@@ -16,6 +16,83 @@ extension String {
 
 class Solution {
     /*
+     200. Number of Islands
+     Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
+     An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
+
+     Example 1:
+     Input: grid = [
+       ["1","1","1","1","0"],
+       ["1","1","0","1","0"],
+       ["1","1","0","0","0"],
+       ["0","0","0","0","0"]
+     ]
+     Output: 1
+     Example 2:
+     Input: grid = [
+       ["1","1","0","0","0"],
+       ["1","1","0","0","0"],
+       ["0","0","1","0","0"],
+       ["0","0","0","1","1"]
+     ]
+     Output: 3
+     Constraints:
+     m == grid.length
+     n == grid[i].length
+     1 <= m, n <= 300
+     grid[i][j] is '0' or '1'.
+     */
+    class Solution200 {
+        /// Counts number of islands using DFS flood fill.
+        ///
+        /// Time Complexity:  O(m * n) — we visit each cell at most once.
+        /// Space Complexity: O(m * n) worst-case recursion stack (or O(1) if using iterative DFS).
+        static func numIslands(_ grid: inout [[Character]]) -> Int {
+            let rows = grid.count
+            let cols = grid[0].count
+            var count = 0
+            
+            func dfs(_ r: Int, _ c: Int) {
+                // Boundary check
+                if r < 0 || c < 0 || r >= rows || c >= cols { return }
+                // Skip water or visited cells
+                if grid[r][c] == "0" { return }
+                
+                // Mark as visited
+                grid[r][c] = "0"
+                
+                // Explore neighbors (4-directional)
+                dfs(r + 1, c)
+                dfs(r - 1, c)
+                dfs(r, c + 1)
+                dfs(r, c - 1)
+            }
+            
+            for r in 0..<rows {
+                for c in 0..<cols {
+                    if grid[r][c] == "1" {
+                        count += 1
+                        dfs(r, c) // Flood-fill this island
+                    }
+                }
+            }
+            
+            return count
+        }
+        
+        /// Optional demo
+        static func runDemo() {
+            var grid: [[Character]] = [
+                ["1","1","0","0","0"],
+                ["1","1","0","0","0"],
+                ["0","0","1","0","0"],
+                ["0","0","0","1","1"]
+            ]
+            print(numIslands(&grid)) // Expected: 3
+        }
+    }
+
+    /*
      199. Binary Tree Right Side View
      Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
      Example 1:
