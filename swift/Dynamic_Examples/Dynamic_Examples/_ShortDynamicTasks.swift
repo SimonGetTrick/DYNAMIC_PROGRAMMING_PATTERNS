@@ -16,6 +16,48 @@ extension String {
 
 class Solution {
     /*
+     201. Bitwise AND of Numbers Range
+     Given two integers left and right that represent the range [left, right], return the bitwise AND of all numbers in this range, inclusive.
+     Example 1:
+     Input: left = 5, right = 7
+     Output: 4
+     Example 2:
+     Input: left = 0, right = 0
+     Output: 0
+     Example 3:
+     Input: left = 1, right = 2147483647
+     Output: 0
+     */
+    class Solution201 {
+        /// Computes bitwise AND in range [left, right] by finding the common bit prefix.
+        ///
+        /// Time Complexity:  O(1) — max 31 shifts for 32-bit integers.
+        /// Space Complexity: O(1)
+        static func rangeBitwiseAnd(_ left: Int, _ right: Int) -> Int {
+            var l = left
+            var r = right
+            var shift = 0
+            
+            // Shift until both numbers become equal
+            while l < r {
+                l >>= 1
+                r >>= 1
+                shift += 1
+            }
+            
+            // Shift back to restore common prefix
+            return l << shift
+        }
+        
+        /// Optional demo
+        static func runDemo() {
+            print(rangeBitwiseAnd(5, 7))          // 4
+            print(rangeBitwiseAnd(0, 0))          // 0
+            print(rangeBitwiseAnd(1, 2147483647)) // 0
+        }
+    }
+
+    /*
      200. Number of Islands
      Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
      An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
