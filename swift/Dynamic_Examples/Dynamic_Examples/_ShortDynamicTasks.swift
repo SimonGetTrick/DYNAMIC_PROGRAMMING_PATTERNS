@@ -16,6 +16,108 @@ extension String {
 
 class Solution {
     /*
+     204. Count Primes
+     Given an integer n, return the number of prime numbers that are strictly less than n.
+     Example 1:
+     Input: n = 10
+     Output: 4
+     Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+     Example 2:
+     Input: n = 0
+     Output: 0
+     Example 3:
+     Input: n = 1
+     Output: 0
+     */
+    class Solution204 {
+
+        // ---------------------------------------------------------
+        // Method 1: Basic primality test (Brute Force)
+        // Time Complexity:  O(n * sqrt(n))
+        // Space Complexity: O(1)
+        // ---------------------------------------------------------
+        static func countPrimesBruteforce(_ n: Int) -> Int {
+            if n <= 2 { return 0 }
+            
+            func isPrime(_ x: Int) -> Bool {
+                if x < 2 { return false }
+                for i in 2...Int(Double(x).squareRoot()) {
+                    if x % i == 0 { return false }
+                }
+                return true
+            }
+            
+            var count = 0
+            for i in 2..<n {
+                if isPrime(i) { count += 1 }
+            }
+            return count
+        }
+
+        // ---------------------------------------------------------
+        // Method 2: Optimized primality test using 6k ± 1
+        // Time Complexity:  O(n * sqrt(n)) but faster in practice
+        // Space Complexity: O(1)
+        // ---------------------------------------------------------
+        static func countPrimesFastCheck(_ n: Int) -> Int {
+            if n <= 2 { return 0 }
+            
+            func isPrime(_ x: Int) -> Bool {
+                if x <= 1 { return false }
+                if x <= 3 { return true }
+                if x % 2 == 0 || x % 3 == 0 { return false }
+                
+                var i = 5
+                while i * i <= x {
+                    if x % i == 0 || x % (i + 2) == 0 { return false }
+                    i += 6   // Check only numbers of form 6k ± 1
+                }
+                return true
+            }
+            
+            var count = 0
+            for i in 2..<n {
+                if isPrime(i) { count += 1 }
+            }
+            return count
+        }
+
+        // ---------------------------------------------------------
+        // Method 3: Sieve of Eratosthenes (Optimal)
+        // Time Complexity:  O(n log log n)
+        // Space Complexity: O(n)
+        // ---------------------------------------------------------
+        static func countPrimes(_ n: Int) -> Int {
+            if n <= 2 { return 0 }
+            
+            var sieve = Array(repeating: true, count: n)
+            sieve[0] = false
+            sieve[1] = false
+            
+            var i = 2
+            while i * i < n {
+                if sieve[i] {
+                    var j = i * i
+                    while j < n {
+                        sieve[j] = false
+                        j += i
+                    }
+                }
+                i += 1
+            }
+            
+            return sieve.filter { $0 }.count
+        }
+
+        // Demo
+        static func runDemo() {
+            print(countPrimes(10)) // 4
+            print(countPrimes(0))  // 0
+            print(countPrimes(1))  // 0
+        }
+    }
+
+    /*
      201. Bitwise AND of Numbers Range
      Given two integers left and right that represent the range [left, right], return the bitwise AND of all numbers in this range, inclusive.
      Example 1:
