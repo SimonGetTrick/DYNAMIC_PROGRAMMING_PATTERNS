@@ -16,6 +16,118 @@ extension String {
 
 class Solution {
     /*
+     207. Course Schedule
+     There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
+
+     For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
+     Return true if you can finish all courses. Otherwise, return false.
+     Example 1:
+     Input: numCourses = 2, prerequisites = [[1,0]]
+     Output: true
+     Explanation: There are a total of 2 courses to take.
+     To take course 1 you should have finished course 0. So it is possible.
+     Example 2:
+
+     Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
+     Output: false
+     Explanation: There are a total of 2 courses to take.
+     To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
+     */
+    class Solution207 {
+
+        // ---------------------------------------------------------
+        // Method 1: DFS + Cycle Detection
+        // Detects cycles using a recursion stack.
+        //
+        // Time Complexity:  O(V + E)
+        // Space Complexity: O(V + E) for adjacency list + O(V) for recursion
+        // ---------------------------------------------------------
+        static func canFinishDFS(_ numCourses: Int, _ prerequisites: [[Int]]) -> Bool {
+            // Build graph
+            var graph = Array(repeating: [Int](), count: numCourses)
+            for pair in prerequisites {
+                graph[pair[1]].append(pair[0]) // bi → ai
+            }
+
+            // 0 = unvisited, 1 = visiting, 2 = visited
+            var state = Array(repeating: 0, count: numCourses)
+
+            func dfs(_ course: Int) -> Bool {
+                if state[course] == 1 { return false }  // Found cycle
+                if state[course] == 2 { return true }   // Already checked
+
+                state[course] = 1 // Mark as visiting
+
+                for next in graph[course] {
+                    if !dfs(next) { return false }
+                }
+
+                state[course] = 2 // Mark as done
+                return true
+            }
+
+            for c in 0..<numCourses {
+                if !dfs(c) { return false }
+            }
+            return true
+        }
+
+        // ---------------------------------------------------------
+        // Method 2: BFS (Kahn’s Algorithm)
+        // Uses indegree array to detect whether a topological order exists.
+        //
+        // Time Complexity:  O(V + E)
+        // Space Complexity: O(V + E)
+        // ---------------------------------------------------------
+        static func canFinishBFS(_ numCourses: Int, _ prerequisites: [[Int]]) -> Bool {
+            var graph = Array(repeating: [Int](), count: numCourses)
+            var indegree = Array(repeating: 0, count: numCourses)
+
+            for pair in prerequisites {
+                let course = pair[0]
+                let pre = pair[1]
+                graph[pre].append(course)
+                indegree[course] += 1
+            }
+
+            // Queue for courses with no prerequisites
+            var queue: [Int] = []
+            for i in 0..<numCourses {
+                if indegree[i] == 0 { queue.append(i) }
+            }
+
+            var taken = 0
+
+            while !queue.isEmpty {
+                let current = queue.removeFirst()
+                taken += 1
+
+                for next in graph[current] {
+                    indegree[next] -= 1
+                    if indegree[next] == 0 {
+                        queue.append(next)
+                    }
+                }
+            }
+
+            return taken == numCourses
+        }
+
+        // ---------------------------------------------------------
+        // Default method — BFS (fastest and simplest)
+        // ---------------------------------------------------------
+        static func canFinish(_ numCourses: Int, _ prerequisites: [[Int]]) -> Bool {
+            return canFinishBFS(numCourses, prerequisites)
+        }
+
+        // For testing
+        static func runDemo() {
+            print(canFinish(2, [[1,0]]))          // true
+            print(canFinish(2, [[1,0],[0,1]]))    // false
+        }
+    }
+
+    /*
      204. Count Primes
      Given an integer n, return the number of prime numbers that are strictly less than n.
      Example 1:
