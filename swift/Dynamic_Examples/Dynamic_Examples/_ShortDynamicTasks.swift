@@ -16,6 +16,109 @@ extension String {
 
 class Solution {
     /*
+     209. Minimum Size Subarray Sum
+     Given an array of positive integers nums and a positive integer target, return the minimal length of a subarray whose sum is greater than or equal to target. If there is no such subarray, return 0 instead.
+     Example 1:
+     Input: target = 7, nums = [2,3,1,2,4,3]
+     Output: 2
+     Explanation: The subarray [4,3] has the minimal length under the problem constraint.
+     Example 2:
+     Input: target = 4, nums = [1,4,4]
+     Output: 1
+     Example 3:
+     Input: target = 11, nums = [1,1,1,1,1,1,1,1]
+     Output: 0
+     Constraints:
+     1 <= target <= 109
+     1 <= nums.length <= 105
+     1 <= nums[i] <= 104
+     Follow up: If you have figured out the O(n) solution, try coding another solution of which the time complexity is O(n log(n)).
+     */
+    class Solution209 {
+
+        // ---------------------------------------------------------
+        // Method 1: Sliding Window (O(n))
+        // Time Complexity: O(n)
+        // Space Complexity: O(1)
+        // ---------------------------------------------------------
+        static func minSubArrayLen(_ target: Int, _ nums: [Int]) -> Int {
+            var left = 0
+            var sum = 0
+            var result = Int.max
+            
+            for right in 0..<nums.count {
+                sum += nums[right]
+                
+                // Shrink window from left while sum >= target
+                while sum >= target {
+                    result = min(result, right - left + 1)
+                    sum -= nums[left]
+                    left += 1
+                }
+            }
+            
+            return result == Int.max ? 0 : result
+        }
+        
+        // ---------------------------------------------------------
+        // Method 2: Binary Search on Prefix Sum (O(n log n))
+        // Time Complexity: O(n log n)
+        // Space Complexity: O(n)
+        // ---------------------------------------------------------
+        static func minSubArrayLenBinarySearch(_ target: Int, _ nums: [Int]) -> Int {
+            let n = nums.count
+            if n == 0 { return 0 }
+            
+            // Build prefix sum array
+            var prefixSum = [0]
+            for num in nums {
+                prefixSum.append(prefixSum.last! + num)
+            }
+            
+            var minLen = Int.max
+            
+            for i in 0..<n {
+                let targetSum = target + prefixSum[i]
+                // Binary search for the minimal j such that prefixSum[j] >= targetSum
+                var left = i + 1
+                var right = n
+                var pos = n + 1
+                
+                while left <= right {
+                    let mid = (left + right) / 2
+                    if prefixSum[mid] >= targetSum {
+                        pos = mid
+                        right = mid - 1
+                    } else {
+                        left = mid + 1
+                    }
+                }
+                
+                if pos <= n {
+                    minLen = min(minLen, pos - i)
+                }
+            }
+            
+            return minLen == Int.max ? 0 : minLen
+        }
+        
+        // Demo
+        static func runDemo() {
+            let nums1 = [2,3,1,2,4,3]
+            print(minSubArrayLen(7, nums1))  // 2
+            print(minSubArrayLenBinarySearch(7, nums1))  // 2
+            
+            let nums2 = [1,4,4]
+            print(minSubArrayLen(4, nums2))  // 1
+            print(minSubArrayLenBinarySearch(4, nums2))  // 1
+            
+            let nums3 = [1,1,1,1,1,1,1,1]
+            print(minSubArrayLen(11, nums3))  // 0
+            print(minSubArrayLenBinarySearch(11, nums3))  // 0
+        }
+    }
+
+    /*
      208. Implement Trie (Prefix Tree)
      A trie (pronounced as "try") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.
      Implement the Trie class:
