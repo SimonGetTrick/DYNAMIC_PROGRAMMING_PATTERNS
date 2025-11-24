@@ -16,6 +16,124 @@ extension String {
 
 class Solution {
     /*
+     212. Word Search II
+     Hard
+
+     Given an m x n board of characters and a list of strings words, return all words on the board.
+
+     Each word must be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
+     Example 1:
+     Input: board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]
+     Output: ["eat","oath"]
+     Example 2:
+     Input: board = [["a","b"],["c","d"]], words = ["abcb"]
+     Output: []
+     Constraiѕnts:
+     m == board.length
+     n == board[i].length
+     1 <= m, n <= 12
+     board[i][j] is a lowercase English letter.
+     1 <= words.length <= 3 * 104
+     1 <= words[i].length <= 10
+     words[i] consists of lowercase English letters.
+     All the strings of words are unique.
+     */
+    // Trie node for storing children and a full word when the path forms one
+    class TrieNode212 {
+        // 26 lowercase English letters
+        var children = Array<TrieNode212?>(repeating: nil, count: 26)
+        
+        // Holds the complete word when the end of a valid inserted word is reached
+        var word: String? = nil
+    }
+
+    // Trie structure for fast prefix lookup
+    class Trie212 {
+        let root = TrieNode212()
+
+        // Inserts a word into the Trie
+        func insert(_ word: String) {
+            var node = root
+            for ch in word {
+                let idx = Int(ch.asciiValue! - Character("a").asciiValue!)
+                if node.children[idx] == nil {
+                    node.children[idx] = TrieNode212()
+                }
+                node = node.children[idx]!
+            }
+            node.word = word    // Mark the end of a valid word
+        }
+    }
+
+    class WordSearch212 {
+
+        // Main function: returns all words from `words` that appear in the board
+        func findWords(_ board: [[Character]], _ words: [String]) -> [String] {
+            let trie = Trie212()
+
+            // Build Trie from all words
+            for w in words { trie.insert(w) }
+
+            var result = Set<String>()
+            var board = board
+            let m = board.count
+            let n = board[0].count
+
+            // Start DFS from every cell
+            for i in 0..<m {
+                for j in 0..<n {
+                    dfs(&board, i, j, trie.root, &result)
+                }
+            }
+
+            return Array(result)
+        }
+
+        // DFS search that walks the board following Trie prefixes
+        private func dfs(
+            _ board: inout [[Character]],
+            _ i: Int,
+            _ j: Int,
+            _ node: TrieNode212,
+            _ result: inout Set<String>
+        ) {
+            let m = board.count
+            let n = board[0].count
+
+            // Out of bounds check
+            if i < 0 || j < 0 || i >= m || j >= n { return }
+
+            let ch = board[i][j]
+
+            // Cell already visited (marked as '#')
+            if ch == "#" { return }
+
+            // Convert character to Trie index
+            let idx = Int(ch.asciiValue! - Character("a").asciiValue!)
+
+            // No matching prefix in Trie → stop search
+            guard let next = node.children[idx] else { return }
+
+            // If this path forms a complete word → add to result
+            if let word = next.word {
+                result.insert(word)
+                next.word = nil   // Optimization: remove to avoid duplicates
+            }
+
+            // Mark current cell as visited
+            board[i][j] = "#"
+
+            // Explore neighbors (4-directional)
+            dfs(&board, i + 1, j, next, &result)
+            dfs(&board, i - 1, j, next, &result)
+            dfs(&board, i, j + 1, next, &result)
+            dfs(&board, i, j - 1, next, &result)
+
+            // Restore original character after DFS
+            board[i][j] = ch
+        }
+    }
+    /*
      211. Design Add and Search Words Data Structure
      Design a data structure that supports adding new words and finding if a string matches any previously added string.
      Implement the WordDictionary class:
