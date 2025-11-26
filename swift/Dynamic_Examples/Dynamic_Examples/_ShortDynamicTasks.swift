@@ -17,6 +17,59 @@ extension String {
 
 class Solution {
     /*
+     214. Shortest Palindrome
+     You are given a string s. You can convert s to a palindrome by adding characters in front of it.
+     Return the shortest palindrome you can find by performing this transformation.
+     Example 1:
+     Input: s = "aacecaaa"
+     Output: "aaacecaaa"
+     Example 2:
+     Input: s = "abcd"
+     Output: "dcbabcd"
+     Constraints:
+     0 <= s.length <= 5 * 104
+     s consists of lowercase English letters only.
+     */
+    class Solution214ShortestPalindrome {
+        // Returns shortest palindrome by adding chars in front of string
+        func shortestPalindrome(_ s: String) -> String {
+            if s.isEmpty { return s }  // Edge-case: empty string
+            
+            let rev = String(s.reversed())
+            // Create combined string: original + "#" + reversed
+            // "#" is a separator so KMP does not connect mismatched segments
+            let combined = s + "#" + rev
+            
+            // Build LPS (longest prefix-suffix) array for KMP pattern
+            var lps = Array(repeating: 0, count: combined.count)
+            let arr = Array(combined)
+            
+            // Classic KMP prefix-function computation
+            var i = 1, length = 0
+            while i < arr.count {
+                if arr[i] == arr[length] {
+                    length += 1
+                    lps[i] = length
+                    i += 1
+                } else {
+                    if length > 0 {
+                        length = lps[length - 1]   // fallback
+                    } else {
+                        lps[i] = 0
+                        i += 1
+                    }
+                }
+            }
+
+            // lps.last gives the longest palindromic prefix length in s
+            // We must prepend the reverse of remaining suffix
+            let prefixLength = lps.last!
+            let suffix = rev.dropFirst(prefixLength)
+
+            return String(suffix) + s
+        }
+    }
+    /*
      213. House Robber II
      You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed. All houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, adjacent houses have a security system connected, and it will automatically contact the police if two adjacent houses were broken into on the same night.
 
