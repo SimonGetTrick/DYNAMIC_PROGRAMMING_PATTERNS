@@ -17,6 +17,65 @@ extension String {
 
 class Solution {
     /*
+     215. Kth Largest Element in an Array
+     Given an integer array nums and an integer k, return the kth largest element in the array.
+     Note that it is the kth largest element in the sorted order, not the kth distinct element.
+     Can you solve it without sorting?
+     Example 1:
+     Input: nums = [3,2,1,5,6,4], k = 2
+     Output: 5
+     Example 2:
+     Input: nums = [3,2,3,1,2,4,5,5,6], k = 4
+     Output: 4
+     Constraints:
+     1 <= k <= nums.length <= 105
+     -104 <= nums[i] <= 104
+     */
+    class Solution215KthLargest {
+        // Returns the k-th largest element in the array
+        func findKthLargest(_ nums: [Int], _ k: Int) -> Int {
+            var arr = nums                 // mutable copy
+            let target = arr.count - k     // convert: kth largest → index if sorted ascending
+            
+            return quickSelect(&arr, 0, arr.count - 1, target)
+        }
+        
+        // QuickSelect partition-based search
+        private func quickSelect(_ arr: inout [Int], _ left: Int, _ right: Int, _ target: Int) -> Int {
+            var l = left
+            var r = right
+            
+            while l <= r {
+                let pivotIndex = partition(&arr, l, r)
+                
+                if pivotIndex == target {       // found answer
+                    return arr[pivotIndex]
+                } else if pivotIndex < target { // search right side
+                    l = pivotIndex + 1
+                } else {                        // search left side
+                    r = pivotIndex - 1
+                }
+            }
+            return -1  // unreachable if k valid
+        }
+        
+        // Partition: elements < pivot → left, > pivot → right
+        private func partition(_ arr: inout [Int], _ left: Int, _ right: Int) -> Int {
+            let pivot = arr[right]
+            var i = left
+            
+            for j in left..<right {
+                if arr[j] <= pivot {            // place <= pivot to the left part
+                    arr.swapAt(i, j)
+                    i += 1
+                }
+            }
+            arr.swapAt(i, right)                // place pivot into its correct location
+            return i
+        }
+    }
+
+    /*
      214. Shortest Palindrome
      You are given a string s. You can convert s to a palindrome by adding characters in front of it.
      Return the shortest palindrome you can find by performing this transformation.
