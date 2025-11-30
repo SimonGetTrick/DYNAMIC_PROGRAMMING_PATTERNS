@@ -17,6 +17,49 @@ extension String {
 
 class Solution {
     /*
+     219. Contains Duplicate II
+     Given an integer array nums and an integer k, return true if there are two distinct indices i and j in the array such that nums[i] == nums[j] and abs(i - j) <= k.
+     Example 1:
+     Input: nums = [1,2,3,1], k = 3
+     Output: true
+     Example 2:
+     Input: nums = [1,0,1,1], k = 1
+     Output: true
+     Example 3:
+     Input: nums = [1,2,3,1,2,3], k = 2
+     Output: false
+     Constraints:
+     1 <= nums.length <= 105
+     -109 <= nums[i] <= 109
+     0 <= k <= 105
+     */
+    // 219. Contains Duplicate II
+    // Sliding window + Set, O(n) time, O(k) memory
+
+    class Solution219 {
+        func containsNearbyDuplicate(_ nums: [Int], _ k: Int) -> Bool {
+            var window = Set<Int>()   // stores last k numbers
+            
+            for i in 0..<nums.count {
+                
+                // If we see a number already in window -> duplicate within k distance
+                if window.contains(nums[i]) {
+                    return true
+                }
+                
+                window.insert(nums[i])
+                
+                // Maintain window size ≤ k
+                if window.count > k {
+                    window.remove(nums[i - k])
+                }
+            }
+            
+            return false
+        }
+    }
+
+    /*
      218. The Skyline Problem
      A city's skyline is the outer contour of the silhouette formed by all the buildings in that city when viewed from a distance. Given the locations and heights of all the buildings, return the skyline formed by these buildings collectively.
 
@@ -49,29 +92,67 @@ class Solution {
      1 <= heighti <= 231 - 1
      buildings is sorted by lefti in non-decreasing order.
      */
-    class Solution216CombinationSumIII {
-        func combinationSum3(_ k: Int, _ n: Int) -> [[Int]] {
-            var result: [[Int]] = []
-            var current: [Int] = []
+    // 218. The Skyline Problem
+    // Sweep line + max heap approach
 
-            func backtrack(_ start: Int, _ remainingK: Int, _ remainingSum: Int) {
-                // If k numbers chosen & sum reached → store solution
-                if remainingK == 0 && remainingSum == 0 {
-                    result.append(current)
-                    return
+    class Solution218 {
+        func getSkyline(_ buildings: [[Int]]) -> [[Int]] {
+            // List of events: (x, height), entering positive height, leaving negative
+            var events = [(Int, Int)]()
+            for b in buildings {
+                let left = b[0], right = b[1], height = b[2]
+                events.append((left, height))     // building enters
+                events.append((right, -height))   // building leaves
+            }
+            
+            // Sort events:
+            // 1) by x increasing
+            // 2) entering (positive) higher height first
+            // 3) leaving (negative) lower height first
+            events.sort {
+                if $0.0 == $1.0 {
+                    return $0.1 > $1.1   // higher enter first OR lower exit first
                 }
-                // If impossible to continue → prune early
-                if remainingK < 0 || remainingSum < 0 { return }
-
-                // Choose next candidate from 1...9 without repetition
-                for num in start...9 {
-                    current.append(num)
-                    backtrack(num + 1, remainingK - 1, remainingSum - num)
-                    current.removeLast()  // backtrack step
+                return $0.0 < $1.0
+            }
+            
+            // Max-heap simulated by a dictionary counting heights
+            var heightCount = [Int:Int]()     // height -> frequency in active set
+            var maxHeight = 0
+            var result = [[Int]]()
+            
+            func addHeight(_ h: Int) {
+                heightCount[h, default: 0] += 1
+            }
+            
+            func removeHeight(_ h: Int) {
+                if let cnt = heightCount[h] {
+                    if cnt == 1 { heightCount.removeValue(forKey: h) }
+                    else { heightCount[h] = cnt - 1 }
                 }
             }
-
-            backtrack(1, k, n)
+            
+            func currentMaxHeight() -> Int {
+                return heightCount.keys.max() ?? 0
+            }
+            
+            // Sweep line
+            for (x, h) in events {
+                if h > 0 {             // entering building
+                    addHeight(h)
+                } else {               // leaving building
+                    removeHeight(-h)
+                }
+                
+                let newMax = currentMaxHeight()
+                
+                // If skyline height changed -> record key point
+                if newMax != maxHeight {
+                    result.append([x, newMax])
+                    maxHeight = newMax
+                }
+            }
+            
             return result
         }
     }
