@@ -14,8 +14,133 @@ extension String {
         return String(repeating: String(character), count: paddingCount) + self
     }
 }
+extension Array where Element == Int {
+    func binarySearch(_ x: Int) -> Int {
+        var l = 0, r = count
+        while l < r {
+            let mid = (l + r) / 2
+            if self[mid] < x { l = mid + 1 } else { r = mid }
+        }
+        return l
+    }
+}
 
 class Solution {
+    /*
+     220. Contains Duplicate III
+     Hard
+     You are given an integer array nums and two integers indexDiff and valueDiff.
+     Find a pair of indices (i, j) such that:
+     i != j,
+     abs(i - j) <= indexDiff.
+     abs(nums[i] - nums[j]) <= valueDiff, and
+     Return true if such pair exists or false otherwise.
+     Example 1:
+     Input: nums = [1,2,3,1], indexDiff = 3, valueDiff = 0
+     Output: true
+     Explanation: We can choose (i, j) = (0, 3).
+     We satisfy the three conditions:
+     i != j --> 0 != 3
+     abs(i - j) <= indexDiff --> abs(0 - 3) <= 3
+     abs(nums[i] - nums[j]) <= valueDiff --> abs(1 - 1) <= 0
+     Example 2:
+     Input: nums = [1,5,9,1,5,9], indexDiff = 2, valueDiff = 3
+     Output: false
+     Explanation: After trying all the possible pairs (i, j), we cannot satisfy the three conditions, so we return false.
+     */
+    class Solution220 {
+
+        // ============================================================
+        // METHOD 1 — BUCKET HASHING  (BEST PERFORMANCE)
+        // Time:   O(n)
+        // Memory: O(n)
+        //
+        // Idea:
+        // • Each number is placed into a "bucket" based on valueDiff.
+        // • If two values fall into the same bucket -> difference <= valueDiff.
+        // • We also check two neighbor buckets because values there may be close enough.
+        // • Maintain sliding window of size indexDiff by removing old buckets.
+        // ============================================================
+        /* ============================================================
+         COMPARISON SUMMARY
+
+         | Method                           | Time        | Memory | Notes                             |
+         |----------------------------------|-------------|--------|-----------------------------------|
+         | Bucket Hashing                   | O(n)        | O(n)   | Fastest, best for large inputs    |
+         | TreeSet (Sorted window + BS)     | O(n log n)  | O(n)   | Simpler logic, but slower         |
+
+         Recommended solution → Bucket Hashing (Method 1)
+         ============================================================ */
+
+
+        func containsNearbyAlmostDuplicate_Bucket(_ nums: [Int], _ indexDiff: Int, _ valueDiff: Int) -> Bool {
+            if valueDiff < 0 { return false } // impossible to satisfy
+            
+            var buckets = [Int: Int]()
+            let width = valueDiff + 1 // bucket size
+            
+            for (i, num) in nums.enumerated() {
+                let bucketID = num / width
+                
+                // 1) If bucket already contains a value → abs <= valueDiff → success
+                if buckets[bucketID] != nil {
+                    return true
+                }
+                
+                // 2) Check left and right neighboring buckets
+                if let left = buckets[bucketID - 1], abs(left - num) <= valueDiff { return true }
+                if let right = buckets[bucketID + 1], abs(right - num) <= valueDiff { return true }
+
+                // Insert into bucket
+                buckets[bucketID] = num
+                
+                // Maintain sliding window size <= indexDiff
+                if i >= indexDiff {
+                    let oldBucketID = nums[i - indexDiff] / width
+                    buckets.removeValue(forKey: oldBucketID)
+                }
+            }
+            return false
+        }
+
+
+        // ============================================================
+        // METHOD 2 — SORTED WINDOW + BINARY SEARCH (TREESET ANALOG)
+        // Time:   O(n log n)
+        // Memory: O(n)
+        //
+        // Idea:
+        // • Keep an ordered window of at most indexDiff elements.
+        // • For each new number, binary-search closest neighbors.
+        // • If neighbor differs by <= valueDiff → true.
+        // • Remove old values to keep window size valid.
+        // ============================================================
+        
+        func containsNearbyAlmostDuplicate_TreeSet(_ nums: [Int], _ indexDiff: Int, _ valueDiff: Int) -> Bool {
+            var window = [Int]() // sorted sliding window
+
+            for i in 0..<nums.count {
+                let num = nums[i]
+                let pos = window.binarySearch(num) // position if inserted
+                
+                // Check right neighbor
+                if pos < window.count && abs(window[pos] - num) <= valueDiff { return true }
+                // Check left neighbor
+                if pos > 0 && abs(window[pos - 1] - num) <= valueDiff { return true }
+
+                // Insert current number into sorted array
+                window.insert(num, at: pos)
+
+                // Restrict window size to indexDiff
+                if i >= indexDiff {
+                    let removePos = window.binarySearch(nums[i - indexDiff])
+                    window.remove(at: removePos)
+                }
+            }
+            return false
+        }
+    }
+    
     /*
      219. Contains Duplicate II
      Given an integer array nums and an integer k, return true if there are two distinct indices i and j in the array such that nums[i] == nums[j] and abs(i - j) <= k.
