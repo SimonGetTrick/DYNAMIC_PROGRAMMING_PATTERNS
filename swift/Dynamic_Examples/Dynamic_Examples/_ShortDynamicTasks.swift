@@ -27,6 +27,48 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     221. Maximal Square
+     Given an m x n binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.
+     Example 1:
+     Input: matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+     Output: 4
+     Example 2:
+     Input: matrix = [["0","1"],["1","0"]]
+     Output: 1
+     Example 3:
+     Input: matrix = [["0"]]
+     Output: 0
+     */
+    // 221. Maximal Square
+    // Dynamic Programming, O(m*n) time, O(m*n) space
+
+    class Solution221 {
+        func maximalSquare(_ matrix: [[Character]]) -> Int {
+            guard !matrix.isEmpty else { return 0 }
+            let m = matrix.count
+            let n = matrix[0].count
+            var dp = Array(repeating: Array(repeating: 0, count: n), count: m)
+            var maxSide = 0
+            
+            for i in 0..<m {
+                for j in 0..<n {
+                    if matrix[i][j] == "1" {
+                        if i == 0 || j == 0 {
+                            dp[i][j] = 1  // first row or column
+                        } else {
+                            // min of top, left, and top-left + 1
+                            dp[i][j] = min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) + 1
+                        }
+                        maxSide = max(maxSide, dp[i][j])
+                    }
+                }
+            }
+            
+            return maxSide * maxSide
+        }
+    }
+
+    /*
      220. Contains Duplicate III
      Hard
      You are given an integer array nums and two integers indexDiff and valueDiff.
