@@ -27,6 +27,83 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     222. Count Complete Tree Nodes
+     Given the root of a complete binary tree, return the number of the nodes in the tree.
+     According to Wikipedia, every level, except possibly the last, is completely filled in a complete binary tree, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+     Design an algorithm that runs in less than O(n) time complexity.
+     Example 1:
+     Input: root = [1,2,3,4,5,6]
+     Output: 6
+     Example 2:
+     Input: root = []
+     Output: 0
+     Example 3:
+     Input: root = [1]
+     Output: 1
+     Constraints:
+     The number of nodes in the tree is in the range [0, 5 * 104].
+     0 <= Node.val <= 5 * 104
+     The tree is guaranteed to be complete.
+     */
+    /**
+     * Definition for a binary tree node.
+     * public class TreeNode {
+     *     public var val: Int
+     *     public var left: TreeNode?
+     *     public var right: TreeNode?
+     *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+     *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+     *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+     *         self.val = val
+     *         self.left = left
+     *         self.right = right
+     *     }
+     * }
+     */
+
+    class Solution222 {
+
+        // Main function
+        // Counts nodes in a complete binary tree in O(log^2 n)
+        func countNodes(_ root: TreeNode?) -> Int {
+            guard let root = root else { return 0 }
+            
+            // Compute leftmost and rightmost heights
+            let leftHeight = getLeftHeight(root)
+            let rightHeight = getRightHeight(root)
+            
+            // If equal → perfect binary tree → use formula
+            if leftHeight == rightHeight {
+                return (1 << leftHeight) - 1
+            }
+            
+            // Otherwise recursively count both subtrees
+            return 1 + countNodes(root.left) + countNodes(root.right)
+        }
+        
+        // Returns the height following only left children
+        private func getLeftHeight(_ node: TreeNode?) -> Int {
+            var height = 0
+            var curr = node
+            while curr != nil {
+                height += 1
+                curr = curr?.left
+            }
+            return height
+        }
+        
+        // Returns the height following only right children
+        private func getRightHeight(_ node: TreeNode?) -> Int {
+            var height = 0
+            var curr = node
+            while curr != nil {
+                height += 1
+                curr = curr?.right
+            }
+            return height
+        }
+    }
+    /*
      221. Maximal Square
      Given an m x n binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.
      Example 1:
