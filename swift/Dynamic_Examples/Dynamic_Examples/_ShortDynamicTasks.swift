@@ -27,6 +27,47 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     223. Rectangle Area
+     Given the coordinates of two rectilinear rectangles in a 2D plane, return the total area covered by the two rectangles.
+     The first rectangle is defined by its bottom-left corner (ax1, ay1) and its top-right corner (ax2, ay2).
+     The second rectangle is defined by its bottom-left corner (bx1, by1) and its top-right corner (bx2, by2).
+     Example 1:
+     Rectangle Area
+     Input: ax1 = -3, ay1 = 0, ax2 = 3, ay2 = 4, bx1 = 0, by1 = -1, bx2 = 9, by2 = 2
+     Output: 45
+     Example 2:
+     Input: ax1 = -2, ay1 = -2, ax2 = 2, ay2 = 2, bx1 = -2, by1 = -2, bx2 = 2, by2 = 2
+     Output: 16
+     Constraints:
+     -104 <= ax1 <= ax2 <= 104
+     -104 <= ay1 <= ay2 <= 104
+     -104 <= bx1 <= bx2 <= 104
+     -104 <= by1 <= by2 <= 104
+     */
+    class Solution223RectangleArea {
+        func computeArea(
+            _ ax1: Int, _ ay1: Int, _ ax2: Int, _ ay2: Int,
+            _ bx1: Int, _ by1: Int, _ bx2: Int, _ by2: Int
+        ) -> Int {
+            
+            // Area of rectangle A
+            let areaA = (ax2 - ax1) * (ay2 - ay1)
+            
+            // Area of rectangle B
+            let areaB = (bx2 - bx1) * (by2 - by1)
+            
+            // Compute overlap width and height
+            let overlapWidth  = max(0, min(ax2, bx2) - max(ax1, bx1))
+            let overlapHeight = max(0, min(ay2, by2) - max(ay1, by1))
+            
+            // Overlapping area (0 if rectangles don't touch)
+            let overlapArea = overlapWidth * overlapHeight
+            
+            return areaA + areaB - overlapArea
+        }
+    }
+
+    /*
      222. Count Complete Tree Nodes
      Given the root of a complete binary tree, return the number of the nodes in the tree.
      According to Wikipedia, every level, except possibly the last, is completely filled in a complete binary tree, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
