@@ -27,6 +27,87 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     224. Basic Calculator
+     Given a string s representing a valid expression, implement a basic calculator to evaluate it, and return the result of the evaluation.
+     Note: You are not allowed to use any built-in function which evaluates strings as mathematical expressions, such as eval().
+     Example 1:
+     Input: s = "1 + 1"
+     Output: 2
+     Example 2:
+     Input: s = " 2-1 + 2 "
+     Output: 3
+     Example 3:
+     Input: s = "(1+(4+5+2)-3)+(6+8)"
+     Output: 23
+     Constraints:
+     1 <= s.length <= 3 * 105
+     s consists of digits, '+', '-', '(', ')', and ' '.
+     s represents a valid expression.
+     '+' is not used as a unary operation (i.e., "+1" and "+(2 + 3)" is invalid).
+     '-' could be used as a unary operation (i.e., "-1" and "-(2 + 3)" is valid).
+     There will be no two consecutive operators in the input.
+     Every number and running calculation will fit in a signed 32-bit integer.
+     */
+    class Solution224BasicCalculator {
+        func calculate(_ s: String) -> Int {
+            var result = 0                  // global result
+            var currentNumber = 0           // number being parsed
+            var sign = 1                    // current sign (+1 or -1)
+            var stack: [Int] = []           // stack for previous results and signs
+            
+            let chars = Array(s)
+            var i = 0
+            
+            while i < chars.count {
+                let c = chars[i]
+                
+                if let digit = c.wholeNumberValue {
+                    // Build the current number
+                    currentNumber = currentNumber * 10 + digit
+                }
+                else if c == "+" {
+                    // Add previous number and reset
+                    result += sign * currentNumber
+                    currentNumber = 0
+                    sign = 1
+                }
+                else if c == "-" {
+                    // Add previous number and reset
+                    result += sign * currentNumber
+                    currentNumber = 0
+                    sign = -1
+                }
+                else if c == "(" {
+                    // Push current result and sign onto the stack
+                    stack.append(result)
+                    stack.append(sign)
+                    
+                    // Reset for inside parentheses
+                    result = 0
+                    sign = 1
+                }
+                else if c == ")" {
+                    // Complete the number before ')'
+                    result += sign * currentNumber
+                    currentNumber = 0
+                    
+                    // Pop sign and previous result
+                    let prevSign = stack.removeLast()
+                    let prevResult = stack.removeLast()
+                    
+                    // Combine
+                    result = prevResult + prevSign * result
+                }
+                
+                // Ignore spaces
+                i += 1
+            }
+            
+            return result + sign * currentNumber
+        }
+    }
+
+    /*
      223. Rectangle Area
      Given the coordinates of two rectilinear rectangles in a 2D plane, return the total area covered by the two rectangles.
      The first rectangle is defined by its bottom-left corner (ax1, ay1) and its top-right corner (ax2, ay2).
