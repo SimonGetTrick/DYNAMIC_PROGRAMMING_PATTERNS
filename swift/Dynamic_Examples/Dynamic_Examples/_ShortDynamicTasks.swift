@@ -27,6 +27,71 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     225. Implement Stack using Queues
+     Implement a last-in-first-out (LIFO) stack using only two queues. The implemented stack should support all the functions of a normal stack (push, top, pop, and empty).
+     Implement the MyStack class:
+     void push(int x) Pushes element x to the top of the stack.
+     int pop() Removes the element on the top of the stack and returns it.
+     int top() Returns the element on the top of the stack.
+     boolean empty() Returns true if the stack is empty, false otherwise.
+     Notes:
+     You must use only standard operations of a queue, which means that only push to back, peek/pop from front, size and is empty operations are valid.
+     Depending on your language, the queue may not be supported natively. You may simulate a queue using a list or deque (double-ended queue) as long as you use only a queue's standard operations.
+     Example 1:
+     Input
+     ["MyStack", "push", "push", "top", "pop", "empty"]
+     [[], [1], [2], [], [], []]
+     Output
+     [null, null, null, 2, 2, false]
+     Explanation
+     MyStack myStack = new MyStack();
+     myStack.push(1);
+     myStack.push(2);
+     myStack.top(); // return 2
+     myStack.pop(); // return 2
+     myStack.empty(); // return False
+     */
+    /// LeetCode 225. Implement Stack using Queues
+    /// Two-queue implementation
+    class Solution225MyStack {
+
+        private var q1: [Int] = []  // main queue
+        private var q2: [Int] = []  // helper queue
+
+        /// Push element x to top of stack
+        func push(_ x: Int) {
+            // Step 1: enqueue new element to q2
+            q2.append(x)
+
+            // Step 2: move everything from q1 to q2
+            while !q1.isEmpty {
+                q2.append(q1.removeFirst())
+            }
+
+            // Step 3: swap queues
+            let temp = q1
+            q1 = q2
+            q2 = temp
+            q2.removeAll()
+        }
+
+        /// Removes top element and returns it
+        func pop() -> Int {
+            return q1.removeFirst()
+        }
+
+        /// Returns top element without removing it
+        func top() -> Int {
+            return q1.first!
+        }
+
+        /// Returns whether stack is empty
+        func empty() -> Bool {
+            return q1.isEmpty
+        }
+    }
+
+    /*
      224. Basic Calculator
      Given a string s representing a valid expression, implement a basic calculator to evaluate it, and return the result of the evaluation.
      Note: You are not allowed to use any built-in function which evaluates strings as mathematical expressions, such as eval().
