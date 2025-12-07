@@ -27,6 +27,57 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     226. Invert Binary Tree
+     Given the root of a binary tree, invert the tree, and return its root.
+     Example 1:
+     Input: root = [4,2,7,1,3,6,9]
+     Output: [4,7,2,9,6,3,1]
+     Example 2:
+     Input: root = [2,1,3]
+     Output: [2,3,1]
+     Example 3:
+     Input: root = []
+     Output: []
+     Constraints:
+     The number of nodes in the tree is in the range [0, 100].
+     -100 <= Node.val <= 100
+     */
+    /// LeetCode 226. Invert Binary Tree
+    /// Recursively swaps left and right children for each node
+    class Solution226InvertBinaryTree {
+
+        /// Binary tree node
+        public class TreeNode {
+            public var val: Int
+            public var left: TreeNode?
+            public var right: TreeNode?
+            public init(_ val: Int) {
+                self.val = val
+                self.left = nil
+                self.right = nil
+            }
+        }
+
+        /// Inverts the binary tree and returns the root
+        func invertTree(_ root: TreeNode?) -> TreeNode? {
+            guard let node = root else {
+                return nil
+            }
+
+            // swap left and right children
+            let temp = node.left
+            node.left = node.right
+            node.right = temp
+
+            // recursively invert subtrees
+            _ = invertTree(node.left)
+            _ = invertTree(node.right)
+
+            return node
+        }
+    }
+
+    /*
      225. Implement Stack using Queues
      Implement a last-in-first-out (LIFO) stack using only two queues. The implemented stack should support all the functions of a normal stack (push, top, pop, and empty).
      Implement the MyStack class:
