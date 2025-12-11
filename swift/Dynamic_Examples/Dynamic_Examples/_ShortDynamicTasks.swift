@@ -27,6 +27,47 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     230. Kth Smallest Element in a BST
+     Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.
+     Example 1:
+     Input: root = [3,1,4,null,2], k = 1
+     Output: 1
+     Example 2:
+     Input: root = [5,3,6,2,4,null,null,1], k = 3
+     Output: 3
+     Constraints:
+     The number of nodes in the tree is n.
+     1 <= k <= n <= 104
+     0 <= Node.val <= 104
+     Follow up: If the BST is modified often (i.e., we can do insert and delete operations) and you need to find the kth smallest frequently, how would you optimize?
+     */
+    // MARK: - 230. Kth Smallest Element in a BST
+    class LC230_KthSmallestInBST {
+
+        // Returns the k-th smallest element (1-indexed)
+        func kthSmallest(_ root: TreeNode?, _ k: Int) -> Int {
+            var k = k
+            var result = 0
+
+            func inorder(_ node: TreeNode?) {
+                guard let node = node, k > 0 else { return }
+
+                inorder(node.left)
+
+                k -= 1
+                if k == 0 {
+                    result = node.val
+                    return
+                }
+
+                inorder(node.right)
+            }
+
+            inorder(root)
+            return result
+        }
+    }    
+    /*
      229. Majority Element II
      Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times.
 Example 1:
