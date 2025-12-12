@@ -27,6 +27,48 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     233. Number of Digit One
+     Given an integer n, count the total number of digit 1 appearing in all non-negative integers less than or equal to n.
+     Example 1:
+     Input: n = 13
+     Output: 6
+     Example 2:
+     Input: n = 0
+     Output: 0
+     Constraints:
+     0 <= n <= 109
+     */
+    // 233. Number of Digit One
+    // Count the total number of digit '1' appearing in all non-negative integers <= n
+    // Time: O(log n), Space: O(1)
+    class LC233_NumberOfDigitOne {
+        func countDigitOne(_ n: Int) -> Int {
+            let n = n
+            var digit = 1
+            var res = 0
+
+            while n / digit > 0 {
+                let high = n / (digit * 10)
+                let cur  = (n / digit) % 10
+                let low  = n % digit
+
+                if cur == 0 {
+                    res += high * digit
+                } else if cur == 1 {
+                    res += high * digit + low + 1
+                } else {
+                    res += (high + 1) * digit
+                }
+
+                // move to next higher digit
+                digit *= 10
+            }
+
+            return res
+        }
+    }
+
+    /*
      230. Kth Smallest Element in a BST
      Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.
      Example 1:
@@ -66,7 +108,7 @@ class Solution {
             inorder(root)
             return result
         }
-    }    
+    }
     /*
      229. Majority Element II
      Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times.
