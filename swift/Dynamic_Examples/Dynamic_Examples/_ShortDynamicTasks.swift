@@ -27,6 +27,118 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     239. Sliding Window Maximum     Hard
+     You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
+     Return the max sliding window.
+     Example 1:
+     Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
+     Output: [3,3,5,5,6,7]
+     Explanation:
+     Window position                Max
+     ---------------               -----
+     [1  3  -1] -3  5  3  6  7       3
+      1 [3  -1  -3] 5  3  6  7       3
+      1  3 [-1  -3  5] 3  6  7       5
+      1  3  -1 [-3  5  3] 6  7       5
+      1  3  -1  -3 [5  3  6] 7       6
+      1  3  -1  -3  5 [3  6  7]      7
+     Example 2:
+
+     Input: nums = [1], k = 1
+     Output: [1]
+      
+
+     Constraints:
+
+     1 <= nums.length <= 105
+     -104 <= nums[i] <= 104
+     1 <= k <= nums.length
+     */
+    // 239. Sliding Window Maximum
+    // Time Complexity: O(n)
+    // Space Complexity: O(k)
+
+    class LC239_SlidingWindowMaximum {
+
+        func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
+            guard !nums.isEmpty, k > 0 else { return [] }
+
+            var deque: [Int] = []   // Stores indices
+            var result: [Int] = []
+
+            for i in 0..<nums.count {
+
+                // Remove indices that are out of the current window
+                if let first = deque.first, first <= i - k {
+                    deque.removeFirst()
+                }
+
+                // Remove elements smaller than current from the back
+                while let last = deque.last, nums[last] < nums[i] {
+                    deque.removeLast()
+                }
+
+                // Add current index
+                deque.append(i)
+
+                // The front of the deque is the maximum of the window
+                if i >= k - 1 {
+                    result.append(nums[deque.first!])
+                }
+            }
+
+            return result
+        }
+    }
+
+    /*
+     238. Product of Array Except Self
+     Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
+     The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
+     You must write an algorithm that runs in O(n) time and without using the division operation.
+     Example 1:
+     Input: nums = [1,2,3,4]
+     Output: [24,12,8,6]
+     Example 2:
+     Input: nums = [-1,1,0,-3,3]
+     Output: [0,0,9,0,0]
+     Constraints:
+     2 <= nums.length <= 105
+     -30 <= nums[i] <= 30
+     The input is generated such that answer[i] is guaranteed to fit in a 32-bit integer.
+     Follow up: Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)
+     */
+    // 238. Product of Array Except Self
+    // Time Complexity: O(n)
+    // Space Complexity: O(1) extra space (output array does not count)
+
+    class LC238_ProductOfArrayExceptSelf {
+
+        func productExceptSelf(_ nums: [Int]) -> [Int] {
+            let n = nums.count
+            var result = Array(repeating: 1, count: n)
+
+            // Step 1: Calculate prefix products
+            // result[i] will contain the product of all elements to the left of i
+            var prefix = 1
+            for i in 0..<n {
+                result[i] = prefix
+                prefix *= nums[i]
+            }
+
+            // Step 2: Calculate suffix products and multiply with prefix products
+            // suffix holds the product of all elements to the right of i
+            var suffix = 1
+            for i in stride(from: n - 1, through: 0, by: -1) {
+                result[i] *= suffix
+                suffix *= nums[i]
+            }
+
+            return result
+        }
+    }
+
+    /*
      237. Delete Node in a Linked List
      There is a singly-linked list head and we want to delete a node node in it.
 
