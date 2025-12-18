@@ -27,6 +27,58 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     240. Search a 2D Matrix II
+     Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:
+     Integers in each row are sorted in ascending from left to right.
+     Integers in each column are sorted in ascending from top to bottom.
+     Example 1:
+     Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5
+     Output: true
+     Example 2:
+     Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 20
+     Output: false
+     Constraints:
+     m == matrix.length
+     n == matrix[i].length
+     1 <= n, m <= 300
+     -109 <= matrix[i][j] <= 109
+     All the integers in each row are sorted in ascending order.
+     All the integers in each column are sorted in ascending order.
+     -109 <= target <= 109
+     */
+    // 240. Search a 2D Matrix II
+    // Time Complexity: O(m + n)
+    // Space Complexity: O(1)
+
+    class LC240_Search2DMatrixII {
+
+        func searchMatrix(_ matrix: [[Int]], _ target: Int) -> Bool {
+            let rows = matrix.count
+            let cols = matrix[0].count
+
+            // Start from the top-right corner
+            var row = 0
+            var col = cols - 1
+
+            while row < rows && col >= 0 {
+                let value = matrix[row][col]
+
+                if value == target {
+                    return true
+                } else if value > target {
+                    // Move left if current value is too large
+                    col -= 1
+                } else {
+                    // Move down if current value is too small
+                    row += 1
+                }
+            }
+
+            return false
+        }
+    }
+
+    /*
      239. Sliding Window Maximum     Hard
      You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
      Return the max sliding window.
