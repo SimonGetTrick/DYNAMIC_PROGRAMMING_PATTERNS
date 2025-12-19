@@ -27,6 +27,81 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     241. Different Ways to Add Parentheses
+     Given a string expression of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. You may return the answer in any order.
+     The test cases are generated such that the output values fit in a 32-bit integer and the number of different results does not exceed 104.
+     Example 1:
+     Input: expression = "2-1-1"
+     Output: [0,2]
+     Explanation:
+     ((2-1)-1) = 0
+     (2-(1-1)) = 2
+     Example 2:
+     Input: expression = "2*3-4*5"
+     Output: [-34,-14,-10,-10,10]
+     Explanation:
+     (2*(3-(4*5))) = -34
+     ((2*3)-(4*5)) = -14
+     ((2*(3-4))*5) = -10
+     (2*((3-4)*5)) = -10
+     (((2*3)-4)*5) = 10
+     Constraints:
+     1 <= expression.length <= 20
+     expression consists of digits and the operator '+', '-', and '*'.
+     All the integer values in the input expression are in the range [0, 99].
+     The integer values in the input expression do not have a leading '-' or '+' denoting the sign.
+     */
+    // 241. Different Ways to Add Parentheses
+    // Divide & Conquer with recursion
+    // Time Complexity: Exponential (Catalan number growth)
+    // Space Complexity: Exponential (results + recursion stack)
+
+    class LC241_DifferentWaysToAddParentheses {
+
+        func diffWaysToCompute(_ expression: String) -> [Int] {
+            return compute(expression)
+        }
+
+        private func compute(_ expr: String) -> [Int] {
+            var results: [Int] = []
+
+            // Try every operator as a split point
+            for (i, char) in expr.enumerated() {
+                if char == "+" || char == "-" || char == "*" {
+
+                    let leftExpr = String(expr.prefix(i))
+                    let rightExpr = String(expr.suffix(expr.count - i - 1))
+
+                    let leftResults = compute(leftExpr)
+                    let rightResults = compute(rightExpr)
+
+                    // Combine results from left and right parts
+                    for l in leftResults {
+                        for r in rightResults {
+                            switch char {
+                            case "+":
+                                results.append(l + r)
+                            case "-":
+                                results.append(l - r)
+                            case "*":
+                                results.append(l * r)
+                            default:
+                                break
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Base case: the expression is a single number
+            if results.isEmpty {
+                results.append(Int(expr)!)
+            }
+
+            return results
+        }
+    }
+    /*
      240. Search a 2D Matrix II
      Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:
      Integers in each row are sorted in ascending from left to right.
