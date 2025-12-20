@@ -27,6 +27,53 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     242. Valid Anagram
+     Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+     Example 1:
+     Input: s = "anagram", t = "nagaram"
+     Output: true
+     Example 2:
+     Input: s = "rat", t = "car"
+     Output: false
+     Constraints:
+     1 <= s.length, t.length <= 5 * 104
+     s and t consist of lowercase English letters.
+     Follow up: What if the inputs contain Unicode characters? How would you adapt your solution to such a case?
+     */
+    // 242. Valid Anagram
+    // Time Complexity: O(n)
+    // Space Complexity: O(1)
+
+    class LC242_ValidAnagram {
+
+        func isAnagram(_ s: String, _ t: String) -> Bool {
+            // If lengths differ, they cannot be anagrams
+            if s.count != t.count {
+                return false
+            }
+
+            var count = Array(repeating: 0, count: 26)
+            let aAscii = Int(Character("a").asciiValue!)
+
+            // Count characters in s
+            for ch in s {
+                count[Int(ch.asciiValue!) - aAscii] += 1
+            }
+
+            // Subtract characters in t
+            for ch in t {
+                let index = Int(ch.asciiValue!) - aAscii
+                count[index] -= 1
+                if count[index] < 0 {
+                    return false
+                }
+            }
+
+            return true
+        }
+    }
+
+    /*
      241. Different Ways to Add Parentheses
      Given a string expression of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. You may return the answer in any order.
      The test cases are generated such that the output values fit in a 32-bit integer and the number of different results does not exceed 104.
