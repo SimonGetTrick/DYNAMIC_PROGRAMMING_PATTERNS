@@ -27,6 +27,337 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     262. Trips and Users
+     Hard + SQL Schema
+     Table: Trips
+
+     +-------------+----------+
+     | Column Name | Type     |
+     +-------------+----------+
+     | id          | int      |
+     | client_id   | int      |
+     | driver_id   | int      |
+     | city_id     | int      |
+     | status      | enum     |
+     | request_at  | varchar  |
+     +-------------+----------+
+     id is the primary key (column with unique values) for this table.
+     The table holds all taxi trips. Each trip has a unique id, while client_id and driver_id are foreign keys to the users_id at the Users table.
+     Status is an ENUM (category) type of ('completed', 'cancelled_by_driver', 'cancelled_by_client').
+
+     Table: Users
+
+     +-------------+----------+
+     | Column Name | Type     |
+     +-------------+----------+
+     | users_id    | int      |
+     | banned      | enum     |
+     | role        | enum     |
+     +-------------+----------+
+     users_id is the primary key (column with unique values) for this table.
+     The table holds all users. Each user has a unique users_id, and role is an ENUM type of ('client', 'driver', 'partner').
+     banned is an ENUM (category) type of ('Yes', 'No').
+
+     The cancellation rate is computed by dividing the number of canceled (by client or driver) requests with unbanned users by the total number of requests with unbanned users on that day.
+
+     Write a solution to find the cancellation rate of requests with unbanned users (both client and driver must not be banned) each day between "2013-10-01" and "2013-10-03" with at least one trip. Round Cancellation Rate to two decimal points.
+
+     Return the result table in any order.
+
+     The result format is in the following example.
+
+      
+
+     Example 1:
+
+     Input:
+     Trips table:
+     +----+-----------+-----------+---------+---------------------+------------+
+     | id | client_id | driver_id | city_id | status              | request_at |
+     +----+-----------+-----------+---------+---------------------+------------+
+     | 1  | 1         | 10        | 1       | completed           | 2013-10-01 |
+     | 2  | 2         | 11        | 1       | cancelled_by_driver | 2013-10-01 |
+     | 3  | 3         | 12        | 6       | completed           | 2013-10-01 |
+     | 4  | 4         | 13        | 6       | cancelled_by_client | 2013-10-01 |
+     | 5  | 1         | 10        | 1       | completed           | 2013-10-02 |
+     | 6  | 2         | 11        | 6       | completed           | 2013-10-02 |
+     | 7  | 3         | 12        | 6       | completed           | 2013-10-02 |
+     | 8  | 2         | 12        | 12      | completed           | 2013-10-03 |
+     | 9  | 3         | 10        | 12      | completed           | 2013-10-03 |
+     | 10 | 4         | 13        | 12      | cancelled_by_driver | 2013-10-03 |
+     +----+-----------+-----------+---------+---------------------+------------+
+     Users table:
+     +----------+--------+--------+
+     | users_id | banned | role   |
+     +----------+--------+--------+
+     | 1        | No     | client |
+     | 2        | Yes    | client |
+     | 3        | No     | client |
+     | 4        | No     | client |
+     | 10       | No     | driver |
+     | 11       | No     | driver |
+     | 12       | No     | driver |
+     | 13       | No     | driver |
+     +----------+--------+--------+
+     Output:
+     +------------+-------------------+
+     | Day        | Cancellation Rate |
+     +------------+-------------------+
+     | 2013-10-01 | 0.33              |
+     | 2013-10-02 | 0.00              |
+     | 2013-10-03 | 0.50              |
+     +------------+-------------------+
+     Explanation:
+     On 2013-10-01:
+       - There were 4 requests in total, 2 of which were canceled.
+       - However, the request with Id=2 was made by a banned client (User_Id=2), so it is ignored in the calculation.
+       - Hence there are 3 unbanned requests in total, 1 of which was canceled.
+       - The Cancellation Rate is (1 / 3) = 0.33
+     On 2013-10-02:
+       - There were 3 requests in total, 0 of which were canceled.
+       - The request with Id=6 was made by a banned client, so it is ignored.
+       - Hence there are 2 unbanned requests in total, 0 of which were canceled.
+       - The Cancellation Rate is (0 / 2) = 0.00
+     On 2013-10-03:
+       - There were 3 requests in total, 1 of which was canceled.
+       - The request with Id=8 was made by a banned client, so it is ignored.
+       - Hence there are 2 unbanned request in total, 1 of which were canceled.
+       - The Cancellation Rate is (1 / 2) = 0.50
+     SELECT
+         t.request_at AS Day,
+         ROUND(
+             SUM(
+                 CASE
+                     WHEN t.status IN ('cancelled_by_driver', 'cancelled_by_client')
+                     THEN 1 ELSE 0
+                 END
+             ) / COUNT(*),
+             2
+         ) AS "Cancellation Rate"
+     FROM Trips t
+     JOIN Users c
+         ON t.client_id = c.users_id
+         AND c.banned = 'No'
+     JOIN Users d
+         ON t.driver_id = d.users_id
+         AND d.banned = 'No'
+     WHERE t.request_at BETWEEN '2013-10-01' AND '2013-10-03'
+     GROUP BY t.request_at;
+     */
+    // LeetCode 262. Trips and Users
+    // Emulation of SQL solution using pure Swift (console project)
+
+    final class Task262TripsAndUsers {
+
+        // Entry point for demo execution
+        static func demo() {
+
+            // MARK: - Models (Tables)
+
+            // Represents a row from Users table
+            struct User {
+                let id: Int
+                let banned: Bool
+            }
+
+            // Represents a row from Trips table
+            struct Trip {
+                let id: Int
+                let clientId: Int
+                let driverId: Int
+                let status: Status
+                let date: String
+            }
+
+            enum Status {
+                case completed
+                case cancelledByClient
+                case cancelledByDriver
+            }
+
+            // MARK: - Data (Same as problem example)
+
+            let users: [Int: User] = [
+                1: User(id: 1, banned: false),
+                2: User(id: 2, banned: true),
+                3: User(id: 3, banned: false),
+                4: User(id: 4, banned: false),
+                10: User(id: 10, banned: false),
+                11: User(id: 11, banned: false),
+                12: User(id: 12, banned: false),
+                13: User(id: 13, banned: false)
+            ]
+
+            let trips: [Trip] = [
+                Trip(id: 1, clientId: 1, driverId: 10, status: .completed, date: "2013-10-01"),
+                Trip(id: 2, clientId: 2, driverId: 11, status: .cancelledByDriver, date: "2013-10-01"),
+                Trip(id: 3, clientId: 3, driverId: 12, status: .completed, date: "2013-10-01"),
+                Trip(id: 4, clientId: 4, driverId: 13, status: .cancelledByClient, date: "2013-10-01"),
+
+                Trip(id: 5, clientId: 1, driverId: 10, status: .completed, date: "2013-10-02"),
+                Trip(id: 6, clientId: 2, driverId: 11, status: .completed, date: "2013-10-02"),
+                Trip(id: 7, clientId: 3, driverId: 12, status: .completed, date: "2013-10-02"),
+
+                Trip(id: 8, clientId: 2, driverId: 12, status: .completed, date: "2013-10-03"),
+                Trip(id: 9, clientId: 3, driverId: 10, status: .completed, date: "2013-10-03"),
+                Trip(id: 10, clientId: 4, driverId: 13, status: .cancelledByDriver, date: "2013-10-03")
+            ]
+
+            // MARK: - Calculation Logic
+
+            // Allowed date range
+            let validDates = Set(["2013-10-01", "2013-10-02", "2013-10-03"])
+
+            // Day -> (total trips, cancelled trips)
+            var stats: [String: (total: Int, cancelled: Int)] = [:]
+
+            for trip in trips {
+
+                // WHERE request_at BETWEEN dates
+                guard validDates.contains(trip.date) else { continue }
+
+                // JOIN Users (client and driver)
+                guard
+                    let client = users[trip.clientId],
+                    let driver = users[trip.driverId]
+                else { continue }
+
+                // WHERE client.banned = 'No' AND driver.banned = 'No'
+                guard !client.banned && !driver.banned else { continue }
+
+                // GROUP BY request_at (initialize if needed)
+                if stats[trip.date] == nil {
+                    stats[trip.date] = (0, 0)
+                }
+
+                // COUNT(*)
+                stats[trip.date]!.total += 1
+
+                // COUNT cancelled trips
+                if trip.status != .completed {
+                    stats[trip.date]!.cancelled += 1
+                }
+            }
+
+            // MARK: - Output
+
+            for (day, value) in stats.sorted(by: { $0.key < $1.key }) {
+                let rate = Double(value.cancelled) / Double(value.total)
+                let rounded = String(format: "%.2f", rate)
+                print("\(day) -> Cancellation Rate: \(rounded)")
+            }
+        }
+    }
+
+    /*
+     ------------------------------------------------------------
+     SQL vs Swift (line by line comparison)
+     ------------------------------------------------------------
+
+     SQL:
+     SELECT request_at AS Day,
+            ROUND(
+                SUM(status != 'completed') / COUNT(*), 2
+            ) AS Cancellation Rate
+
+     Swift:
+     let rate = Double(cancelled) / Double(total)
+     let rounded = String(format: "%.2f", rate)
+
+     ------------------------------------------------------------
+
+     SQL:
+     FROM Trips t
+     JOIN Users c ON t.client_id = c.users_id
+     JOIN Users d ON t.driver_id = d.users_id
+
+     Swift:
+     let client = users[trip.clientId]
+     let driver = users[trip.driverId]
+
+     ------------------------------------------------------------
+
+     SQL:
+     WHERE c.banned = 'No'
+       AND d.banned = 'No'
+
+     Swift:
+     guard !client.banned && !driver.banned else { continue }
+
+     ------------------------------------------------------------
+
+     SQL:
+     AND request_at BETWEEN '2013-10-01' AND '2013-10-03'
+
+     Swift:
+     guard validDates.contains(trip.date) else { continue }
+
+     ------------------------------------------------------------
+
+     SQL:
+     GROUP BY request_at
+
+     Swift:
+     stats[trip.date] = (total, cancelled)
+
+     ------------------------------------------------------------
+    */
+
+    /*
+     260. Single Number III
+     Given an integer array nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once. You can return the answer in any order.
+
+     You must write an algorithm that runs in linear runtime complexity and uses only constant extra space.
+     Example 1:
+     Input: nums = [1,2,1,3,2,5]
+     Output: [3,5]
+     Explanation:  [5, 3] is also a valid answer.
+     Example 2:
+     Input: nums = [-1,0]
+     Output: [-1,0]
+     Example 3:
+     Input: nums = [0,1]
+     Output: [1,0]
+      
+
+     Constraints:
+
+     2 <= nums.length <= 3 * 104
+     -231 <= nums[i] <= 231 - 1
+     Each integer in nums will appear twice, only two integers will appear once.     */
+    // 260. Single Number III
+    // Time Complexity: O(n)
+    // Space Complexity: O(1)
+
+    class LC260_SingleNumberIII {
+
+        func singleNumber(_ nums: [Int]) -> [Int] {
+            var xorAll = 0
+
+            // Step 1: XOR of all numbers (result = x ^ y)
+            for num in nums {
+                xorAll ^= num
+            }
+
+            // Step 2: Find a distinguishing bit (rightmost set bit)
+            let diffBit = xorAll & -xorAll
+
+            var num1 = 0
+            var num2 = 0
+
+            // Step 3: Split numbers into two groups based on diffBit
+            for num in nums {
+                if (num & diffBit) == 0 {
+                    num1 ^= num
+                } else {
+                    num2 ^= num
+                }
+            }
+
+            return [num1, num2]
+        }
+    }
+    /*
      242. Valid Anagram
      Given two strings s and t, return true if t is an anagram of s, and false otherwise.
      Example 1:
