@@ -27,6 +27,88 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     263. Ugly Number
+     An ugly number is a positive integer which does not have a prime factor other than 2, 3, and 5.
+     Given an integer n, return true if n is an ugly number.
+Example 1:
+     Input: n = 6
+     Output: true
+     Explanation: 6 = 2 × 3
+Example 2:
+     Input: n = 1
+     Output: true
+     Explanation: 1 has no prime factors.
+Example 3:
+     Input: n = 14
+     Output: false
+     Explanation: 14 is not ugly since it includes the prime factor 7.
+     */
+    // LeetCode 263. Ugly Number
+    // Determines whether a number has no prime factors other than 2, 3, and 5
+
+    final class Task263UglyNumber {
+
+        // Entry point for console demo
+        static func demo() {
+
+            let testValues = [6, 1, 14, 8, 0, -5]
+
+            for n in testValues {
+                print("n = \(n), isUgly = \(isUgly263(n))")
+            }
+        }
+
+        // Checks if a number is an ugly number
+        static func isUgly263(_ n: Int) -> Bool {
+
+            // Ugly numbers must be positive
+            if n <= 0 {
+                return false
+            }
+
+            var value = n
+
+            // Remove all factors of 2
+            while value % 2 == 0 {
+                value /= 2
+            }
+
+            // Remove all factors of 3
+            while value % 3 == 0 {
+                value /= 3
+            }
+
+            // Remove all factors of 5
+            while value % 5 == 0 {
+                value /= 5
+            }
+
+            // If only 1 remains, number is ugly
+            return value == 1
+        }
+    }
+
+    /*
+     ------------------------------------------------------------
+     Explanation
+     ------------------------------------------------------------
+
+     An ugly number is a number whose prime factors are limited to 2, 3, and 5.
+
+     Algorithm:
+     1. If n <= 0 → return false
+     2. Repeatedly divide n by 2 while possible
+     3. Repeatedly divide n by 3 while possible
+     4. Repeatedly divide n by 5 while possible
+     5. If the final result is 1 → ugly number
+
+     ------------------------------------------------------------
+     Time Complexity: O(log n)
+     Space Complexity: O(1)
+     ------------------------------------------------------------
+    */
+
+    /*
      262. Trips and Users
      Hard + SQL Schema
      Table: Trips
