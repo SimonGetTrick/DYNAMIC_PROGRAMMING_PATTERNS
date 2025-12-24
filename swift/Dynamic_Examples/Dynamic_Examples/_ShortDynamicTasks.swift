@@ -27,6 +27,108 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     264. Ugly Number II
+    An ugly number is a positive integer whose prime factors are limited to 2, 3, and 5.
+     Given an integer n, return the nth ugly number.
+     Example 1:
+     Input: n = 10
+     Output: 12
+     Explanation: [1, 2, 3, 4, 5, 6, 8, 9, 10, 12] is the sequence of the first 10 ugly numbers.
+     Example 2:
+     Input: n = 1
+     Output: 1
+     Explanation: 1 has no prime factors, therefore all of its prime factors are limited to 2, 3, and 5.
+     Constraints:
+     1 <= n <= 1690
+     */
+    // LeetCode 264. Ugly Number II
+    // Finds the n-th ugly number using dynamic programming
+
+    final class Task264UglyNumberII {
+
+        // Entry point for console demo
+        static func demo() {
+
+            let testValues = [1, 10, 15]
+
+            for n in testValues {
+                let result = nthUglyNumber264(n)
+                print("n = \(n), nth ugly number = \(result)")
+            }
+        }
+
+        // Returns the n-th ugly number
+        static func nthUglyNumber264(_ n: Int) -> Int {
+
+            // Base case
+            if n == 1 {
+                return 1
+            }
+
+            // DP array to store ugly numbers
+            var ugly = Array(repeating: 0, count: n)
+            ugly[0] = 1
+
+            // Three pointers for multiples of 2, 3, and 5
+            var i2 = 0
+            var i3 = 0
+            var i5 = 0
+
+            for index in 1..<n {
+
+                // Next possible ugly numbers
+                let next2 = ugly[i2] * 2
+                let next3 = ugly[i3] * 3
+                let next5 = ugly[i5] * 5
+
+                // Choose the smallest candidate
+                let nextUgly = min(next2, next3, next5)
+                ugly[index] = nextUgly
+
+                // Move pointers that produced the minimum
+                if nextUgly == next2 {
+                    i2 += 1
+                }
+                if nextUgly == next3 {
+                    i3 += 1
+                }
+                if nextUgly == next5 {
+                    i5 += 1
+                }
+            }
+
+            return ugly[n - 1]
+        }
+    }
+
+    /*
+     ------------------------------------------------------------
+     Explanation
+     ------------------------------------------------------------
+
+     We generate ugly numbers in ascending order using DP.
+
+     Key idea:
+     Every ugly number is produced by multiplying a previous ugly number
+     by 2, 3, or 5.
+
+     We maintain:
+     - ugly[] : list of generated ugly numbers
+     - i2, i3, i5 : pointers to positions whose multiples are candidates
+
+     At each step:
+     1. Compute next candidates (ugly[i2]*2, ugly[i3]*3, ugly[i5]*5)
+     2. Pick the smallest one
+     3. Move all pointers that generated this value
+
+     This avoids duplicates (e.g. 6 from 2*3 and 3*2).
+
+     ------------------------------------------------------------
+     Time Complexity: O(n)
+     Space Complexity: O(n)
+     ------------------------------------------------------------
+    */
+    /*
      263. Ugly Number
      An ugly number is a positive integer which does not have a prime factor other than 2, 3, and 5.
      Given an integer n, return true if n is an ugly number.
