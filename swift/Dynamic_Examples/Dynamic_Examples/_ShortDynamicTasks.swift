@@ -27,6 +27,97 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     268. Missing Number
+     Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
+     Example 1:
+     Input: nums = [3,0,1]
+     Output: 2
+     Explanation:
+     n = 3 since there are 3 numbers, so all numbers are in the range [0,3]. 2 is the missing number in the range since it does not appear in nums.
+     Example 2:
+     Input: nums = [0,1]
+     Output: 2
+     Explanation:
+     n = 2 since there are 2 numbers, so all numbers are in the range [0,2]. 2 is the missing number in the range since it does not appear in nums.
+     Example 3:
+     Input: nums = [9,6,4,2,3,5,7,0,1]
+     Output: 8
+     Explanation:
+     n = 9 since there are 9 numbers, so all numbers are in the range [0,9]. 8 is the missing number in the range since it does not appear in nums.
+     */
+    // LeetCode 268. Missing Number
+    // Finds the missing number in range [0, n] using XOR
+
+    final class Task268MissingNumber {
+
+        // Entry point for console demo
+        static func demo() {
+
+            let testCases = [
+                [3, 0, 1],
+                [0, 1],
+                [9, 6, 4, 2, 3, 5, 7, 0, 1]
+            ]
+
+            for nums in testCases {
+                let result = missingNumber268(nums)
+                print("nums = \(nums) -> missing = \(result)")
+            }
+        }
+
+        // Returns the missing number
+        static func missingNumber268(_ nums: [Int]) -> Int {
+
+            let n = nums.count
+
+            // XOR of all indices and values
+            var xorResult = 0
+
+            // XOR all numbers from 0 to n
+            for i in 0...n {
+                xorResult ^= i
+            }
+
+            // XOR all elements in the array
+            for num in nums {
+                xorResult ^= num
+            }
+
+            // Remaining value is the missing number
+            return xorResult
+        }
+    }
+
+    /*
+     ------------------------------------------------------------
+     Explanation
+     ------------------------------------------------------------
+
+     XOR properties:
+     1) a ^ a = 0
+     2) a ^ 0 = a
+     3) XOR is commutative and associative
+
+     Idea:
+     - XOR all numbers from 0 to n
+     - XOR all numbers present in the array
+     - All matching pairs cancel out
+     - The remaining value is the missing number
+
+     Example:
+     nums = [3, 0, 1], n = 3
+
+     Full range XOR:   0 ^ 1 ^ 2 ^ 3
+     Array XOR:        3 ^ 0 ^ 1
+     Result:           2
+
+     ------------------------------------------------------------
+     Time Complexity: O(n)
+     Space Complexity: O(1)
+     ------------------------------------------------------------
+    */
+
+    /*
      264. Ugly Number II
     An ugly number is a positive integer whose prime factors are limited to 2, 3, and 5.
      Given an integer n, return the nth ugly number.
