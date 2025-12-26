@@ -27,6 +27,218 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     273. Integer to English Words
+     Convert a non-negative integer num to its English words representation.
+     Example 1:
+     Input: num = 123
+     Output: "One Hundred Twenty Three"
+     Example 2:
+     Input: num = 12345
+     Output: "Twelve Thousand Three Hundred Forty Five"
+     Example 3:
+     Input: num = 1234567
+     Output: "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+     Constraints:
+     0 <= num <= 231 - 1
+     */
+    // LeetCode 273. Integer to English & German Words
+    // English and German number-to-words conversion
+
+    final class Task273IntegerToEnglishWords {
+
+        // Entry point for console demo
+        static func demo() {
+
+            let testCases = [
+                0,
+                7,
+                21,
+                105,
+                123,
+                12345,
+                1_000_001
+            ]
+
+            for num in testCases {
+                let en = numberToWords273(num)
+                let de = numberToWords273DE(num)
+
+                print("Number: \(num)")
+                print("EN: \(en)")
+                print("DE: \(de)")
+                print("------------")
+            }
+        }
+
+        // MARK: - English Version
+
+        static func numberToWords273(_ num: Int) -> String {
+
+            if num == 0 { return "Zero" }
+
+            var num = num
+            var result = ""
+
+            if num >= 1_000_000_000 {
+                result += convertBelowThousandEN(num / 1_000_000_000) + " Billion"
+                num %= 1_000_000_000
+            }
+
+            if num >= 1_000_000 {
+                if !result.isEmpty { result += " " }
+                result += convertBelowThousandEN(num / 1_000_000) + " Million"
+                num %= 1_000_000
+            }
+
+            if num >= 1_000 {
+                if !result.isEmpty { result += " " }
+                result += convertBelowThousandEN(num / 1_000) + " Thousand"
+                num %= 1_000
+            }
+
+            if num > 0 {
+                if !result.isEmpty { result += " " }
+                result += convertBelowThousandEN(num)
+            }
+
+            return result
+        }
+
+        private static func convertBelowThousandEN(_ num: Int) -> String {
+
+            let belowTwenty = [
+                "", "One", "Two", "Three", "Four", "Five",
+                "Six", "Seven", "Eight", "Nine", "Ten",
+                "Eleven", "Twelve", "Thirteen", "Fourteen",
+                "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+            ]
+
+            let tens = [
+                "", "", "Twenty", "Thirty", "Forty",
+                "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+            ]
+
+            var num = num
+            var words = ""
+
+            if num >= 100 {
+                words += belowTwenty[num / 100] + " Hundred"
+                num %= 100
+            }
+
+            if num >= 20 {
+                if !words.isEmpty { words += " " }
+                words += tens[num / 10]
+                num %= 10
+            }
+
+            if num > 0 {
+                if !words.isEmpty { words += " " }
+                words += belowTwenty[num]
+            }
+
+            return words
+        }
+
+        // MARK: - German Version 🇩🇪
+
+        static func numberToWords273DE(_ num: Int) -> String {
+
+            if num == 0 { return "null" }
+
+            var num = num
+            var result = ""
+
+            if num >= 1_000_000 {
+                let millions = num / 1_000_000
+                result += convertBelowThousandDE(millions)
+                result += millions == 1 ? " Million" : " Millionen"
+                num %= 1_000_000
+            }
+
+            if num >= 1_000 {
+                if !result.isEmpty { result += " " }
+                result += convertBelowThousandDE(num / 1_000) + "tausend"
+                num %= 1_000
+            }
+
+            if num > 0 {
+                if !result.isEmpty { result += " " }
+                result += convertBelowThousandDE(num)
+            }
+
+            return result
+        }
+
+        // Converts numbers from 1 to 999 (German rules)
+        private static func convertBelowThousandDE(_ num: Int) -> String {
+
+            let ones = [
+                "", "ein", "zwei", "drei", "vier", "fünf",
+                "sechs", "sieben", "acht", "neun", "zehn",
+                "elf", "zwölf", "dreizehn", "vierzehn",
+                "fünfzehn", "sechzehn", "siebzehn",
+                "achtzehn", "neunzehn"
+            ]
+
+            let tens = [
+                "", "", "zwanzig", "dreißig", "vierzig",
+                "fünfzig", "sechzig", "siebzig",
+                "achtzig", "neunzig"
+            ]
+
+            var num = num
+            var words = ""
+
+            if num >= 100 {
+                words += ones[num / 100] + "hundert"
+                num %= 100
+            }
+
+            if num >= 20 {
+                let unit = num % 10
+                let ten = num / 10
+
+                if unit > 0 {
+                    words += ones[unit] + "und" + tens[ten]
+                } else {
+                    words += tens[ten]
+                }
+            } else if num > 0 {
+                words += ones[num]
+            }
+
+            return words
+        }
+    }
+
+    /*
+     ------------------------------------------------------------
+     English vs German comparison
+     ------------------------------------------------------------
+
+     English:
+     - "Twenty One"
+     - tens before ones
+     - words separated by spaces
+
+     German:
+     - "einundzwanzig"
+     - ones before tens
+     - words written together
+
+     Example:
+     21
+     EN -> Twenty One
+     DE -> einundzwanzig
+
+     ------------------------------------------------------------
+     Time Complexity: O(1)
+     Space Complexity: O(1)
+     ------------------------------------------------------------
+     */
+
+    /*
      268. Missing Number
      Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
      Example 1:
