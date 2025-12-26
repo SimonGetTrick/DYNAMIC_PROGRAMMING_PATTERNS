@@ -27,6 +27,95 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     274. H-Index
+     Given an array of integers citations where citations[i] is the number of citations a researcher received for their ith paper, return the researcher's h-index.
+     According to the definition of h-index on Wikipedia: The h-index is defined as the maximum value of h such that the given researcher has published at least h papers that have each been cited at least h times.
+Example 1:
+     Input: citations = [3,0,6,1,5]
+     Output: 3
+     Explanation: [3,0,6,1,5] means the researcher has 5 papers in total and each of them had received 3, 0, 6, 1, 5 citations respectively.
+     Since the researcher has 3 papers with at least 3 citations each and the remaining two with no more than 3 citations each, their h-index is 3.
+Example 2:
+     Input: citations = [1,3,1]
+     Output: 1
+     Constraints:
+     n == citations.length
+     1 <= n <= 5000
+     0 <= citations[i] <= 1000
+     */
+    // LeetCode 274. H-Index
+    // Sorting-based solution
+
+    final class Task274HIndex {
+
+        // Entry point for console demo
+        static func demo() {
+
+            let testCases = [
+                [3, 0, 6, 1, 5],
+                [1, 3, 1],
+                [0, 0, 0],
+                [10, 8, 5, 4, 3],
+                [25, 8, 5, 3, 3]
+            ]
+
+            for citations in testCases {
+                let h = hIndex274(citations)
+                print("Citations: \(citations) -> H-Index: \(h)")
+            }
+        }
+
+        // Computes the H-Index using sorting
+        static func hIndex274(_ citations: [Int]) -> Int {
+
+            // Sort citations in descending order
+            let sorted = citations.sorted(by: >)
+
+            var h = 0
+
+            // Iterate and check the H-index condition
+            for i in 0..<sorted.count {
+                if sorted[i] >= i + 1 {
+                    h = i + 1
+                } else {
+                    break
+                }
+            }
+
+            return h
+        }
+    }
+
+    /*
+     ------------------------------------------------------------
+     Explanation
+     ------------------------------------------------------------
+
+     1) Sort citations in descending order
+     2) For each index i:
+        - Check if citations[i] >= i + 1
+        - If true, we can have at least (i + 1) papers
+          with at least (i + 1) citations
+     3) The largest valid (i + 1) is the H-index
+
+     Example:
+     citations = [3, 0, 6, 1, 5]
+     sorted    = [6, 5, 3, 1, 0]
+
+     i = 0 → 6 >= 1 ✔
+     i = 1 → 5 >= 2 ✔
+     i = 2 → 3 >= 3 ✔
+     i = 3 → 1 >= 4 ✘ → stop
+
+     H-index = 3
+
+     ------------------------------------------------------------
+     Time Complexity: O(n log n)
+     Space Complexity: O(n)
+     ------------------------------------------------------------
+     */
+
+    /*
      273. Integer to English Words
      Convert a non-negative integer num to its English words representation.
      Example 1:
