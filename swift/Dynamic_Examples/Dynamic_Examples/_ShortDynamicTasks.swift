@@ -27,6 +27,103 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     275. H-Index II
+     Given an array of integers citations where citations[i] is the number of citations a researcher received for their ith paper and citations is sorted in non-descending order, return the researcher's h-index.
+     According to the definition of h-index on Wikipedia: The h-index is defined as the maximum value of h such that the given researcher has published at least h papers that have each been cited at least h times.
+     You must write an algorithm that runs in logarithmic time.
+     Example 1:
+     Input: citations = [0,1,3,5,6]
+     Output: 3
+     Explanation: [0,1,3,5,6] means the researcher has 5 papers in total and each of them had received 0, 1, 3, 5, 6 citations respectively.
+     Since the researcher has 3 papers with at least 3 citations each and the remaining two with no more than 3 citations each, their h-index is 3.
+     Example 2:
+     Input: citations = [1,2,100]
+     Output: 2
+     Constraints:
+     n == citations.length
+     1 <= n <= 105
+     0 <= citations[i] <= 1000
+     citations is sorted in ascending order.
+     */
+    // LeetCode 275. H-Index II
+    // Binary Search solution (O(log n))
+
+    final class Task275HIndexII {
+
+        // Entry point for console demo
+        static func demo() {
+
+            let testCases = [
+                [0, 1, 3, 5, 6],
+                [1, 2, 100],
+                [0, 0, 0],
+                [10, 10, 10],
+                [0, 1, 2, 4, 5, 6]
+            ]
+
+            for citations in testCases {
+                let h = hIndex275(citations)
+                print("Citations: \(citations) -> H-Index: \(h)")
+            }
+        }
+
+        // Computes the H-Index using binary search
+        static func hIndex275(_ citations: [Int]) -> Int {
+
+            let n = citations.count
+            var left = 0
+            var right = n - 1
+
+            while left <= right {
+                let mid = left + (right - left) / 2
+                let papersWithAtLeastThisManyCitations = n - mid
+
+                if citations[mid] >= papersWithAtLeastThisManyCitations {
+                    // Try to find a smaller index on the left
+                    right = mid - 1
+                } else {
+                    // Need more citations → move right
+                    left = mid + 1
+                }
+            }
+
+            // left is the first index satisfying the condition
+            return n - left
+        }
+    }
+
+    /*
+     ------------------------------------------------------------
+     Explanation
+     ------------------------------------------------------------
+
+     Given sorted citations in ascending order.
+
+     At index i:
+     - Number of papers with citations >= citations[i] is (n - i)
+     - H-index condition:
+         citations[i] >= (n - i)
+
+     We binary search for the first index i where the condition is true.
+
+     Example:
+     citations = [0, 1, 3, 5, 6]
+     n = 5
+
+     i = 2:
+     citations[2] = 3
+     n - i = 3
+     3 >= 3 ✔
+
+     First such index is i = 2
+     H-index = n - i = 3
+
+     ------------------------------------------------------------
+     Time Complexity: O(log n)
+     Space Complexity: O(1)
+     ------------------------------------------------------------
+     */
+    /*
      274. H-Index
      Given an array of integers citations where citations[i] is the number of citations a researcher received for their ith paper, return the researcher's h-index.
      According to the definition of h-index on Wikipedia: The h-index is defined as the maximum value of h such that the given researcher has published at least h papers that have each been cited at least h times.
