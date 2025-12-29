@@ -27,6 +27,94 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     279. Perfect Squares
+     Given an integer n, return the least number of perfect square numbers that sum to n.
+     A perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself. For example, 1, 4, 9, and 16 are perfect squares while 3 and 11 are not.
+     Example 1:
+     Input: n = 12
+     Output: 3
+     Explanation: 12 = 4 + 4 + 4.
+     Example 2:
+     Input: n = 13
+     Output: 2
+     Explanation: 13 = 4 + 9.
+     Constraints:
+     1 <= n <= 104
+     */
+    // LeetCode 279. Perfect Squares
+    // Dynamic Programming solution
+
+    final class Task279PerfectSquares {
+
+        // Entry point for console demo
+        static func demo() {
+
+            let testCases = [1, 12, 13, 43, 100]
+
+            for n in testCases {
+                let result = numSquares279(n)
+                print("n = \(n) -> minimum squares = \(result)")
+            }
+        }
+
+        // Returns the least number of perfect square numbers that sum to n
+        static func numSquares279(_ n: Int) -> Int {
+
+            // dp[i] = minimum number of perfect squares that sum to i
+            var dp = Array(repeating: Int.max, count: n + 1)
+            dp[0] = 0
+
+            // Build the DP table from 1 to n
+            for i in 1...n {
+
+                var j = 1
+                while j * j <= i {
+                    let square = j * j
+
+                    // Transition: use one square and solve the rest
+                    dp[i] = min(dp[i], dp[i - square] + 1)
+
+                    j += 1
+                }
+            }
+
+            return dp[n]
+        }
+    }
+
+    /*
+     ------------------------------------------------------------
+     Explanation
+     ------------------------------------------------------------
+
+     dp[i] represents the minimum number of perfect squares
+     that sum up to the value i.
+
+     For each i, we try all perfect squares j*j <= i and choose
+     the best option:
+
+         dp[i] = min(dp[i], dp[i - j*j] + 1)
+
+     Example:
+     n = 12
+
+     dp[12] = min(
+         dp[12 - 1] + 1,   // 1*1
+         dp[12 - 4] + 1,   // 2*2
+         dp[12 - 9] + 1    // 3*3
+     )
+
+     dp[12] = min(4, 3, 4) = 3
+
+     Answer: 12 = 4 + 4 + 4
+
+     ------------------------------------------------------------
+     Time Complexity: O(n * sqrt(n))
+     Space Complexity: O(n)
+     ------------------------------------------------------------
+     */
+
+    /*
      275. H-Index II
      Given an array of integers citations where citations[i] is the number of citations a researcher received for their ith paper and citations is sorted in non-descending order, return the researcher's h-index.
      According to the definition of h-index on Wikipedia: The h-index is defined as the maximum value of h such that the given researcher has published at least h papers that have each been cited at least h times.
