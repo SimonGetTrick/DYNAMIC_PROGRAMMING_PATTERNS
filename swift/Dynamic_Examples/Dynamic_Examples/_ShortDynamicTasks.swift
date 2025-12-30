@@ -27,6 +27,158 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     282. Expression Add Operator  Hard
+     Given a string num that contains only digits and an integer target, return all possibilities to insert the binary operators '+', '-', and/or '*' between the digits of num so that the resultant expression evaluates to the target value.
+     Note that operands in the returned expressions should not contain leading zeros.
+     Note that a number can contain multiple digits.
+     Example 1:
+     Input: num = "123", target = 6
+     Output: ["1*2*3","1+2+3"]
+     Explanation: Both "1*2*3" and "1+2+3" evaluate to 6.
+     Example 2:
+     Input: num = "232", target = 8
+     Output: ["2*3+2","2+3*2"]
+     Explanation: Both "2*3+2" and "2+3*2" evaluate to 8.
+     Example 3:
+     Input: num = "3456237490", target = 9191
+     Output: []
+     Explanation: There are no expressions that can be created from "3456237490" to evaluate to 9191.
+     Constraints:
+
+     1 <= num.length <= 10
+     num consists of only digits.
+     -231 <= target <= 231 - 1
+     */
+    // LeetCode 282. Expression Add Operators
+    // Backtracking with operator precedence handling
+
+    final class Task282ExpressionAddOperators {
+
+        // Entry point for console demo
+        static func demo() {
+
+            let tests = [
+                ("123", 6),
+                ("232", 8),
+                ("105", 5),
+                ("00", 0),
+                ("3456237490", 9191)
+            ]
+
+            for (num, target) in tests {
+                let result = addOperators282(num, target)
+                print("num = \(num), target = \(target)")
+                print("Result: \(result)")
+                print("-----")
+            }
+        }
+
+        // Main solution method
+        static func addOperators282(_ num: String, _ target: Int) -> [String] {
+
+            let chars = Array(num)
+            var result: [String] = []
+
+            // DFS backtracking
+            func dfs(
+                _ index: Int,
+                _ expression: String,
+                _ currentValue: Int64,
+                _ lastOperand: Int64
+            ) {
+
+                // If we consumed all digits
+                if index == chars.count {
+                    if currentValue == Int64(target) {
+                        result.append(expression)
+                    }
+                    return
+                }
+
+                var number: Int64 = 0
+
+                // Try all possible splits
+                for i in index..<chars.count {
+
+                    // Prevent numbers with leading zero
+                    if i > index && chars[index] == "0" {
+                        break
+                    }
+
+                    number = number * 10 + Int64(String(chars[i]))!
+
+                    let numberStr = String(number)
+
+                    if index == 0 {
+                        // First number: no operator
+                        dfs(
+                            i + 1,
+                            numberStr,
+                            number,
+                            number
+                        )
+                    } else {
+                        // Addition
+                        dfs(
+                            i + 1,
+                            expression + "+" + numberStr,
+                            currentValue + number,
+                            number
+                        )
+
+                        // Subtraction
+                        dfs(
+                            i + 1,
+                            expression + "-" + numberStr,
+                            currentValue - number,
+                            -number
+                        )
+
+                        // Multiplication (handle precedence)
+                        dfs(
+                            i + 1,
+                            expression + "*" + numberStr,
+                            currentValue - lastOperand + lastOperand * number,
+                            lastOperand * number
+                        )
+                    }
+                }
+            }
+
+            dfs(0, "", 0, 0)
+            return result
+        }
+    }
+
+    /*
+     ------------------------------------------------------------
+     Explanation
+     ------------------------------------------------------------
+
+     We use DFS to try all possible ways to insert '+', '-', '*'
+     between digits.
+
+     Parameters:
+     - index: current position in the string
+     - expression: built expression so far
+     - currentValue: evaluated value so far
+     - lastOperand: last added operand (used for '*')
+
+     Multiplication handling:
+     Example: 1 + 2 * 3
+     When '*' is added:
+       currentValue = (1 + 2) - 2 + (2 * 3)
+
+     Leading zeros are prevented by:
+       if i > index && chars[index] == '0' -> break
+
+     ------------------------------------------------------------
+     Time Complexity: Exponential (bounded by input size <= 10)
+     Space Complexity: O(n) recursion depth
+     ------------------------------------------------------------
+     */
+
+    /*
      279. Perfect Squares
      Given an integer n, return the least number of perfect square numbers that sum to n.
      A perfect square is an integer that is the square of an integer; in other words, it is the product of some integer with itself. For example, 1, 4, 9, and 16 are perfect squares while 3 and 11 are not.
