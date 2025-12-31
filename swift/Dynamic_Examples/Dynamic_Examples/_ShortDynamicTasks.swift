@@ -27,6 +27,137 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     284. Peeking Iterator
+     Design an iterator that supports the peek operation on an existing iterator in addition to the hasNext and the next operations.
+     Implement the PeekingIterator class:
+     PeekingIterator(Iterator<int> nums) Initializes the object with the given integer iterator iterator.
+     int next() Returns the next element in the array and moves the pointer to the next element.
+     boolean hasNext() Returns true if there are still elements in the array.
+     int peek() Returns the next element in the array without moving the pointer.
+     Note: Each language may have a different implementation of the constructor and Iterator, but they all support the int next() and boolean hasNext() functions.
+     Example 1:
+     Input
+     ["PeekingIterator", "next", "peek", "next", "next", "hasNext"]
+     [[[1, 2, 3]], [], [], [], [], []]
+     Output
+     [null, 1, 2, 2, 3, false]
+     Explanation
+     PeekingIterator peekingIterator = new PeekingIterator([1, 2, 3]); // [1,2,3]
+     peekingIterator.next();    // return 1, the pointer moves to the next element [1,2,3].
+     peekingIterator.peek();    // return 2, the pointer does not move [1,2,3].
+     peekingIterator.next();    // return 2, the pointer moves to the next element [1,2,3]
+     peekingIterator.next();    // return 3, the pointer moves to the next element [1,2,3]
+     peekingIterator.hasNext(); // return False     */
+    // LeetCode 284. Peeking Iterator
+    // Wrapper over an iterator with one-element cache
+    final class Task284PeekingIterator {
+
+        // Simple iterator simulation for Swift
+        final class Iterator {
+            private var data: [Int]
+            private var index: Int = 0
+
+            init(_ nums: [Int]) {
+                self.data = nums
+            }
+
+            func next() -> Int {
+                let value = data[index]
+                index += 1
+                return value
+            }
+
+            func hasNext() -> Bool {
+                return index < data.count
+            }
+        }
+
+        // PeekingIterator implementation
+        final class PeekingIterator {
+
+            private let iterator: Iterator
+            private var nextValue: Int?
+            private var hasCached: Bool = false
+
+            // Initialize with existing iterator
+            init(_ iterator: Iterator) {
+                self.iterator = iterator
+                advance()
+            }
+
+            // Returns the next element without moving the pointer
+            func peek() -> Int {
+                return nextValue!
+            }
+
+            // Returns the next element and advances iterator
+            func next() -> Int {
+                let value = nextValue!
+                advance()
+                return value
+            }
+
+            // Returns true if there are more elements
+            func hasNext() -> Bool {
+                return hasCached
+            }
+
+            // Loads next value from underlying iterator
+            private func advance() {
+                if iterator.hasNext() {
+                    nextValue = iterator.next()
+                    hasCached = true
+                } else {
+                    nextValue = nil
+                    hasCached = false
+                }
+            }
+        }
+
+        // Demo method
+        static func demo() {
+
+            let iterator = Iterator([1, 2, 3])
+            let peekingIterator = PeekingIterator(iterator)
+
+            print(peekingIterator.next())    // 1
+            print(peekingIterator.peek())    // 2
+            print(peekingIterator.next())    // 2
+            print(peekingIterator.next())    // 3
+            print(peekingIterator.hasNext()) // false
+        }
+    }
+
+    /*
+     ------------------------------------------------------------
+     Explanation
+     ------------------------------------------------------------
+
+     We wrap the original iterator and cache exactly one element.
+
+     Key idea:
+     - Always keep the next element preloaded
+     - peek() returns cached value without advancing
+     - next() returns cached value and loads the next one
+
+     This guarantees:
+     - O(1) time per operation
+     - O(1) extra space
+
+     ------------------------------------------------------------
+     Comparison: Iterator vs PeekingIterator
+     ------------------------------------------------------------
+
+     SQL:
+       cursor.peek -> NOT SUPPORTED
+
+     Swift:
+       nextValue cache allows peek without moving cursor
+
+     ------------------------------------------------------------
+     */
+
+    /*
      282. Expression Add Operator  Hard
      Given a string num that contains only digits and an integer target, return all possibilities to insert the binary operators '+', '-', and/or '*' between the digits of num so that the resultant expression evaluates to the target value.
      Note that operands in the returned expressions should not contain leading zeros.
