@@ -27,6 +27,222 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     185. Department Top Three Salaries     Hard
+     +--------------+---------+
+     | Column Name  | Type    |
+     +--------------+---------+
+     | id           | int     |
+     | name         | varchar |
+     | salary       | int     |
+     | departmentId | int     |
+     +--------------+---------+
+     id is the primary key (column with unique values) for this table.
+     departmentId is a foreign key (reference column) of the ID from the Department table.
+     Each row of this table indicates the ID, name, and salary of an employee. It also contains the ID of their department.
+     Table: Department
+     +-------------+---------+
+     | Column Name | Type    |
+     +-------------+---------+
+     | id          | int     |
+     | name        | varchar |
+     +-------------+---------+
+     id is the primary key (column with unique values) for this table.
+     Each row of this table indicates the ID of a department and its name.
+     A company's executives are interested in seeing who earns the most money in each of the company's departments. A high earner in a department is an employee who has a salary in the top three unique salaries for that department.
+     Write a solution to find the employees who are high earners in each of the departments.
+     Return the result table in any order.
+     The result format is in the following example.
+     Example 1:
+     Input:
+     Employee table:
+     +----+-------+--------+--------------+
+     | id | name  | salary | departmentId |
+     +----+-------+--------+--------------+
+     | 1  | Joe   | 85000  | 1            |
+     | 2  | Henry | 80000  | 2            |
+     | 3  | Sam   | 60000  | 2            |
+     | 4  | Max   | 90000  | 1            |
+     | 5  | Janet | 69000  | 1            |
+     | 6  | Randy | 85000  | 1            |
+     | 7  | Will  | 70000  | 1            |
+     +----+-------+--------+--------------+
+     Department table:
+     +----+-------+
+     | id | name  |
+     +----+-------+
+     | 1  | IT    |
+     | 2  | Sales |
+     +----+-------+
+     Output:
+     +------------+----------+--------+
+     | Department | Employee | Salary |
+     +------------+----------+--------+
+     | IT         | Max      | 90000  |
+     | IT         | Joe      | 85000  |
+     | IT         | Randy    | 85000  |
+     | IT         | Will     | 70000  |
+     | Sales      | Henry    | 80000  |
+     | Sales      | Sam      | 60000  |
+     +------------+----------+--------+
+     Explanation:
+     In the IT department:
+     - Max earns the highest unique salary
+     - Both Randy and Joe earn the second-highest unique salary
+     - Will earns the third-highest unique salary
+     In the Sales department:
+     - Henry earns the highest salary
+     - Sam earns the second-highest salary
+     - There is no third-highest salary as there are only two employees
+     Constraints:
+     There are no employees with the exact same name, salary and department.
+     */
+    // LeetCode 185. Department Top Three Salaries
+    // Swift simulation of SQL logic
+
+    final class Task185DepartmentTopThreeSalaries {
+
+        // MARK: - Models (simulate tables)
+
+        struct Employee {
+            let id: Int
+            let name: String
+            let salary: Int
+            let departmentId: Int
+        }
+
+        struct Department {
+            let id: Int
+            let name: String
+        }
+
+        // MARK: - Solution
+
+        static func topThreeSalaries(
+            employees: [Employee],
+            departments: [Department]
+        ) -> [(department: String, employee: String, salary: Int)] {
+
+            // Group employees by departmentId
+            let employeesByDept = Dictionary(grouping: employees) { $0.departmentId }
+
+            var result: [(String, String, Int)] = []
+
+            for department in departments {
+
+                guard let deptEmployees = employeesByDept[department.id] else {
+                    continue
+                }
+
+                // Get unique salaries sorted descending
+                let topSalaries = Array(
+                    Set(deptEmployees.map { $0.salary })
+                )
+                .sorted(by: >)
+                .prefix(3)
+
+                // Select employees whose salary is in top 3
+                for emp in deptEmployees where topSalaries.contains(emp.salary) {
+                    result.append((department.name, emp.name, emp.salary))
+                }
+            }
+
+            return result
+        }
+
+        // MARK: - Demo
+
+        static func demo() {
+
+            let employees = [
+                Employee(id: 1, name: "Joe",   salary: 85000, departmentId: 1),
+                Employee(id: 2, name: "Henry", salary: 80000, departmentId: 2),
+                Employee(id: 3, name: "Sam",   salary: 60000, departmentId: 2),
+                Employee(id: 4, name: "Max",   salary: 90000, departmentId: 1),
+                Employee(id: 5, name: "Janet", salary: 69000, departmentId: 1),
+                Employee(id: 6, name: "Randy", salary: 85000, departmentId: 1),
+                Employee(id: 7, name: "Will",  salary: 70000, departmentId: 1)
+            ]
+
+            let departments = [
+                Department(id: 1, name: "IT"),
+                Department(id: 2, name: "Sales")
+            ]
+
+            let result = topThreeSalaries(
+                employees: employees,
+                departments: departments
+            )
+
+            for row in result {
+                print("\(row.department) | \(row.employee) | \(row.salary)")
+            }
+        }
+    }
+
+    /*
+     ------------------------------------------------------------
+     SQL vs Swift — line by line comparison
+     ------------------------------------------------------------
+
+     SQL:
+       SELECT Department.name, Employee.name, Employee.salary
+
+     Swift:
+       result.append((department.name, emp.name, emp.salary))
+
+     ------------------------------------------------------------
+
+     SQL:
+       FROM Employee
+       JOIN Department ON Employee.departmentId = Department.id
+
+     Swift:
+       Dictionary(grouping: employees) { $0.departmentId }
+
+     ------------------------------------------------------------
+
+     SQL:
+       WHERE salary IN (
+           SELECT DISTINCT salary
+           FROM Employee
+           WHERE departmentId = ?
+           ORDER BY salary DESC
+           LIMIT 3
+       )
+
+     Swift:
+       let topSalaries = Set(deptEmployees.map { $0.salary })
+           .sorted(by: >)
+           .prefix(3)
+
+     ------------------------------------------------------------
+
+     SQL:
+       DISTINCT salary
+
+     Swift:
+       Set(deptEmployees.map { $0.salary })
+
+     ------------------------------------------------------------
+
+     SQL:
+       ORDER BY salary DESC
+
+     Swift:
+       .sorted(by: >)
+
+     ------------------------------------------------------------
+
+     SQL:
+       LIMIT 3
+
+     Swift:
+       .prefix(3)
+
+     ------------------------------------------------------------
+     */
+
+    /*
      284. Peeking Iterator
      Design an iterator that supports the peek operation on an existing iterator in addition to the hasNext and the next operations.
      Implement the PeekingIterator class:
