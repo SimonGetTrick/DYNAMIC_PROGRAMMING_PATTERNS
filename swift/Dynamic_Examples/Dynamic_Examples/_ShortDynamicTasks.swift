@@ -27,197 +27,138 @@ extension Array where Element == Int {
 
 class Solution {
     /*
-     289. Game of Life
-     According to Wikipedia's article: "The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970."
-     The board is made up of an m x n grid of cells, where each cell has an initial state: live (represented by a 1) or dead (represented by a 0). Each cell interacts with its eight neighbors (horizontal, vertical, diagonal) using the following four rules (taken from the above Wikipedia article):
-     Any live cell with fewer than two live neighbors dies as if caused by under-population.
-     Any live cell with two or three live neighbors lives on to the next generation.
-     Any live cell with more than three live neighbors dies, as if by over-population.
-     Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
-     The next state of the board is determined by applying the above rules simultaneously to every cell in the current state of the m x n grid board. In this process, births and deaths occur simultaneously.
-     Given the current state of the board, update the board to reflect its next state.
-     Note that you do not need to return anything.
+     290. Word Pattern
+     Easy
+     Topics
+     premium lock icon
+     Companies
+     Given a pattern and a string s, find if s follows the same pattern.
+
+     Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty word in s. Specifically:
+
+     Each letter in pattern maps to exactly one unique word in s.
+     Each unique word in s maps to exactly one letter in pattern.
+     No two letters map to the same word, and no two words map to the same letter.
+      
+
      Example 1:
-     Input: board = [[0,1,0],[0,0,1],[1,1,1],[0,0,0]]
-     Output: [[0,0,0],[1,0,1],[0,1,1],[0,1,0]]
+
+     Input: pattern = "abba", s = "dog cat cat dog"
+
+     Output: true
+
+     Explanation:
+
+     The bijection can be established as:
+
+     'a' maps to "dog".
+     'b' maps to "cat".
      Example 2:
-     Input: board = [[1,1],[1,0]]
-     Output: [[1,1],[1,1]]
+
+     Input: pattern = "abba", s = "dog cat cat fish"
+
+     Output: false
+
+     Example 3:
+
+     Input: pattern = "aaaa", s = "dog cat cat dog"
+
+     Output: false
+
+      
+
      Constraints:
-     m == board.length
-     n == board[i].length
-     1 <= m, n <= 25
-     board[i][j] is 0 or 1.
+
+     1 <= pattern.length <= 300
+     pattern contains only lower-case English letters.
+     1 <= s.length <= 3000
+     s contains only lowercase English letters and spaces ' '.
+     s does not contain any leading or trailing spaces.
+     All the words in s are separated by a single space.
      */
-    // LeetCode 289. Game of Life
-    // Toroidal world with pattern generator and random seeding
+    // LeetCode 290. Word Pattern
+    // Checks whether a string follows a given pattern using bijection mapping
 
-    final class Task289GameOfLife {
+    final class Task290WordPattern {
 
-        // MARK: - Cell states (in-place encoding)
+        /// Main solution method
+        /// Time Complexity: O(n)
+        /// Space Complexity: O(n)
+        static func wordPattern(_ pattern: String, _ s: String) -> Bool {
 
-        //  1  -> live
-        //  0  -> dead
-        // -1  -> live -> dead
-        //  2  -> dead -> live
+            let words = s.split(separator: " ").map(String.init)
+            let chars = Array(pattern)
 
-        // MARK: - Patterns
+            // Length mismatch → impossible to match
+            if chars.count != words.count {
+                return false
+            }
 
-        enum Pattern {
-            case block
-            case blinker
-            case glider
-            case toad
-            case beacon
+            // Pattern char → word
+            var charToWord: [Character: String] = [:]
 
-            var cells: [(Int, Int)] {
-                switch self {
-                case .block:
-                    return [(0,0), (0,1), (1,0), (1,1)]
+            // Word → pattern char
+            var wordToChar: [String: Character] = [:]
 
-                case .blinker:
-                    return [(0,0), (0,1), (0,2)]
+            for i in 0..<chars.count {
+                let ch = chars[i]
+                let word = words[i]
 
-                case .glider:
-                    return [(0,1), (1,2), (2,0), (2,1), (2,2)]
-
-                case .toad:
-                    return [(0,1), (0,2), (0,3),
-                            (1,0), (1,1), (1,2)]
-
-                case .beacon:
-                    return [(0,0), (0,1), (1,0), (1,1),
-                            (2,2), (2,3), (3,2), (3,3)]
+                // Check char → word mapping
+                if let mappedWord = charToWord[ch] {
+                    if mappedWord != word {
+                        return false
+                    }
+                } else {
+                    charToWord[ch] = word
                 }
-            }
-        }
 
-        // MARK: - Board generation
-
-        /// Generates an empty board (all cells dead)
-        static func generateBoard(rows: Int, cols: Int) -> [[Int]] {
-            Array(repeating: Array(repeating: 0, count: cols), count: rows)
-        }
-
-        /// Places a pattern on the board using toroidal wrapping
-        static func placePattern(
-            board: inout [[Int]],
-            pattern: Pattern,
-            atRow row: Int,
-            col: Int
-        ) {
-            let rows = board.count
-            let cols = board[0].count
-
-            for (dr, dc) in pattern.cells {
-                let r = (row + dr + rows) % rows
-                let c = (col + dc + cols) % cols
-                board[r][c] = 1
-            }
-        }
-
-        /// Randomly seeds the board with patterns
-        static func seedRandomPatterns(
-            board: inout [[Int]],
-            patterns: [Pattern],
-            count: Int
-        ) {
-            let rows = board.count
-            let cols = board[0].count
-
-            for _ in 0..<count {
-                let pattern = patterns.randomElement()!
-                let r = Int.random(in: 0..<rows)
-                let c = Int.random(in: 0..<cols)
-                placePattern(board: &board, pattern: pattern, atRow: r, col: c)
-            }
-        }
-
-        // MARK: - Game logic (toroidal)
-
-        static func step(board: inout [[Int]]) {
-
-            let rows = board.count
-            let cols = board[0].count
-
-            let directions = [
-                (-1,-1), (-1,0), (-1,1),
-                ( 0,-1),         ( 0,1),
-                ( 1,-1), ( 1,0), ( 1,1)
-            ]
-
-            // First pass: mark transitions
-            for r in 0..<rows {
-                for c in 0..<cols {
-
-                    var liveNeighbors = 0
-
-                    for (dr, dc) in directions {
-                        let nr = (r + dr + rows) % rows
-                        let nc = (c + dc + cols) % cols
-
-                        if abs(board[nr][nc]) == 1 {
-                            liveNeighbors += 1
-                        }
+                // Check word → char mapping
+                if let mappedChar = wordToChar[word] {
+                    if mappedChar != ch {
+                        return false
                     }
-
-                    if board[r][c] == 1 && (liveNeighbors < 2 || liveNeighbors > 3) {
-                        board[r][c] = -1
-                    }
-
-                    if board[r][c] == 0 && liveNeighbors == 3 {
-                        board[r][c] = 2
-                    }
+                } else {
+                    wordToChar[word] = ch
                 }
             }
 
-            // Second pass: normalize states
-            for r in 0..<rows {
-                for c in 0..<cols {
-                    board[r][c] = board[r][c] > 0 ? 1 : 0
-                }
-            }
-        }
-
-        // MARK: - Debug / Visualization
-
-        static func printBoard(_ board: [[Int]]) {
-            for row in board {
-                print(row.map { $0 == 1 ? "⬛️" : "⬜️" }.joined())
-            }
-            print()
+            return true
         }
 
         // MARK: - Demo
 
         static func demo() {
 
-            // Create large toroidal world
-            let rows = 20
-            let cols = 40
-
-            var board = generateBoard(rows: rows, cols: cols)
-
-            // Seed known patterns
-            placePattern(board: &board, pattern: .glider, atRow: 1, col: 1)
-            placePattern(board: &board, pattern: .blinker, atRow: 10, col: 10)
-            placePattern(board: &board, pattern: .block, atRow: 15, col: 30)
-
-            // Seed random patterns
-            seedRandomPatterns(
-                board: &board,
-                patterns: [.glider, .toad, .beacon],
-                count: 10
-            )
-
-            // Run simulation
-            for generation in 1...5 {
-                print("Generation \(generation)")
-                printBoard(board)
-                step(board: &board)
-            }
+            print(wordPattern("abba", "dog cat cat dog"))   // true
+            print(wordPattern("abba", "dog cat cat fish")) // false
+            print(wordPattern("aaaa", "dog cat cat dog"))  // false
+            print(wordPattern("abc", "one two three"))     // true
+            print(wordPattern("abc", "one one one"))       // false
         }
     }
+
+    /*
+     ------------------------------------------------------------
+     Explanation: SQL vs Swift mindset
+     ------------------------------------------------------------
+
+     SQL:
+     - pattern table
+     - words table
+     - JOIN + GROUP BY to ensure uniqueness
+
+     Swift:
+     - Dictionary<Character, String>
+     - Dictionary<String, Character>
+     - Enforce bijection explicitly
+
+     Key idea:
+     - One-to-one mapping must work BOTH ways
+
+     ------------------------------------------------------------
+     */
+
 
     /*
      ------------------------------------------------------------
