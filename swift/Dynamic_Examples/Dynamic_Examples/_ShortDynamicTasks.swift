@@ -27,6 +27,157 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     295. Find Median from Data Stream Hard
+     The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values.
+
+     For example, for arr = [2,3,4], the median is 3.
+     For example, for arr = [2,3], the median is (2 + 3) / 2 = 2.5.
+     Implement the MedianFinder class:
+
+     MedianFinder() initializes the MedianFinder object.
+     void addNum(int num) adds the integer num from the data stream to the data structure.
+     double findMedian() returns the median of all elements so far. Answers within 10-5 of the actual answer will be accepted.
+     Example 1:
+     Input
+     ["MedianFinder", "addNum", "addNum", "findMedian", "addNum", "findMedian"]
+     [[], [1], [2], [], [3], []]
+     Output
+     [null, null, null, 1.5, null, 2.0]
+     Explanation
+     MedianFinder medianFinder = new MedianFinder();
+     medianFinder.addNum(1);    // arr = [1]
+     medianFinder.addNum(2);    // arr = [1, 2]
+     medianFinder.findMedian(); // return 1.5 (i.e., (1 + 2) / 2)
+     medianFinder.addNum(3);    // arr[1, 2, 3]
+     medianFinder.findMedian(); // return 2.0
+     Constraints:
+     -105 <= num <= 105
+     There will be at least one element in the data structure before calling findMedian.
+     At most 5 * 104 calls will be made to addNum and findMedian.
+     Follow up:
+     If all integer numbers from the stream are in the range [0, 100], how would you optimize your solution?
+     If 99% of all integer numbers from the stream are in the range [0, 100], how would you optimize your solution?
+     */
+    final class MedianFinder295 {
+
+        private var left: [Int] = []   // max-heap
+        private var right: [Int] = []  // min-heap
+
+        init() {}
+
+        // MARK: - Public API
+
+        func addNum(_ num: Int) {
+            // Step 1: push into max-heap
+            pushMax(&left, num)
+
+            // Step 2: move largest from left to right
+            let moved = popMax(&left)
+            pushMin(&right, moved)
+
+            // Step 3: rebalance sizes
+            if right.count > left.count {
+                let back = popMin(&right)
+                pushMax(&left, back)
+            }
+        }
+
+        func findMedian() -> Double {
+            if left.count > right.count {
+                return Double(left[0])
+            } else {
+                return (Double(left[0]) + Double(right[0])) / 2.0
+            }
+        }
+
+        // MARK: - Max Heap (left)
+
+        private func pushMax(_ heap: inout [Int], _ value: Int) {
+            heap.append(value)
+            siftUpMax(&heap, heap.count - 1)
+        }
+
+        private func popMax(_ heap: inout [Int]) -> Int {
+            let res = heap[0]
+            heap.swapAt(0, heap.count - 1)
+            heap.removeLast()
+            siftDownMax(&heap, 0)
+            return res
+        }
+
+        // MARK: - Min Heap (right)
+
+        private func pushMin(_ heap: inout [Int], _ value: Int) {
+            heap.append(value)
+            siftUpMin(&heap, heap.count - 1)
+        }
+
+        private func popMin(_ heap: inout [Int]) -> Int {
+            let res = heap[0]
+            heap.swapAt(0, heap.count - 1)
+            heap.removeLast()
+            siftDownMin(&heap, 0)
+            return res
+        }
+
+        // MARK: - Heap helpers
+
+        private func siftUpMax(_ heap: inout [Int], _ i: Int) {
+            var child = i
+            while child > 0 {
+                let parent = (child - 1) / 2
+                if heap[child] > heap[parent] {
+                    heap.swapAt(child, parent)
+                    child = parent
+                } else { break }
+            }
+        }
+
+        private func siftDownMax(_ heap: inout [Int], _ i: Int) {
+            var parent = i
+            while true {
+                let l = parent * 2 + 1
+                let r = l + 1
+                var best = parent
+
+                if l < heap.count && heap[l] > heap[best] { best = l }
+                if r < heap.count && heap[r] > heap[best] { best = r }
+
+                if best == parent { break }
+                heap.swapAt(parent, best)
+                parent = best
+            }
+        }
+
+        private func siftUpMin(_ heap: inout [Int], _ i: Int) {
+            var child = i
+            while child > 0 {
+                let parent = (child - 1) / 2
+                if heap[child] < heap[parent] {
+                    heap.swapAt(child, parent)
+                    child = parent
+                } else { break }
+            }
+        }
+
+        private func siftDownMin(_ heap: inout [Int], _ i: Int) {
+            var parent = i
+            while true {
+                let l = parent * 2 + 1
+                let r = l + 1
+                var best = parent
+
+                if l < heap.count && heap[l] < heap[best] { best = l }
+                if r < heap.count && heap[r] < heap[best] { best = r }
+
+                if best == parent { break }
+                heap.swapAt(parent, best)
+                parent = best
+            }
+        }
+    }
+
+     /*
      292. Nim Game
      You are playing the following Nim Game with your friend:
      Initially, there is a heap of stones on the table.
