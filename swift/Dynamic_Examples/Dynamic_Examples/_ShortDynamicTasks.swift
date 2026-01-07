@@ -27,6 +27,76 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     297. Serialize and Deserialize Binary Tree Hard
+     Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+     Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
+     Clarification: The input/output format is the same as how LeetCode serializes a binary tree. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.
+     Example 1:
+     Input: root = [1,2,3,null,null,4,5]
+     Output: [1,2,3,null,null,4,5]
+     Example 2:
+     Input: root = []
+     Output: []
+     */
+    final class Codec297 {
+
+        // Serialize tree to string using preorder traversal
+        func serialize(_ root: TreeNode?) -> String {
+            var result: [String] = []
+            
+            func dfs(_ node: TreeNode?) {
+                guard let node = node else {
+                    result.append("#")
+                    return
+                }
+                result.append(String(node.val))
+                dfs(node.left)
+                dfs(node.right)
+            }
+            
+            dfs(root)
+            return result.joined(separator: ",")
+        }
+
+        // Deserialize string back to tree
+        func deserialize(_ data: String) -> TreeNode? {
+            let values = data.split(separator: ",").map(String.init)
+            var index = 0
+            
+            func dfs() -> TreeNode? {
+                if values[index] == "#" {
+                    index += 1
+                    return nil
+                }
+                
+                let node = TreeNode(Int(values[index])!)
+                index += 1
+                node.left = dfs()
+                node.right = dfs()
+                return node
+            }
+            
+            return dfs()
+        }
+
+        // Demo
+        static func demo() {
+            let root = TreeNode(1)
+            root.left = TreeNode(2)
+            root.right = TreeNode(3)
+            root.right?.left = TreeNode(4)
+            root.right?.right = TreeNode(5)
+
+            let codec = Codec297()
+            let s = codec.serialize(root)
+            print("Serialized:", s)
+
+            let restored = codec.deserialize(s)
+            print("Restored root:", restored?.val ?? "nil")
+        }
+    }
+
+    /*
      295. Find Median from Data Stream Hard
      The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values.
 
