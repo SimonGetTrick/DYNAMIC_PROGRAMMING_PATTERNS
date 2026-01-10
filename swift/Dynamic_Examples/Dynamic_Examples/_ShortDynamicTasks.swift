@@ -27,6 +27,74 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     301. Remove Invalid Parentheses  Hard
+     Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.
+     Return a list of unique strings that are valid with the minimum number of removals. You may return the answer in any order.
+     Example 1:
+     Input: s = "()())()"
+     Output: ["(())()","()()()"]
+     Example 2:
+     Input: s = "(a)())()"
+     Output: ["(a())()","(a)()()"]
+     Example 3:
+     Input: s = ")("
+     Output: [""]
+     Constraints:
+     1 <= s.length <= 25
+     s consists of lowercase English letters and parentheses '(' and ')'.
+     There will be at most 20 parentheses in s.
+     */
+    func removeInvalidParentheses301(_ s: String) -> [String] {
+        var result: [String] = []
+        var visited: Set<String> = []
+        var queue: [String] = [s]
+        var found = false
+        
+        while !queue.isEmpty {
+            var nextQueue: [String] = []
+            
+            for str in queue {
+                if visited.contains(str) { continue }
+                visited.insert(str)
+                
+                if isValid301(str) {
+                    result.append(str)
+                    found = true
+                }
+                
+                if !found {
+                    // generate all possible strings by removing one parenthesis
+                    for i in str.indices {
+                        let char = str[i]
+                        if char == "(" || char == ")" {
+                            var newStr = str
+                            newStr.remove(at: i)
+                            nextQueue.append(newStr)
+                        }
+                    }
+                }
+            }
+            
+            if found { break }
+            queue = nextQueue
+        }
+        
+        return result
+    }
+    
+    private func isValid301(_ s: String) -> Bool {
+        var count = 0
+        for char in s {
+            if char == "(" {
+                count += 1
+            } else if char == ")" {
+                count -= 1
+                if count < 0 { return false }
+            }
+        }
+        return count == 0
+    }
+    /*
      300. Longest Increasing Subsequence
      Given an integer array nums, return the length of the longest strictly increasing subsequence.
      Example 1:
