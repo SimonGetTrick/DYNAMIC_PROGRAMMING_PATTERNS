@@ -27,6 +27,60 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     303. Range Sum Query - Immutable
+     Given an integer array nums, handle multiple queries of the following type:
+     Calculate the sum of the elements of nums between indices left and right inclusive where left <= right.
+     Implement the NumArray class:
+     NumArray(int[] nums) Initializes the object with the integer array nums.
+     int sumRange(int left, int right) Returns the sum of the elements of nums between indices left and right inclusive (i.e. nums[left] + nums[left + 1] + ... + nums[right]).
+      
+     Example 1:
+     Input
+     ["NumArray", "sumRange", "sumRange", "sumRange"]
+     [[[-2, 0, 3, -5, 2, -1]], [0, 2], [2, 5], [0, 5]]
+     Output
+     [null, 1, -1, -3]
+     Explanation
+     NumArray numArray = new NumArray([-2, 0, 3, -5, 2, -1]);
+     numArray.sumRange(0, 2); // return (-2) + 0 + 3 = 1
+     numArray.sumRange(2, 5); // return 3 + (-5) + 2 + (-1) = -1
+     numArray.sumRange(0, 5); // return (-2) + 0 + 3 + (-5) + 2 + (-1) = -3
+     Constraints:
+     1 <= nums.length <= 104
+     -105 <= nums[i] <= 105
+     0 <= left <= right < nums.length
+     At most 104 calls will be made to sumRange.
+     */
+    class LC303_NumArray {
+
+        private var prefix: [Int]
+
+        init(_ nums: [Int]) {
+            // Prefix sum array:
+            // prefix[i] stores sum of elements from index 0 to i-1
+            prefix = Array(repeating: 0, count: nums.count + 1)
+
+            for i in 0..<nums.count {
+                prefix[i + 1] = prefix[i] + nums[i]
+            }
+        }
+
+        func sumRange(_ left: Int, _ right: Int) -> Int {
+            // Sum from left to right inclusive
+            return prefix[right + 1] - prefix[left]
+        }
+
+        // Demo method
+        static func runDemo() {
+            let numArray = LC303_NumArray([-2, 0, 3, -5, 2, -1])
+
+            print(numArray.sumRange(0, 2)) // 1
+            print(numArray.sumRange(2, 5)) // -1
+            print(numArray.sumRange(0, 5)) // -3
+        }
+    }
+
+    /*
      301. Remove Invalid Parentheses  Hard
      Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.
      Return a list of unique strings that are valid with the minimum number of removals. You may return the answer in any order.
