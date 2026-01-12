@@ -27,6 +27,90 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     304. Range Sum Query 2D - Immutable
+     Given a 2D matrix matrix, handle multiple queries of the following type:
+     Calculate the sum of the elements of matrix inside the rectangle defined by its upper left corner (row1, col1) and lower right corner (row2, col2).
+     Implement the NumMatrix class:
+     NumMatrix(int[][] matrix) Initializes the object with the integer matrix matrix.
+     int sumRegion(int row1, int col1, int row2, int col2) Returns the sum of the elements of matrix inside the rectangle defined by its upper left corner (row1, col1) and lower right corner (row2, col2).
+     You must design an algorithm where sumRegion works on O(1) time complexity.
+     Example 1:
+     Input
+     ["NumMatrix", "sumRegion", "sumRegion", "sumRegion"]
+     [[[[3, 0, 1, 4, 2], [5, 6, 3, 2, 1], [1, 2, 0, 1, 5], [4, 1, 0, 1, 7], [1, 0, 3, 0, 5]]], [2, 1, 4, 3], [1, 1, 2, 2], [1, 2, 2, 4]]
+     Output
+     [null, 8, 11, 12]
+     Explanation
+     NumMatrix numMatrix = new NumMatrix([[3, 0, 1, 4, 2], [5, 6, 3, 2, 1], [1, 2, 0, 1, 5], [4, 1, 0, 1, 7], [1, 0, 3, 0, 5]]);
+     numMatrix.sumRegion(2, 1, 4, 3); // return 8 (i.e sum of the red rectangle)
+     numMatrix.sumRegion(1, 1, 2, 2); // return 11 (i.e sum of the green rectangle)
+     numMatrix.sumRegion(1, 2, 2, 4); // return 12 (i.e sum of the blue rectangle)
+     Constraints:
+     m == matrix.length
+     n == matrix[i].length
+     1 <= m, n <= 200
+     -104 <= matrix[i][j] <= 104
+     0 <= row1 <= row2 < m
+     0 <= col1 <= col2 < n
+     At most 104 calls will be made to sumRegion.
+     */
+    final class LC304_NumMatrix {
+
+        private var prefix: [[Int]]
+
+        init(_ matrix: [[Int]]) {
+            let m = matrix.count
+            let n = matrix.first?.count ?? 0
+
+            // prefix[r][c] = sum of rectangle (0,0) -> (r-1,c-1)
+            prefix = Array(
+                repeating: Array(repeating: 0, count: n + 1),
+                count: m + 1
+            )
+
+            for r in 0..<m {
+                for c in 0..<n {
+                    prefix[r + 1][c + 1] =
+                        prefix[r][c + 1]
+                      + prefix[r + 1][c]
+                      - prefix[r][c]
+                      + matrix[r][c]
+                }
+            }
+        }
+
+        func sumRegion(
+            _ row1: Int,
+            _ col1: Int,
+            _ row2: Int,
+            _ col2: Int
+        ) -> Int {
+            return
+                prefix[row2 + 1][col2 + 1]
+              - prefix[row1][col2 + 1]
+              - prefix[row2 + 1][col1]
+              + prefix[row1][col1]
+        }
+
+        // Demo
+        static func runDemo() {
+            let matrix = [
+                [3, 0, 1, 4, 2],
+                [5, 6, 3, 2, 1],
+                [1, 2, 0, 1, 5],
+                [4, 1, 0, 1, 7],
+                [1, 0, 3, 0, 5]
+            ]
+
+            let numMatrix = LC304_NumMatrix(matrix)
+
+            print(numMatrix.sumRegion(2, 1, 4, 3)) // 8
+            print(numMatrix.sumRegion(1, 1, 2, 2)) // 11
+            print(numMatrix.sumRegion(1, 2, 2, 4)) // 12
+        }
+    }
+
+    /*
      303. Range Sum Query - Immutable
      Given an integer array nums, handle multiple queries of the following type:
      Calculate the sum of the elements of nums between indices left and right inclusive where left <= right.
