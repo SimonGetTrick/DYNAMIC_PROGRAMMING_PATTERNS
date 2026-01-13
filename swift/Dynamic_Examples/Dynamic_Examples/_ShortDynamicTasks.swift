@@ -27,6 +27,104 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     306. Additive Number
+     An additive number is a string whose digits can form an additive sequence.
+     A valid additive sequence should contain at least three numbers. Except for the first two numbers, each subsequent number in the sequence must be the sum of the preceding two.
+     Given a string containing only digits, return true if it is an additive number or false otherwise.
+     Note: Numbers in the additive sequence cannot have leading zeros, so sequence 1, 2, 03 or 1, 02, 3 is invalid.
+     Example 1:
+     Input: "112358"
+     Output: true
+     Explanation:
+     The digits can form an additive sequence: 1, 1, 2, 3, 5, 8.
+     1 + 1 = 2, 1 + 2 = 3, 2 + 3 = 5, 3 + 5 = 8
+     Example 2:
+     Input: "199100199"
+     Output: true
+     Explanation:
+     The additive sequence is: 1, 99, 100, 199.
+     1 + 99 = 100, 99 + 100 = 199
+     Constraints:
+     1 <= num.length <= 35
+     num consists only of digits.
+     Follow up: How would you handle overflow for very large input integers?
+     */
+    class Solution306 {
+        // Main function to check if the string is an additive number
+        func isAdditiveNumber(_ num: String) -> Bool {
+            let n = num.count
+            let chars = Array(num)
+            
+            // Try all possible first and second number splits
+            for i in 1..<n {
+                for j in i+1..<n {
+                    let first = String(chars[0..<i])
+                    let second = String(chars[i..<j])
+                    
+                    // Skip if numbers have leading zeros
+                    if (first.count > 1 && first.first == "0") || (second.count > 1 && second.first == "0") {
+                        continue
+                    }
+                    
+                    // Start checking the additive sequence from these two numbers
+                    if checkSequence(first, second, String(chars[j...])) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+        
+        // Helper function to verify if the remaining string forms a valid additive sequence
+        private func checkSequence(_ first: String, _ second: String, _ remaining: String) -> Bool {
+            if remaining.isEmpty {
+                return true
+            }
+            
+            // Sum of first and second as string
+            guard let sum = addStrings(first, second) else {
+                return false
+            }
+            
+            // Check if remaining starts with the sum
+            if remaining.hasPrefix(sum) {
+                let nextRemaining = String(remaining.dropFirst(sum.count))
+                return checkSequence(second, sum, nextRemaining)
+            } else {
+                return false
+            }
+        }
+        
+        // Helper function to add two big numbers represented as strings
+        private func addStrings(_ num1: String, _ num2: String) -> String? {
+            var i = num1.count - 1
+            var j = num2.count - 1
+            var carry = 0
+            var result = ""
+            
+            let arr1 = Array(num1)
+            let arr2 = Array(num2)
+            
+            while i >= 0 || j >= 0 || carry > 0 {
+                let x = i >= 0 ? Int(String(arr1[i]))! : 0
+                let y = j >= 0 ? Int(String(arr2[j]))! : 0
+                let sum = x + y + carry
+                result = "\(sum % 10)" + result
+                carry = sum / 10
+                i -= 1
+                j -= 1
+            }
+            
+            return result
+        }
+    }
+
+    // Example usage:
+    let solution = Solution306()
+    print(solution.isAdditiveNumber("112358"))   // true
+    print(solution.isAdditiveNumber("199100199")) // true
+
+    /*
      304. Range Sum Query 2D - Immutable
      Given a 2D matrix matrix, handle multiple queries of the following type:
      Calculate the sum of the elements of matrix inside the rectangle defined by its upper left corner (row1, col1) and lower right corner (row2, col2).
