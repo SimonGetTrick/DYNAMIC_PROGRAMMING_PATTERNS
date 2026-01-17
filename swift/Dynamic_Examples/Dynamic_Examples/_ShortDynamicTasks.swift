@@ -27,6 +27,54 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     312. Burst Balloons  Hard
+     You are given n balloons, indexed from 0 to n - 1. Each balloon is painted with a number on it represented by an array nums. You are asked to burst all the balloons.
+     If you burst the ith balloon, you will get nums[i - 1] * nums[i] * nums[i + 1] coins. If i - 1 or i + 1 goes out of bounds of the array, then treat it as if there is a balloon with a 1 painted on it.
+     Return the maximum coins you can collect by bursting the balloons wisely.
+     Example 1:
+     Input: nums = [3,1,5,8]
+     Output: 167
+     Explanation:
+     nums = [3,1,5,8] --> [3,5,8] --> [3,8] --> [8] --> []
+     coins =  3*1*5    +   3*5*8   +  1*3*8  + 1*8*1 = 167
+     Example 2:
+     Input: nums = [1,5]
+     Output: 10
+     */
+    class Solution312 {
+        func maxCoins(_ nums: [Int]) -> Int {
+            // Add virtual balloons with value 1 at both ends
+            let n = nums.count
+            var arr = [1]
+            arr.append(contentsOf: nums)
+            arr.append(1)
+            
+            // dp[left][right] = max coins from (left, right)
+            var dp = Array(
+                repeating: Array(repeating: 0, count: n + 2),
+                count: n + 2
+            )
+            
+            // length is the distance between left and right
+            for length in 2...(n + 1) {
+                for left in 0...(n + 1 - length) {
+                    let right = left + length
+                    
+                    for k in (left + 1)..<right {
+                        let coins = dp[left][k]
+                                  + arr[left] * arr[k] * arr[right]
+                                  + dp[k][right]
+                        
+                        dp[left][right] = max(dp[left][right], coins)
+                    }
+                }
+            }
+            
+            return dp[0][n + 1]
+        }
+    }
+
+    /*
      310. Minimum Height Trees
      A tree is an undirected graph in which any two vertices are connected by exactly one path. In other words, any connected graph without simple cycles is a tree.
      Given a tree of n nodes labelled from 0 to n - 1, and an array of n - 1 edges where edges[i] = [ai, bi] indicates that there is an undirected edge between the two nodes ai and bi in the tree, you can choose any node of the tree as the root. When you select a node x as the root, the result tree has height h. Among all possible rooted trees, those with minimum height (i.e. min(h))  are called minimum height trees (MHTs).
