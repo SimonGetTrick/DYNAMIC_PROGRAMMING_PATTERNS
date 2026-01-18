@@ -27,6 +27,60 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     313. Super Ugly Number
+     A super ugly number is a positive integer whose prime factors are in the array primes.
+     Given an integer n and an array of integers primes, return the nth super ugly number.
+     The nth super ugly number is guaranteed to fit in a 32-bit signed integer.
+     Example 1:
+     Input: n = 12, primes = [2,7,13,19]
+     Output: 32
+     Explanation: [1,2,4,7,8,13,14,16,19,26,28,32] is the sequence of the first 12 super ugly numbers given primes = [2,7,13,19].
+     Example 2:
+     Input: n = 1, primes = [2,3,5]
+     Output: 1
+     Explanation: 1 has no prime factors, therefore all of its prime factors are in the array primes = [2,3,5].
+     Constraints:
+     1 <= n <= 105
+     1 <= primes.length <= 100
+     2 <= primes[i] <= 1000
+     primes[i] is guaranteed to be a prime number.
+     All the values of primes are unique and sorted in ascending order.
+     */
+    class Solution313 {
+        func nthSuperUglyNumber(_ n: Int, _ primes: [Int]) -> Int {
+            // dp[i] = i-th super ugly number
+            var dp = Array(repeating: 0, count: n)
+            dp[0] = 1
+            
+            let k = primes.count
+            
+            // idx[j] points to the position in dp
+            // whose value will be multiplied by primes[j]
+            var idx = Array(repeating: 0, count: k)
+            
+            for i in 1..<n {
+                var nextUgly = Int.max
+                
+                // Find the minimum candidate
+                for j in 0..<k {
+                    let candidate = dp[idx[j]] * primes[j]
+                    nextUgly = min(nextUgly, candidate)
+                }
+                
+                dp[i] = nextUgly
+                
+                // Move all pointers that match nextUgly
+                for j in 0..<k {
+                    if dp[idx[j]] * primes[j] == nextUgly {
+                        idx[j] += 1
+                    }
+                }
+            }
+            
+            return dp[n - 1]
+        }
+    }
+    /*
      312. Burst Balloons  Hard
      You are given n balloons, indexed from 0 to n - 1. Each balloon is painted with a number on it represented by an array nums. You are asked to burst all the balloons.
      If you burst the ith balloon, you will get nums[i - 1] * nums[i] * nums[i + 1] coins. If i - 1 or i + 1 goes out of bounds of the array, then treat it as if there is a balloon with a 1 painted on it.
