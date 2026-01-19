@@ -27,6 +27,63 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     315. Count of Smaller Numbers After Self     Hard
+     Given an integer array nums, return an integer array counts where counts[i] is the number of smaller elements to the right of nums[i].
+     Example 1:
+     Input: nums = [5,2,6,1]
+     Output: [2,1,1,0]
+     Explanation:
+     To the right of 5 there are 2 smaller elements (2 and 1).
+     To the right of 2 there is only 1 smaller element (1).
+     To the right of 6 there is 1 smaller element (1).
+     To the right of 1 there is 0 smaller element.
+     Example 2:
+     Input: nums = [-1]
+     Output: [0]
+     Example 3:
+     Input: nums = [-1,-1]
+     Output: [0,0]
+     Constraints:
+     1 <= nums.length <= 105
+     -104 <= nums[i] <= 104
+     */
+    class Solution315 {
+        func countSmaller(_ nums: [Int]) -> [Int] {
+            let offset = 10001 
+            let size = 2 * 10000 + 2
+            var tree = Array(repeating: 0, count: size)
+            
+            func update(_ index: Int) {
+                var i = index
+                while i < size {
+                    tree[i] += 1
+                    i += i & -i
+                }
+            }
+            
+            func query(_ index: Int) -> Int {
+                var i = index
+                var sum = 0
+                while i > 0 {
+                    sum += tree[i]
+                    i -= i & -i
+                }
+                return sum
+            }
+            
+            var result = [Int]()
+            for num in nums.reversed() {
+                let idx = num + offset
+                result.append(query(idx - 1))
+                update(idx)
+            }
+            
+            return result.reversed()
+        }
+    }
+
+
+    /*
      313. Super Ugly Number
      A super ugly number is a positive integer whose prime factors are in the array primes.
      Given an integer n and an array of integers primes, return the nth super ugly number.
