@@ -27,6 +27,72 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     316. Remove Duplicate Letters
+     Given a string s, remove duplicate letters so that every letter appears once and only once. You must make sure your result is the smallest in lexicographical order among all possible results.
+     Example 1:
+     Input: s = "bcabc"
+     Output: "abc"
+     Example 2:
+     Input: s = "cbacdcbc"
+     Output: "acdb"
+     Constraints:
+     1 <= s.length <= 104
+     s consists of lowercase English letters.
+     */
+    class Solution316 {
+        // Static demo method
+        static func runDemo() {
+            print(removeDuplicateLetters("bcabc"))     // "abc"
+            print(removeDuplicateLetters("cbacdcbc"))  // "acdb"
+        }
+        
+        // Removes duplicate letters to get the smallest lexicographical result
+        private static func removeDuplicateLetters(_ s: String) -> String {
+            let chars = Array(s)
+            
+            // Count remaining occurrences of each character
+            var count = Array(repeating: 0, count: 26)
+            for c in chars {
+                count[Int(c.asciiValue! - 97)] += 1
+            }
+            
+            // Track whether a character is already in the stack
+            var inStack = Array(repeating: false, count: 26)
+            
+            // Stack to build the result
+            var stack = [Character]()
+            
+            for c in chars {
+                let idx = Int(c.asciiValue! - 97)
+                count[idx] -= 1
+                
+                // Skip if character is already used
+                if inStack[idx] {
+                    continue
+                }
+                
+                // Remove characters that are bigger and appear later
+                while let last = stack.last {
+                    let lastIdx = Int(last.asciiValue! - 97)
+                    
+                    if last > c && count[lastIdx] > 0 {
+                        stack.removeLast()
+                        inStack[lastIdx] = false
+                    } else {
+                        break
+                    }
+                }
+                
+                // Add current character
+                stack.append(c)
+                inStack[idx] = true
+            }
+            
+            return String(stack)
+        }
+    }
+
+    /*
      315. Count of Smaller Numbers After Self     Hard
      Given an integer array nums, return an integer array counts where counts[i] is the number of smaller elements to the right of nums[i].
      Example 1:
