@@ -27,6 +27,172 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     321. Create Maximum Number     Hard
+     You are given two integer arrays nums1 and nums2 of lengths m and n respectively. nums1 and nums2 represent the digits of two numbers. You are also given an integer k.
+     Create the maximum number of length k <= m + n from digits of the two numbers. The relative order of the digits from the same array must be preserved.
+     Return an array of the k digits representing the answer.
+     Example 1:
+     Input: nums1 = [3,4,6,5], nums2 = [9,1,2,5,8,3], k = 5
+     Output: [9,8,6,5,3]
+     Example 2:
+     Input: nums1 = [6,7], nums2 = [6,0,4], k = 5
+     Output: [6,7,6,0,4]
+     Example 3:
+     Input: nums1 = [3,9], nums2 = [8,9], k = 3
+     Output: [9,8,9]
+     Constraints:
+     m == nums1.length
+     n == nums2.length
+     1 <= m, n <= 500
+     0 <= nums1[i], nums2[i] <= 9
+     1 <= k <= m + n
+     nums1 and nums2 do not have leading zeros.
+     */
+    class Solution321 {
+        // Static demo method
+        static func runDemo() {
+            print(maxNumber([3,4,6,5], [9,1,2,5,8,3], 5)) // [9,8,6,5,3]
+            print(maxNumber([6,7], [6,0,4], 5))          // [6,7,6,0,4]
+            print(maxNumber([3,9], [8,9], 3))            // [9,8,9]
+        }
+        
+        // Main function
+        private static func maxNumber(_ nums1: [Int], _ nums2: [Int], _ k: Int) -> [Int] {
+            let m = nums1.count
+            let n = nums2.count
+            var best = [Int]()
+            
+            let start = max(0, k - n)
+            let end = min(k, m)
+            
+            for i in start...end {
+                let part1 = maxSubsequence(nums1, i)
+                let part2 = maxSubsequence(nums2, k - i)
+                let candidate = merge(part1, part2)
+                if candidate.lexicographicallyPrecedes(best) == false {
+                    best = candidate
+                }
+            }
+            return best
+        }
+        
+        // Greedy selection of max subsequence of length k
+        private static func maxSubsequence(_ nums: [Int], _ k: Int) -> [Int] {
+            var stack = [Int]()
+            var drop = nums.count - k
+            
+            for num in nums {
+                while drop > 0, !stack.isEmpty, stack.last! < num {
+                    stack.removeLast()
+                    drop -= 1
+                }
+                stack.append(num)
+            }
+            return Array(stack.prefix(k))
+        }
+        
+        // Merge two sequences into the largest lexicographical result
+        private static func merge(_ a: [Int], _ b: [Int]) -> [Int] {
+            var i = 0, j = 0
+            var result = [Int]()
+            
+            while i < a.count || j < b.count {
+                if greater(a, i, b, j) {
+                    result.append(a[i])
+                    i += 1
+                } else {
+                    result.append(b[j])
+                    j += 1
+                }
+            }
+            return result
+        }
+        
+        // Compare two arrays from given indices
+        private static func greater(_ a: [Int], _ i: Int, _ b: [Int], _ j: Int) -> Bool {
+            var i = i, j = j
+            while i < a.count && j < b.count && a[i] == b[j] {
+                i += 1
+                j += 1
+            }
+            if j == b.count { return true }
+            if i == a.count { return false }
+            return a[i] > b[j]
+        }
+    }
+    /*
+     318. Maximum Product of Word Lengths
+     Given a string array words, return the maximum value of length(word[i]) * length(word[j]) where the two words do not share common letters. If no such two words exist, return 0.
+     Example 1:
+     Input: words = ["abcw","baz","foo","bar","xtfn","abcdef"]
+     Output: 16
+     Explanation: The two words can be "abcw", "xtfn".
+     Example 2:
+     Input: words = ["a","ab","abc","d","cd","bcd","abcd"]
+     Output: 4
+     Explanation: The two words can be "ab", "cd".
+     Example 3:
+     Input: words = ["a","aa","aaa","aaaa"]
+     Output: 0
+     Explanation: No such pair of words.
+     Constraints:
+     2 <= words.length <= 1000
+     1 <= words[i].length <= 1000
+     words[i] consists only of lowercase English letters.
+     */
+    class Solution318 {
+        // Static demo method
+        static func runDemo() {
+            let words1 = ["abcw","baz","foo","bar","xtfn","abcdef"]
+            let words2 = ["a","ab","abc","d","cd","bcd","abcd"]
+            let words3 = ["a","aa","aaa","aaaa"]
+            
+            print(maxProduct(words1)) // 16
+            print(maxProduct(words2)) // 4
+            print(maxProduct(words3)) // 0
+        }
+        
+        // Returns the maximum product of word lengths
+        // for two words without common letters
+        private static func maxProduct(_ words: [String]) -> Int {
+            let n = words.count
+            var masks = Array(repeating: 0, count: n)
+            var lengths = Array(repeating: 0, count: n)
+            
+            // Build bitmask for each word
+            for i in 0..<n {
+                let chars = Array(words[i])
+                var mask = 0
+                
+                for c in chars {
+                    let bit = Int(c.asciiValue! - 97)
+                    mask |= (1 << bit)
+                }
+                
+                masks[i] = mask
+                lengths[i] = chars.count
+            }
+            
+            var maxProduct = 0
+            
+            // Check all pairs
+            for i in 0..<n {
+                for j in (i + 1)..<n {
+                    // No common letters
+                    if (masks[i] & masks[j]) == 0 {
+                        let product = lengths[i] * lengths[j]
+                        if product > maxProduct {
+                            maxProduct = product
+                        }
+                    }
+                }
+            }
+            
+            return maxProduct
+        }
+    }
+
+    /*
      316. Remove Duplicate Letters
      Given a string s, remove duplicate letters so that every letter appears once and only once. You must make sure your result is the smallest in lexicographical order among all possible results.
      Example 1:
