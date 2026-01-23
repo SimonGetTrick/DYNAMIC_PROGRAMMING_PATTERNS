@@ -27,6 +27,55 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     322. Coin Change
+     You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+     Return the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+     You may assume that you have an infinite number of each kind of coin.
+     Example 1:
+     Input: coins = [1,2,5], amount = 11
+     Output: 3
+     Explanation: 11 = 5 + 5 + 1
+     Example 2:
+     Input: coins = [2], amount = 3
+     Output: -1
+     Example 3:
+     Input: coins = [1], amount = 0
+     Output: 0
+     Constraints:
+     1 <= coins.length <= 12
+     1 <= coins[i] <= 231 - 1
+     0 <= amount <= 104
+     */
+    class Solution322 {
+        // Static demo method
+        static func runDemo() {
+            print(coinChange([1,2,5], 11)) // 3
+            print(coinChange([2], 3))      // -1
+            print(coinChange([1], 0))      // 0
+        }
+        
+        // Returns the minimum number of coins needed to make up the amount
+        private static func coinChange(_ coins: [Int], _ amount: Int) -> Int {
+            if amount == 0 { return 0 }
+            
+            // dp[x] = minimum coins to make sum x
+            var dp = Array(repeating: amount + 1, count: amount + 1)
+            dp[0] = 0
+            
+            // Build DP table
+            for x in 1...amount {
+                for coin in coins {
+                    if coin <= x {
+                        dp[x] = min(dp[x], dp[x - coin] + 1)
+                    }
+                }
+            }
+            
+            return dp[amount] > amount ? -1 : dp[amount]
+        }
+    }
+
+    /*
      321. Create Maximum Number     Hard
      You are given two integer arrays nums1 and nums2 of lengths m and n respectively. nums1 and nums2 represent the digits of two numbers. You are also given an integer k.
      Create the maximum number of length k <= m + n from digits of the two numbers. The relative order of the digits from the same array must be preserved.
