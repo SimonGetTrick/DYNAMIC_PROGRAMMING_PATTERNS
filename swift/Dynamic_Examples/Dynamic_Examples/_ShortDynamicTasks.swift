@@ -27,6 +27,109 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     327. Count of Range Sum Hard
+     Given an integer array nums and two integers lower and upper, return the number of range sums that lie in [lower, upper] inclusive.
+     Range sum S(i, j) is defined as the sum of the elements in nums between indices i and j inclusive, where i <= j.
+
+     Input: nums = [-2,5,-1], lower = -2, upper = 2
+     Output: 3
+     Explanation: The three ranges are: [0,0], [2,2], and [0,2] and their respective sums are: -2, -1, 2.
+     Example 2:
+
+     Input: nums = [0], lower = 0, upper = 0
+     Output: 1
+     Constraints:
+     1 <= nums.length <= 105
+     -231 <= nums[i] <= 231 - 1
+     -105 <= lower <= upper <= 105
+     The answer is guaranteed to fit in a 32-bit integer.
+     */
+    class Solution327 {
+        // Static demo method
+        static func runDemo() {
+            print(countRangeSum([-2,5,-1], -2, 2)) // 3
+            print(countRangeSum([0], 0, 0))        // 1
+        }
+        
+        // Main function
+        private static func countRangeSum(_ nums: [Int], _ lower: Int, _ upper: Int) -> Int {
+            let n = nums.count
+            var prefix = Array(repeating: Int64(0), count: n + 1)
+            
+            // Build prefix sum array
+            for i in 0..<n {
+                prefix[i + 1] = prefix[i] + Int64(nums[i])
+            }
+            
+            return mergeSort(&prefix, 0, n, lower, upper)
+        }
+        
+        // Merge sort that counts valid range sums
+        private static func mergeSort(
+            _ arr: inout [Int64],
+            _ left: Int,
+            _ right: Int,
+            _ lower: Int,
+            _ upper: Int
+        ) -> Int {
+            if left >= right {
+                return 0
+            }
+            
+            let mid = (left + right) / 2
+            var count = 0
+            
+            count += mergeSort(&arr, left, mid, lower, upper)
+            count += mergeSort(&arr, mid + 1, right, lower, upper)
+            
+            // Count valid pairs
+            var l = left
+            var r = left
+            
+            for j in (mid + 1)...right {
+                while l <= mid && arr[l] < arr[j] - Int64(upper) {
+                    l += 1
+                }
+                while r <= mid && arr[r] <= arr[j] - Int64(lower) {
+                    r += 1
+                }
+                count += r - l
+            }
+            
+            // Merge two sorted halves
+            var temp = [Int64]()
+            var i = left
+            var j = mid + 1
+            
+            while i <= mid && j <= right {
+                if arr[i] <= arr[j] {
+                    temp.append(arr[i])
+                    i += 1
+                } else {
+                    temp.append(arr[j])
+                    j += 1
+                }
+            }
+            
+            while i <= mid {
+                temp.append(arr[i])
+                i += 1
+            }
+            
+            while j <= right {
+                temp.append(arr[j])
+                j += 1
+            }
+            
+            for k in 0..<temp.count {
+                arr[left + k] = temp[k]
+            }
+            
+            return count
+        }
+    }
+
+    /*
      324. Wiggle Sort II
      Given an integer array nums, reorder it such that nums[0] < nums[1] > nums[2] < nums[3]....
      You may assume the input array always has a valid answer.
