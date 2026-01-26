@@ -27,6 +27,91 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     328. Odd Even Linked List
+     Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.
+     The first node is considered odd, and the second node is even, and so on.
+     Note that the relative order inside both the even and odd groups should remain as it was in the input.
+     You must solve the problem in O(1) extra space complexity and O(n) time complexity.
+     Example 1:
+     Input: head = [1,2,3,4,5]
+     Output: [1,3,5,2,4]
+     Example 2:
+     Input: head = [2,1,3,5,6,4,7]
+     Output: [2,3,6,7,1,5,4]
+     Constraints:
+     The number of nodes in the linked list is in the range [0, 104].
+     -106 <= Node.val <= 106
+     */
+    class Solution328 {
+        // Definition for singly-linked list
+        class ListNode {
+            var val: Int
+            var next: ListNode?
+            
+            init(_ val: Int, _ next: ListNode? = nil) {
+                self.val = val
+                self.next = next
+            }
+        }
+        
+        // Static demo method
+        static func runDemo() {
+            let head1 = buildList([1,2,3,4,5])
+            let result1 = oddEvenList(head1)
+            print(listToArray(result1)) // [1,3,5,2,4]
+            
+            let head2 = buildList([2,1,3,5,6,4,7])
+            let result2 = oddEvenList(head2)
+            print(listToArray(result2)) // [2,3,6,7,1,5,4]
+        }
+        
+        // Main function
+        private static func oddEvenList(_ head: ListNode?) -> ListNode? {
+            guard let head = head, let evenHead = head.next else {
+                return head
+            }
+            
+            var odd: ListNode? = head
+            var even: ListNode? = evenHead
+            
+            // Rewire next pointers
+            while even?.next != nil {
+                odd?.next = even?.next
+                odd = odd?.next
+                
+                even?.next = odd?.next
+                even = even?.next
+            }
+            
+            // Attach even list after odd list
+            odd?.next = evenHead
+            return head
+        }
+        
+        // Helper: build linked list from array
+        private static func buildList(_ values: [Int]) -> ListNode? {
+            let dummy = ListNode(0)
+            var current = dummy
+            for v in values {
+                current.next = ListNode(v)
+                current = current.next!
+            }
+            return dummy.next
+        }
+        
+        // Helper: convert linked list to array
+        private static func listToArray(_ head: ListNode?) -> [Int] {
+            var result = [Int]()
+            var current = head
+            while let node = current {
+                result.append(node.val)
+                current = node.next
+            }
+            return result
+        }
+    }
+
+    /*
      327. Count of Range Sum Hard
      Given an integer array nums and two integers lower and upper, return the number of range sums that lie in [lower, upper] inclusive.
      Range sum S(i, j) is defined as the sum of the elements in nums between indices i and j inclusive, where i <= j.
