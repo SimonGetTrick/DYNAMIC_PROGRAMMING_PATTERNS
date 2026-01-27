@@ -27,6 +27,116 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     https://www.techiedelight.com/external-merge-sort/
+     External Merge Sort Algorithm
+     The external merge sort algorithm is used to efficiently sort massive amounts of data when the data being sorted cannot be fit into the main memory (usually RAM) and resides in the slower external memory (usually a HDD).
+
+     External merge sort uses a hybrid sort-merge technique. The chunks of data small enough to fit in the RAM are read, sorted, and written out to a temporary file during the sorting phase. In the merge phase, the sorted sub-files are combined into a single larger file.
+
+      In other words, external merge sort sorts the chunks of data that fits in the main memory, then merges the sorted chunks, i.e.,
+
+     First, divide the file into runs such that the size of a run is small enough to fit into the main memory.
+     Next, sort each run in main memory using the standard merge sort sorting algorithm.
+     Finally, merge the resulting runs into successively bigger runs until the file is sorted.
+     */
+    class ExternalMergeSortDemo {
+        
+        // MARK: - Demo Entry Point
+        static func runDemo() {
+            let inputFile = tempURL("input.txt")
+            let outputFile = tempURL("output.txt")
+            
+            // Create test input file
+            writeNumbers([7, 3, 9, 1, 5, 8, 2, 6, 4], to: inputFile)
+            
+            externalMergeSort(
+                input: inputFile,
+                output: outputFile,
+                chunkSize: 3
+            )
+            
+            let result = readNumbers(from: outputFile)
+            print("Sorted result:", result)
+        }
+        
+        // MARK: - External Merge Sort
+        
+        private static func externalMergeSort(
+            input: URL,
+            output: URL,
+            chunkSize: Int
+        ) {
+            let tempRuns = createSortedRuns(input: input, chunkSize: chunkSize)
+            mergeRuns(tempRuns, output: output)
+        }
+        
+        // Step 1: Read chunks, sort in memory, write temp runs
+        private static func createSortedRuns(input: URL, chunkSize: Int) -> [URL] {
+            let numbers = readNumbers(from: input)
+            var runs: [URL] = []
+            var index = 0
+            
+            while index < numbers.count {
+                let chunk = Array(numbers[index..<min(index + chunkSize, numbers.count)])
+                let sortedChunk = chunk.sorted()
+                
+                let runURL = tempURL("run_\(runs.count).txt")
+                writeNumbers(sortedChunk, to: runURL)
+                runs.append(runURL)
+                
+                index += chunkSize
+            }
+            return runs
+        }
+        
+        // Step 2: Merge sorted runs
+        private static func mergeRuns(_ runs: [URL], output: URL) {
+            var pointers = Array(repeating: 0, count: runs.count)
+            let buffers = runs.map { readNumbers(from: $0) }
+            var result: [Int] = []
+            
+            while true {
+                var minValue: Int?
+                var minIndex = -1
+                
+                for i in 0..<buffers.count {
+                    if pointers[i] < buffers[i].count {
+                        let value = buffers[i][pointers[i]]
+                        if minValue == nil || value < minValue! {
+                            minValue = value
+                            minIndex = i
+                        }
+                    }
+                }
+                
+                guard let value = minValue else { break }
+                result.append(value)
+                pointers[minIndex] += 1
+            }
+            
+            writeNumbers(result, to: output)
+        }
+        
+        // MARK: - File Helpers
+        
+        private static func tempURL(_ name: String) -> URL {
+            FileManager.default.temporaryDirectory.appendingPathComponent(name)
+        }
+        
+        private static func writeNumbers(_ numbers: [Int], to url: URL) {
+            let text = numbers.map(String.init).joined(separator: "\n")
+            try? text.write(to: url, atomically: true, encoding: .utf8)
+        }
+        
+        private static func readNumbers(from url: URL) -> [Int] {
+            guard let text = try? String(contentsOf: url) else { return [] }
+            return text
+                .split(separator: "\n")
+                .compactMap { Int($0) }
+        }
+    }
+
+    /*
      328. Odd Even Linked List
      Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.
      The first node is considered odd, and the second node is even, and so on.
