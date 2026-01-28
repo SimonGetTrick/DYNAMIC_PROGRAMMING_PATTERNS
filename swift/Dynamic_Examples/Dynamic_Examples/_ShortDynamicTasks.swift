@@ -27,6 +27,106 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     329. Longest Increasing Path in a Matrix     Hard
+     Given an m x n integers matrix, return the length of the longest increasing path in matrix.
+     From each cell, you can either move in four directions: left, right, up, or down. You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).
+     Example 1:
+     Input: matrix = [[9,9,4],[6,6,8],[2,1,1]]
+     Output: 4
+     Explanation: The longest increasing path is [1, 2, 6, 9].
+     Example 2:
+     Input: matrix = [[3,4,5],[3,2,6],[2,2,1]]
+     Output: 4
+     Explanation: The longest increasing path is [3, 4, 5, 6]. Moving diagonally is not allowed.
+     Example 3:
+     Input: matrix = [[1]]
+     Output: 1
+     Constraints:
+     m == matrix.length
+     n == matrix[i].length
+     1 <= m, n <= 200
+     0 <= matrix[i][j] <= 231 - 1
+     */
+    class Solution329 {
+        // Static demo method
+        static func runDemo() {
+            let matrix1 = [
+                [9,9,4],
+                [6,6,8],
+                [2,1,1]
+            ]
+            
+            let matrix2 = [
+                [3,4,5],
+                [3,2,6],
+                [2,2,1]
+            ]
+            
+            let matrix3 = [[1]]
+            
+            print(longestIncreasingPath(matrix1)) // 4
+            print(longestIncreasingPath(matrix2)) // 4
+            print(longestIncreasingPath(matrix3)) // 1
+        }
+        
+        // Main function
+        private static func longestIncreasingPath(_ matrix: [[Int]]) -> Int {
+            let m = matrix.count
+            let n = matrix[0].count
+            
+            // Memoization table
+            var dp = Array(
+                repeating: Array(repeating: 0, count: n),
+                count: m
+            )
+            
+            var result = 0
+            
+            for i in 0..<m {
+                for j in 0..<n {
+                    result = max(result, dfs(matrix, i, j, &dp))
+                }
+            }
+            
+            return result
+        }
+        
+        // DFS with memoization
+        private static func dfs(
+            _ matrix: [[Int]],
+            _ i: Int,
+            _ j: Int,
+            _ dp: inout [[Int]]
+        ) -> Int {
+            if dp[i][j] != 0 {
+                return dp[i][j]
+            }
+            
+            let m = matrix.count
+            let n = matrix[0].count
+            let directions = [(0,1), (1,0), (0,-1), (-1,0)]
+            
+            var maxLength = 1
+            
+            for (dx, dy) in directions {
+                let x = i + dx
+                let y = j + dy
+                
+                if x >= 0, x < m, y >= 0, y < n,
+                   matrix[x][y] > matrix[i][j] {
+                    maxLength = max(
+                        maxLength,
+                        1 + dfs(matrix, x, y, &dp)
+                    )
+                }
+            }
+            
+            dp[i][j] = maxLength
+            return maxLength
+        }
+    }
+
+    /*
      https://www.techiedelight.com/external-merge-sort/
      External Merge Sort Algorithm
      The external merge sort algorithm is used to efficiently sort massive amounts of data when the data being sorted cannot be fit into the main memory (usually RAM) and resides in the slower external memory (usually a HDD).
