@@ -27,6 +27,36 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     330. Patching Array Hard Topics premium lock icon Companies Given a sorted integer array nums and an integer n, add/patch elements to the array such that any number in the range [1, n] inclusive can be formed by the sum of some elements in the array. Return the minimum number of patches required. Example 1: Input: nums = [1,3], n = 6 Output: 1 Explanation: Combinations of nums are [1], [3], [1,3], which form possible sums of: 1, 3, 4. Now if we add/patch 2 to nums, the combinations are: [1], [2], [3], [1,3], [2,3], [1,2,3]. Possible sums are 1, 2, 3, 4, 5, 6, which now covers the range [1, 6]. So we only need 1 patch. Example 2: Input: nums = [1,5,10], n = 20 Output: 2 Explanation: The two patches can be [2, 4]. Example 3: Input: nums = [1,2,2], n = 5 Output: 0 Constraints: 1 <= nums.length <= 1000 1 <= nums[i] <= 104 nums is sorted in ascending order. 1 <= n <= 231 - 1
+     */
+    class Solution330 {
+        static func runDemo() {
+            print(minPatches([1,3], 6))      // 1
+            print(minPatches([1,5,10], 20))  // 2
+            print(minPatches([1,2,2], 5))    // 0
+        }
+        
+        static func minPatches(_ nums: [Int], _ n: Int) -> Int {
+            var miss: Int64 = 1
+            var i = 0
+            var patches = 0
+            
+            while miss <= Int64(n) {
+                if i < nums.count && Int64(nums[i]) <= miss {
+                    miss += Int64(nums[i])
+                    i += 1
+                } else {
+                    // Patch miss itself
+                    miss += miss
+                    patches += 1
+                }
+            }
+            
+            return patches
+        }
+    }
+
+    /*
      329. Longest Increasing Path in a Matrix     Hard
      Given an m x n integers matrix, return the length of the longest increasing path in matrix.
      From each cell, you can either move in four directions: left, right, up, or down. You may not move diagonally or move outside the boundary (i.e., wrap-around is not allowed).
