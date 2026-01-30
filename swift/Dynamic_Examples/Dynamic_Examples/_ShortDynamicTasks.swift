@@ -27,6 +27,61 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     331. Verify Preorder Serialization of a Binary Tree
+     One way to serialize a binary tree is to use preorder traversal. When we encounter a non-null node, we record the node's value. If it is a null node, we record using a sentinel value such as '#'.
+     For example, the above binary tree can be serialized to the string "9,3,4,#,#,1,#,#,2,#,6,#,#", where '#' represents a null node.
+     Given a string of comma-separated values preorder, return true if it is a correct preorder traversal serialization of a binary tree.
+     It is guaranteed that each comma-separated value in the string must be either an integer or a character '#' representing null pointer.
+     You may assume that the input format is always valid.
+     For example, it could never contain two consecutive commas, such as "1,,3".
+     Note: You are not allowed to reconstruct the tree.
+     Example 1:
+     Input: preorder = "9,3,4,#,#,1,#,#,2,#,6,#,#"
+     Output: true
+     Example 2:
+     Input: preorder = "1,#"
+     Output: false
+     Example 3:
+     Input: preorder = "9,#,#,1"
+     Output: false
+     Constraints:
+     1 <= preorder.length <= 104
+     preorder consist of integers in the range [0, 100] and '#' separated by commas ','.
+     */
+    class Solution331 {
+        static func runDemo() {
+            print(isValidSerialization("9,3,4,#,#,1,#,#,2,#,6,#,#")) // true
+            print(isValidSerialization("1,#"))                       // false
+            print(isValidSerialization("9,#,#,1"))                   // false
+        }
+        
+        static func isValidSerialization(_ preorder: String) -> Bool {
+            let nodes = preorder.split(separator: ",")
+            
+            // Number of available slots
+            var slots = 1
+            
+            for node in nodes {
+                // One slot is used for current node
+                slots -= 1
+                
+                // No slot available -> invalid
+                if slots < 0 {
+                    return false
+                }
+                
+                // Non-null node generates two new slots
+                if node != "#" {
+                    slots += 2
+                }
+            }
+            
+            // All slots must be exactly filled
+            return slots == 0
+        }
+    }
+
+    /*
      330. Patching Array Hard Topics premium lock icon Companies Given a sorted integer array nums and an integer n, add/patch elements to the array such that any number in the range [1, n] inclusive can be formed by the sum of some elements in the array. Return the minimum number of patches required. Example 1: Input: nums = [1,3], n = 6 Output: 1 Explanation: Combinations of nums are [1], [3], [1,3], which form possible sums of: 1, 3, 4. Now if we add/patch 2 to nums, the combinations are: [1], [2], [3], [1,3], [2,3], [1,2,3]. Possible sums are 1, 2, 3, 4, 5, 6, which now covers the range [1, 6]. So we only need 1 patch. Example 2: Input: nums = [1,5,10], n = 20 Output: 2 Explanation: The two patches can be [2, 4]. Example 3: Input: nums = [1,2,2], n = 5 Output: 0 Constraints: 1 <= nums.length <= 1000 1 <= nums[i] <= 104 nums is sorted in ascending order. 1 <= n <= 231 - 1
      */
     class Solution330 {
