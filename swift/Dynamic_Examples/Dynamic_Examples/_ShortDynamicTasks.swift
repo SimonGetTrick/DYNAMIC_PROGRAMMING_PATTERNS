@@ -27,6 +27,77 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     332. Reconstruct Itinerary     Hard
+     You are given a list of airline tickets where tickets[i] = [fromi, toi] represent the departure and the arrival airports of one flight. Reconstruct the itinerary in order and return it.
+     All of the tickets belong to a man who departs from "JFK", thus, the itinerary must begin with "JFK". If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string.
+     For example, the itinerary ["JFK", "LGA"] has a smaller lexical order than ["JFK", "LGB"].
+     You may assume all tickets form at least one valid itinerary. You must use all the tickets once and only once.
+     Example 1:
+     Input: tickets = [["MUC","LHR"],["JFK","MUC"],["SFO","SJC"],["LHR","SFO"]]
+     Output: ["JFK","MUC","LHR","SFO","SJC"]
+     Example 2:
+     Input: tickets = [["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]
+     Output: ["JFK","ATL","JFK","SFO","ATL","SFO"]
+     Explanation: Another possible reconstruction is ["JFK","SFO","ATL","JFK","ATL","SFO"] but it is larger in lexical order.
+     
+     Time O(E log E) (sort by ticket)
+     Memory: O(E)
+     */
+    class Solution332 {
+        static func runDemo() {
+            let tickets1 = [
+                ["MUC","LHR"],
+                ["JFK","MUC"],
+                ["SFO","SJC"],
+                ["LHR","SFO"]
+            ]
+            
+            let tickets2 = [
+                ["JFK","SFO"],
+                ["JFK","ATL"],
+                ["SFO","ATL"],
+                ["ATL","JFK"],
+                ["ATL","SFO"]
+            ]
+            
+            print(findItinerary(tickets1))
+            print(findItinerary(tickets2))
+        }
+        
+        static func findItinerary(_ tickets: [[String]]) -> [String] {
+            // Graph: airport -> list of destinations
+            var graph: [String: [String]] = [:]
+            
+            // Build graph
+            for ticket in tickets {
+                graph[ticket[0], default: []].append(ticket[1])
+            }
+            
+            // Sort destinations lexicographically
+            for key in graph.keys {
+                graph[key]?.sort()
+            }
+            
+            var result: [String] = []
+            
+            // DFS using Hierholzer's algorithm
+            func dfs(_ airport: String) {
+                while let destinations = graph[airport], !destinations.isEmpty {
+                    let next = graph[airport]!.removeFirst()
+                    dfs(next)
+                }
+                // Add airport after using all outgoing edges
+                result.append(airport)
+            }
+            
+            dfs("JFK")
+            
+            // Result is built in reverse order
+            return result.reversed()
+        }
+    }
+
+    /*
      331. Verify Preorder Serialization of a Binary Tree
      One way to serialize a binary tree is to use preorder traversal. When we encounter a non-null node, we record the node's value. If it is a null node, we record using a sentinel value such as '#'.
      For example, the above binary tree can be serialized to the string "9,3,4,#,#,1,#,#,2,#,6,#,#", where '#' represents a null node.
