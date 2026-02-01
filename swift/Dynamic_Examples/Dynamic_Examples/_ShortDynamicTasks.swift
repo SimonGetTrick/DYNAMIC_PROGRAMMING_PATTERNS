@@ -27,6 +27,50 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     334. Increasing Triplet Subsequence
+     Given an integer array nums, return true if there exists a triple of indices (i, j, k) such that i < j < k and nums[i] < nums[j] < nums[k]. If no such indices exists, return false.
+     Example 1:
+     Input: nums = [1,2,3,4,5]
+     Output: true
+     Explanation: Any triplet where i < j < k is valid.
+     Example 2:
+     Input: nums = [5,4,3,2,1]
+     Output: false
+     Explanation: No triplet exists.
+     Example 3:
+     Input: nums = [2,1,5,0,4,6]
+     Output: true
+     Explanation: One of the valid triplet is (1, 4, 5), because nums[1] == 1 < nums[4] == 4 < nums[5] == 6.
+     */
+    class Solution334 {
+        static func runDemo() {
+            print(increasingTriplet([1,2,3,4,5])) // true
+            print(increasingTriplet([5,4,3,2,1])) // false
+            print(increasingTriplet([2,1,5,0,4,6])) // true
+        }
+        
+        static func increasingTriplet(_ nums: [Int]) -> Bool {
+            // First and second smallest values
+            var first = Int.max
+            var second = Int.max
+            
+            for num in nums {
+                if num <= first {
+                    // Update smallest value
+                    first = num
+                } else if num <= second {
+                    // Update second smallest value
+                    second = num
+                } else {
+                    // Found a value greater than both first and second
+                    return true
+                }
+            }
+            
+            return false
+        }
+    }
+     /*
      332. Reconstruct Itinerary     Hard
      You are given a list of airline tickets where tickets[i] = [fromi, toi] represent the departure and the arrival airports of one flight. Reconstruct the itinerary in order and return it.
      All of the tickets belong to a man who departs from "JFK", thus, the itinerary must begin with "JFK". If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string.
