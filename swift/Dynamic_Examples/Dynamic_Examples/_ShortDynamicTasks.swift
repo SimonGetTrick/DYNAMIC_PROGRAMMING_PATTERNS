@@ -27,6 +27,60 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     335. Self Crossing Hard
+     You start at the point (0, 0) on an X-Y plane, and you move distance[0] meters to the north, then distance[1] meters to the west, distance[2] meters to the south, distance[3] meters to the east, and so on. In other words, after each move, your direction changes counter-clockwise.
+     Return true if your path crosses itself or false if it does not.
+     Example 1:
+     Input: distance = [2,1,1,2]
+     Output: true
+     Explanation: The path crosses itself at the point (0, 1).
+     Example 2:
+     Input: distance = [1,2,3,4]
+     Output: false
+     Explanation: The path does not cross itself at any point.
+     Example 3:
+     Input: distance = [1,1,1,2,1]
+     Output: true
+     Explanation: The path crosses itself at the point (0, 0).
+     */
+    class Solution335 {
+        static func runDemo() {
+            print(isSelfCrossing([2,1,1,2]))      // true
+            print(isSelfCrossing([1,2,3,4]))      // false
+            print(isSelfCrossing([1,1,1,2,1]))    // true
+        }
+        
+        static func isSelfCrossing(_ distance: [Int]) -> Bool {
+            let n = distance.count
+            guard n >= 4 else { return false }
+            
+            for i in 3..<n {
+                // Case 1: current line crosses the line 3 steps ahead
+                if distance[i] >= distance[i-2] && distance[i-1] <= distance[i-3] {
+                    return true
+                }
+                
+                // Case 2: current line crosses the line 4 steps ahead
+                if i >= 4 &&
+                    distance[i-1] == distance[i-3] &&
+                    distance[i] + distance[i-4] >= distance[i-2] {
+                    return true
+                }
+                
+                // Case 3: current line crosses the line 5 steps ahead
+                if i >= 5 &&
+                    distance[i-2] >= distance[i-4] &&
+                    distance[i] + distance[i-4] >= distance[i-2] &&
+                    distance[i-1] <= distance[i-3] &&
+                    distance[i-1] + distance[i-5] >= distance[i-3] {
+                    return true
+                }
+            }
+            
+            return false
+        }
+    }
+    /*
      334. Increasing Triplet Subsequence
      Given an integer array nums, return true if there exists a triple of indices (i, j, k) such that i < j < k and nums[i] < nums[j] < nums[k]. If no such indices exists, return false.
      Example 1:
@@ -429,7 +483,7 @@ class Solution {
         }
         
         private static func readNumbers(from url: URL) -> [Int] {
-            guard let text = try? String(contentsOf: url) else { return [] }
+            guard let text = try? String(contentsOf: url, encoding: .utf8) else { return [] }
             return text
                 .split(separator: "\n")
                 .compactMap { Int($0) }
