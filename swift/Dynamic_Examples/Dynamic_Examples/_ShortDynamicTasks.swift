@@ -27,6 +27,114 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     336. Palindrome Pairs     Hard
+     You are given a 0-indexed array of unique strings words.
+     A palindrome pair is a pair of integers (i, j) such that:
+     0 <= i, j < words.length,
+     i != j, and
+     words[i] + words[j] (the concatenation of the two strings) is a palindrome.
+     Return an array of all the palindrome pairs of words.
+     You must write an algorithm with O(sum of words[i].length) runtime complexity.
+     Example 1:
+     Input: words = ["abcd","dcba","lls","s","sssll"]
+     Output: [[0,1],[1,0],[3,2],[2,4]]
+     Explanation: The palindromes are ["abcddcba","dcbaabcd","slls","llssssll"]
+     Example 2:
+     Input: words = ["bat","tab","cat"]
+     Output: [[0,1],[1,0]]
+     Explanation: The palindromes are ["battab","tabbat"]
+     Example 3:
+     Input: words = ["a",""]
+     Output: [[0,1],[1,0]]
+     Explanation: The palindromes are ["a","a"]
+     */
+    class Solution336 {
+        
+        class TrieNode {
+            var children: [Character: TrieNode] = [:]
+            var wordIndex: Int = -1
+            var palindromeSuffixes: [Int] = []
+        }
+        
+        static func runDemo() {
+            print(palindromePairs(["abcd","dcba","lls","s","sssll"]))
+            print(palindromePairs(["bat","tab","cat"]))
+            print(palindromePairs(["a",""]))
+        }
+        
+        static func palindromePairs(_ words: [String]) -> [[Int]] {
+            let root = TrieNode()
+            
+            // Insert reversed words into Trie
+            for (index, word) in words.enumerated() {
+                insert(word, index, root)
+            }
+            
+            var result: [[Int]] = []
+            
+            // Search pairs
+            for (index, word) in words.enumerated() {
+                search(word, index, root, &result)
+            }
+            
+            return result
+        }
+        
+        // Insert reversed word into trie
+        static func insert(_ word: String, _ index: Int, _ root: TrieNode) {
+            var node = root
+            let chars = Array(word)
+            
+            for i in 0..<chars.count {
+                if isPalindrome(chars, 0, chars.count - i - 1) {
+                    node.palindromeSuffixes.append(index)
+                }
+                let c = chars[chars.count - 1 - i]
+                node.children[c, default: TrieNode()] = node.children[c] ?? TrieNode()
+                node = node.children[c]!
+            }
+            
+            node.wordIndex = index
+            node.palindromeSuffixes.append(index)
+        }
+        
+        // Search palindrome pairs
+        static func search(_ word: String, _ index: Int, _ root: TrieNode, _ result: inout [[Int]]) {
+            var node = root
+            let chars = Array(word)
+            
+            for i in 0..<chars.count {
+                if node.wordIndex >= 0 &&
+                    node.wordIndex != index &&
+                    isPalindrome(chars, i, chars.count - 1) {
+                    result.append([index, node.wordIndex])
+                }
+                
+                guard let next = node.children[chars[i]] else { return }
+                node = next
+            }
+            
+            for otherIndex in node.palindromeSuffixes {
+                if otherIndex != index {
+                    result.append([index, otherIndex])
+                }
+            }
+        }
+        
+        // Check if substring is palindrome
+        static func isPalindrome(_ chars: [Character], _ left: Int, _ right: Int) -> Bool {
+            var l = left
+            var r = right
+            while l < r {
+                if chars[l] != chars[r] { return false }
+                l += 1
+                r -= 1
+            }
+            return true
+        }
+    }
+
+    /*
      335. Self Crossing Hard
      You start at the point (0, 0) on an X-Y plane, and you move distance[0] meters to the north, then distance[1] meters to the west, distance[2] meters to the south, distance[3] meters to the east, and so on. In other words, after each move, your direction changes counter-clockwise.
      Return true if your path crosses itself or false if it does not.
