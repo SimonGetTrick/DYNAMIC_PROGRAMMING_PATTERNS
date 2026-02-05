@@ -27,6 +27,78 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     341. Flatten Nested List Iterator Medium Topics premium lock icon Companies You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists. Implement an iterator to flatten it. Implement the NestedIterator class: NestedIterator(List<NestedInteger> nestedList) Initializes the iterator with the nested list nestedList. int next() Returns the next integer in the nested list. boolean hasNext() Returns true if there are still some integers in the nested list and false otherwise. Your code will be tested with the following pseudocode: initialize iterator with nestedList res = [] while iterator.hasNext() append iterator.next() to the end of res return res If res matches the expected flattened list, then your code will be judged as correct. Example 1: Input: nestedList = [[1,1],2,[1,1]] Output: [1,1,2,1,1] Explanation: By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,1,2,1,1]. Example 2: Input: nestedList = [1,[4,[6]]] Output: [1,4,6] Explanation: By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,4,6]. Constraints: 1 <= nestedList.length <= 500 The values of the integers in the nested list is in the range [-106, 106].
+     */
+    class Solution341 {
+        
+        static func runDemo() {
+            // Demo depends on NestedInteger provided by the platform
+            print("Flatten Nested List Iterator demo ready")
+        }
+    }
+    class NestedInteger {
+        private var integer: Int?
+        private var list: [NestedInteger]?
+        
+        init(_ value: Int) {
+            self.integer = value
+            self.list = nil
+        }
+        
+        init(_ list: [NestedInteger]) {
+            self.list = list
+            self.integer = nil
+        }
+        
+        func isInteger() -> Bool {
+            return integer != nil
+        }
+        
+        func getInteger() -> Int {
+            return integer!
+        }
+        
+        func getList() -> [NestedInteger] {
+            return list ?? []
+        }
+    }
+
+    class NestedIterator {
+        
+        private var stack: [NestedInteger] = []
+        
+        init(_ nestedList: [NestedInteger]) {
+            // Push elements in reverse order
+            for item in nestedList.reversed() {
+                stack.append(item)
+            }
+        }
+        
+        func next() -> Int {
+            // hasNext guarantees top is integer
+            return stack.removeLast().getInteger()
+        }
+        
+        func hasNext() -> Bool {
+            while !stack.isEmpty {
+                let top = stack.last!
+                
+                if top.isInteger() {
+                    return true
+                }
+                
+                // If top is a list, expand it
+                stack.removeLast()
+                let list = top.getList()
+                for item in list.reversed() {
+                    stack.append(item)
+                }
+            }
+            return false
+        }
+    }
+
+    /*
      337. House Robber III
      The thief has found himself a new place for his thievery again. There is only one entrance to this area, called root.
      Besides the root, each house has one and only one parent house. After a tour, the smart thief realized that all houses in this place form a binary tree. It will automatically contact the police if two directly-linked houses were broken into on the same night.
