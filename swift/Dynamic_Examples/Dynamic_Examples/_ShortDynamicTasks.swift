@@ -27,6 +27,52 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     343. Integer Break
+     Given an integer n, break it into the sum of k positive integers, where k >= 2, and maximize the product of those integers.
+
+     Return the maximum product you can get.
+
+      
+
+     Example 1:
+
+     Input: n = 2
+     Output: 1
+     Explanation: 2 = 1 + 1, 1 × 1 = 1.
+     Example 2:
+
+     Input: n = 10
+     Output: 36
+     Explanation: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36.
+     */
+    class Solution343 {
+        
+        static func runDemo() {
+            print(integerBreak(2))   // 1
+            print(integerBreak(10))  // 36
+            print(integerBreak(8))   // 18
+        }
+        
+        static func integerBreak(_ n: Int) -> Int {
+            // Base cases
+            if n == 2 { return 1 }
+            if n == 3 { return 2 }
+            
+            var n = n
+            var result = 1
+            
+            // Break n into as many 3s as possible
+            while n > 4 {
+                result *= 3
+                n -= 3
+            }
+            
+            // Multiply the remaining part
+            return result * n
+        }
+    }
+
+    /*
      341. Flatten Nested List Iterator Medium Topics premium lock icon Companies You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists. Implement an iterator to flatten it. Implement the NestedIterator class: NestedIterator(List<NestedInteger> nestedList) Initializes the iterator with the nested list nestedList. int next() Returns the next integer in the nested list. boolean hasNext() Returns true if there are still some integers in the nested list and false otherwise. Your code will be tested with the following pseudocode: initialize iterator with nestedList res = [] while iterator.hasNext() append iterator.next() to the end of res return res If res matches the expected flattened list, then your code will be judged as correct. Example 1: Input: nestedList = [[1,1],2,[1,1]] Output: [1,1,2,1,1] Explanation: By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,1,2,1,1]. Example 2: Input: nestedList = [1,[4,[6]]] Output: [1,4,6] Explanation: By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,4,6]. Constraints: 1 <= nestedList.length <= 500 The values of the integers in the nested list is in the range [-106, 106].
      */
     class Solution341 {
