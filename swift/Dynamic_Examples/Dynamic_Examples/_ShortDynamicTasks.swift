@@ -27,6 +27,37 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     349. Intersection of Two Arrays
+     Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must be unique and you may return the result in any order.
+     Example 1:
+     Input: nums1 = [1,2,2,1], nums2 = [2,2]
+     Output: [2]
+     Example 2:
+     Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+     Output: [9,4]
+     Explanation: [4,9] is also accepted.
+     */
+    class Solution349 {
+        
+        static func runDemo() {
+            print(intersection([1,2,2,1], [2,2]))          // [2]
+            print(intersection([4,9,5], [9,4,9,8,4]))      // [9,4] or [4,9]
+        }
+        
+        static func intersection(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+            // Convert arrays to sets to remove duplicates
+            let set1 = Set(nums1)
+            let set2 = Set(nums2)
+            
+            // Compute intersection
+            let resultSet = set1.intersection(set2)
+            
+            // Convert result to array
+            return Array(resultSet)
+        }
+    }
+
+    /*
      343. Integer Break
      Given an integer n, break it into the sum of k positive integers, where k >= 2, and maximize the product of those integers.
 
