@@ -26,41 +26,85 @@ extension Array where Element == Int {
 }
 
 class Solution {
-    /*
-     350. Intersection of Two Arrays II
-     Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must appear as many times as it shows in both arrays and you may return the result in any order.
-     Example 1:
-     Input: nums1 = [1,2,2,1], nums2 = [2,2]
-     Output: [2,2]
-     Example 2:
-     Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
-     Output: [4,9]
-     Explanation: [9,4] is also accepted.
-     Constraints:
-     1 <= nums1.length, nums2.length <= 1000
-     0 <= nums1[i], nums2[i] <= 1000
-     Follow up:
-     What if the given array is already sorted? How would you optimize your algorithm?
-     What if nums1's size is small compared to nums2's size? Which algorithm is better?
-     What if elements of nums2 are stored on disk, and the memory is limited such that you cannot load all elements into the memory at once?
-     */
-    class Solution349 {
+/*
+ 352. Data Stream as Disjoint Intervals  Hard
+ Given a data stream input of non-negative integers a1, a2, ..., an, summarize the numbers seen so far as a list of disjoint intervals.
+ Implement the SummaryRanges class:
+ SummaryRanges() Initializes the object with an empty stream.
+ void addNum(int value) Adds the integer value to the stream.
+ int[][] getIntervals() Returns a summary of the integers in the stream currently as a list of disjoint intervals [starti, endi]. The answer should be sorted by starti.
+ Example 1:
+ Input
+ ["SummaryRanges", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals"]
+ [[], [1], [], [3], [], [7], [], [2], [], [6], []]
+ Output
+ [null, null, [[1, 1]], null, [[1, 1], [3, 3]], null, [[1, 1], [3, 3], [7, 7]], null, [[1, 3], [7, 7]], null, [[1, 3], [6, 7]]]
+
+ Explanation
+ SummaryRanges summaryRanges = new SummaryRanges();
+ summaryRanges.addNum(1);      // arr = [1]
+ summaryRanges.getIntervals(); // return [[1, 1]]
+ summaryRanges.addNum(3);      // arr = [1, 3]
+ summaryRanges.getIntervals(); // return [[1, 1], [3, 3]]
+ summaryRanges.addNum(7);      // arr = [1, 3, 7]
+ summaryRanges.getIntervals(); // return [[1, 1], [3, 3], [7, 7]]
+ summaryRanges.addNum(2);      // arr = [1, 2, 3, 7]
+ summaryRanges.getIntervals(); // return [[1, 3], [7, 7]]
+ summaryRanges.addNum(6);      // arr = [1, 2, 3, 6, 7]
+ summaryRanges.getIntervals(); // return [[1, 3], [6, 7]]
+ Constraints:
+ 0 <= value <= 104
+ At most 3 * 104 calls will be made to addNum and getIntervals.
+ At most 102 calls will be made to getIntervals.
+ Follow up: What if there are lots of merges and the number of disjoint intervals is small compared to the size of the data stream?
+ */
+    class SummaryRanges {
         
-        static func runDemo() {
-            print(intersection([1,2,2,1], [2,2]))          // [2]
-            print(intersection([4,9,5], [9,4,9,8,4]))      // [9,4] or [4,9]
+        private var intervals: [(Int, Int)] = []
+        
+        init() {}
+        
+        func addNum(_ value: Int) {
+            if intervals.isEmpty {
+                intervals.append((value, value))
+                return
+            }
+            
+            var i = 0
+            
+            // Find the first interval with start > value
+            while i < intervals.count && intervals[i].1 < value - 1 {
+                i += 1
+            }
+            
+            // Case 1: value already covered
+            if i < intervals.count &&
+                intervals[i].0 <= value &&
+                value <= intervals[i].1 {
+                return
+            }
+            
+            let leftMerge = (i > 0 && intervals[i - 1].1 + 1 == value)
+            let rightMerge = (i < intervals.count && intervals[i].0 - 1 == value)
+            
+            if leftMerge && rightMerge {
+                // Merge left and right intervals
+                intervals[i - 1].1 = intervals[i].1
+                intervals.remove(at: i)
+            } else if leftMerge {
+                // Extend left interval
+                intervals[i - 1].1 += 1
+            } else if rightMerge {
+                // Extend right interval
+                intervals[i].0 -= 1
+            } else {
+                // Insert new interval
+                intervals.insert((value, value), at: i)
+            }
         }
         
-        static func intersection(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
-            // Convert arrays to sets to remove duplicates
-            let set1 = Set(nums1)
-            let set2 = Set(nums2)
-            
-            // Compute intersection
-            let resultSet = set1.intersection(set2)
-            
-            // Convert result to array
-            return Array(resultSet)
+        func getIntervals() -> [[Int]] {
+            return intervals.map { [$0.0, $0.1] }
         }
     }
 
