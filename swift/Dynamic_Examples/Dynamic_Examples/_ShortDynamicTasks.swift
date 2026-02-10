@@ -26,6 +26,54 @@ extension Array where Element == Int {
 }
 
 class Solution {
+    /*
+     354. Russian Doll Envelopes Hard
+     You are given a 2D array of integers envelopes where envelopes[i] = [wi, hi] represents the width and the height of an envelope.
+     One envelope can fit into another if and only if both the width and height of one envelope are greater than the other envelope's width and height.
+     Return the maximum number of envelopes you can Russian doll (i.e., put one inside the other).
+     Note: You cannot rotate an envelope.
+     Example 1:
+     Input: envelopes = [[5,4],[6,4],[6,7],[2,3]]
+     Output: 3
+     Explanation: The maximum number of envelopes you can Russian doll is 3 ([2,3] => [5,4] => [6,7]).
+     Example 2:
+
+     Input: envelopes = [[1,1],[1,1],[1,1]]
+     Output: 1
+     */
+    class Solution354 {
+        
+        static func runDemo() {
+            print(maxEnvelopes([[5,4],[6,4],[6,7],[2,3]])) // 3
+            print(maxEnvelopes([[1,1],[1,1],[1,1]]))       // 1
+        }
+        
+        static func maxEnvelopes(_ envelopes: [[Int]]) -> Int {
+            guard !envelopes.isEmpty else { return 0 }
+            
+            // Sort by width ascending, height descending if width equal
+            let sorted = envelopes.sorted { a, b in
+                if a[0] != b[0] { return a[0] < b[0] }
+                return a[1] > b[1]
+            }
+            
+            // Extract heights
+            let heights = sorted.map { $0[1] }
+            
+            // Apply LIS on heights
+            var lis: [Int] = []
+            for h in heights {
+                if let i = lis.firstIndex(where: { $0 >= h }) {
+                    lis[i] = h
+                } else {
+                    lis.append(h)
+                }
+            }
+            return lis.count
+        }
+    }
+
+    
 /*
  352. Data Stream as Disjoint Intervals  Hard
  Given a data stream input of non-negative integers a1, a2, ..., an, summarize the numbers seen so far as a list of disjoint intervals.
