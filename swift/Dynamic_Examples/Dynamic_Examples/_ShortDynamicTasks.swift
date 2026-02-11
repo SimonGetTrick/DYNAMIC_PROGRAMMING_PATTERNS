@@ -51,7 +51,50 @@ class Solution {
      twitter.unfollow(1, 2);  // User 1 unfollows user 2.
      twitter.getNewsFeed(1);  // User 1's news feed should return a list with 1 tweet id -> [5], since user 1 is no longer following user 2.
      */
-    	
+    class Twitter {
+        
+        private var time = 0
+        
+        // userId -> [(time, tweetId)]
+        private var tweets: [Int: [(Int, Int)]] = [:]
+        
+        // followerId -> Set of followeeIds
+        private var followMap: [Int: Set<Int>] = [:]
+        
+        init() {}
+        
+        func postTweet(_ userId: Int, _ tweetId: Int) {
+            time += 1
+            tweets[userId, default: []].append((time, tweetId))
+        }
+        
+        func getNewsFeed(_ userId: Int) -> [Int] {
+            var heap: [(Int, Int)] = []
+            
+            var users = followMap[userId] ?? Set<Int>()
+            users.insert(userId)
+            
+            for user in users {
+                if let userTweets = tweets[user] {
+                    heap.append(contentsOf: userTweets)
+                }
+            }
+            
+            // Sort descending by time
+            heap.sort { $0.0 > $1.0 }
+            
+            return heap.prefix(10).map { $0.1 }
+        }
+        
+        func follow(_ followerId: Int, _ followeeId: Int) {
+            followMap[followerId, default: []].insert(followeeId)
+        }
+        
+        func unfollow(_ followerId: Int, _ followeeId: Int) {
+            followMap[followerId]?.remove(followeeId)
+        }
+    }
+    
     /*
      354. Russian Doll Envelopes Hard
      You are given a 2D array of integers envelopes where envelopes[i] = [wi, hi] represents the width and the height of an envelope.
@@ -63,7 +106,7 @@ class Solution {
      Output: 3
      Explanation: The maximum number of envelopes you can Russian doll is 3 ([2,3] => [5,4] => [6,7]).
      Example 2:
-
+     
      Input: envelopes = [[1,1],[1,1],[1,1]]
      Output: 1
      */
@@ -98,40 +141,40 @@ class Solution {
             return lis.count
         }
     }
-
     
-/*
- 352. Data Stream as Disjoint Intervals  Hard
- Given a data stream input of non-negative integers a1, a2, ..., an, summarize the numbers seen so far as a list of disjoint intervals.
- Implement the SummaryRanges class:
- SummaryRanges() Initializes the object with an empty stream.
- void addNum(int value) Adds the integer value to the stream.
- int[][] getIntervals() Returns a summary of the integers in the stream currently as a list of disjoint intervals [starti, endi]. The answer should be sorted by starti.
- Example 1:
- Input
- ["SummaryRanges", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals"]
- [[], [1], [], [3], [], [7], [], [2], [], [6], []]
- Output
- [null, null, [[1, 1]], null, [[1, 1], [3, 3]], null, [[1, 1], [3, 3], [7, 7]], null, [[1, 3], [7, 7]], null, [[1, 3], [6, 7]]]
-
- Explanation
- SummaryRanges summaryRanges = new SummaryRanges();
- summaryRanges.addNum(1);      // arr = [1]
- summaryRanges.getIntervals(); // return [[1, 1]]
- summaryRanges.addNum(3);      // arr = [1, 3]
- summaryRanges.getIntervals(); // return [[1, 1], [3, 3]]
- summaryRanges.addNum(7);      // arr = [1, 3, 7]
- summaryRanges.getIntervals(); // return [[1, 1], [3, 3], [7, 7]]
- summaryRanges.addNum(2);      // arr = [1, 2, 3, 7]
- summaryRanges.getIntervals(); // return [[1, 3], [7, 7]]
- summaryRanges.addNum(6);      // arr = [1, 2, 3, 6, 7]
- summaryRanges.getIntervals(); // return [[1, 3], [6, 7]]
- Constraints:
- 0 <= value <= 104
- At most 3 * 104 calls will be made to addNum and getIntervals.
- At most 102 calls will be made to getIntervals.
- Follow up: What if there are lots of merges and the number of disjoint intervals is small compared to the size of the data stream?
- */
+    
+    /*
+     352. Data Stream as Disjoint Intervals  Hard
+     Given a data stream input of non-negative integers a1, a2, ..., an, summarize the numbers seen so far as a list of disjoint intervals.
+     Implement the SummaryRanges class:
+     SummaryRanges() Initializes the object with an empty stream.
+     void addNum(int value) Adds the integer value to the stream.
+     int[][] getIntervals() Returns a summary of the integers in the stream currently as a list of disjoint intervals [starti, endi]. The answer should be sorted by starti.
+     Example 1:
+     Input
+     ["SummaryRanges", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals"]
+     [[], [1], [], [3], [], [7], [], [2], [], [6], []]
+     Output
+     [null, null, [[1, 1]], null, [[1, 1], [3, 3]], null, [[1, 1], [3, 3], [7, 7]], null, [[1, 3], [7, 7]], null, [[1, 3], [6, 7]]]
+     
+     Explanation
+     SummaryRanges summaryRanges = new SummaryRanges();
+     summaryRanges.addNum(1);      // arr = [1]
+     summaryRanges.getIntervals(); // return [[1, 1]]
+     summaryRanges.addNum(3);      // arr = [1, 3]
+     summaryRanges.getIntervals(); // return [[1, 1], [3, 3]]
+     summaryRanges.addNum(7);      // arr = [1, 3, 7]
+     summaryRanges.getIntervals(); // return [[1, 1], [3, 3], [7, 7]]
+     summaryRanges.addNum(2);      // arr = [1, 2, 3, 7]
+     summaryRanges.getIntervals(); // return [[1, 3], [7, 7]]
+     summaryRanges.addNum(6);      // arr = [1, 2, 3, 6, 7]
+     summaryRanges.getIntervals(); // return [[1, 3], [6, 7]]
+     Constraints:
+     0 <= value <= 104
+     At most 3 * 104 calls will be made to addNum and getIntervals.
+     At most 102 calls will be made to getIntervals.
+     Follow up: What if there are lots of merges and the number of disjoint intervals is small compared to the size of the data stream?
+     */
     class SummaryRanges {
         
         private var intervals: [(Int, Int)] = []
@@ -181,7 +224,7 @@ class Solution {
             return intervals.map { [$0.0, $0.1] }
         }
     }
-
+    
     /*
      349. Intersection of Two Arrays
      Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must be unique and you may return the result in any order.
@@ -212,22 +255,22 @@ class Solution {
             return Array(resultSet)
         }
     }
-
+    
     /*
      343. Integer Break
      Given an integer n, break it into the sum of k positive integers, where k >= 2, and maximize the product of those integers.
-
+     
      Return the maximum product you can get.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: n = 2
      Output: 1
      Explanation: 2 = 1 + 1, 1 × 1 = 1.
      Example 2:
-
+     
      Input: n = 10
      Output: 36
      Explanation: 10 = 3 + 3 + 4, 3 × 3 × 4 = 36.
@@ -258,7 +301,7 @@ class Solution {
             return result * n
         }
     }
-
+    
     /*
      341. Flatten Nested List Iterator Medium Topics premium lock icon Companies You are given a nested list of integers nestedList. Each element is either an integer or a list whose elements may also be integers or other lists. Implement an iterator to flatten it. Implement the NestedIterator class: NestedIterator(List<NestedInteger> nestedList) Initializes the iterator with the nested list nestedList. int next() Returns the next integer in the nested list. boolean hasNext() Returns true if there are still some integers in the nested list and false otherwise. Your code will be tested with the following pseudocode: initialize iterator with nestedList res = [] while iterator.hasNext() append iterator.next() to the end of res return res If res matches the expected flattened list, then your code will be judged as correct. Example 1: Input: nestedList = [[1,1],2,[1,1]] Output: [1,1,2,1,1] Explanation: By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,1,2,1,1]. Example 2: Input: nestedList = [1,[4,[6]]] Output: [1,4,6] Explanation: By calling next repeatedly until hasNext returns false, the order of elements returned by next should be: [1,4,6]. Constraints: 1 <= nestedList.length <= 500 The values of the integers in the nested list is in the range [-106, 106].
      */
@@ -295,7 +338,7 @@ class Solution {
             return list ?? []
         }
     }
-
+    
     class NestedIterator {
         
         private var stack: [NestedInteger] = []
@@ -330,7 +373,7 @@ class Solution {
             return false
         }
     }
-
+    
     /*
      337. House Robber III
      The thief has found himself a new place for his thievery again. There is only one entrance to this area, called root.
@@ -378,7 +421,7 @@ class Solution {
             return (robCurrent, skipCurrent)
         }
     }
-
+    
     /*
      336. Palindrome Pairs     Hard
      You are given a 0-indexed array of unique strings words.
@@ -486,7 +529,7 @@ class Solution {
             return true
         }
     }
-
+    
     /*
      335. Self Crossing Hard
      You start at the point (0, 0) on an X-Y plane, and you move distance[0] meters to the north, then distance[1] meters to the west, distance[2] meters to the south, distance[3] meters to the east, and so on. In other words, after each move, your direction changes counter-clockwise.
@@ -585,7 +628,7 @@ class Solution {
             return false
         }
     }
-     /*
+    /*
      332. Reconstruct Itinerary     Hard
      You are given a list of airline tickets where tickets[i] = [fromi, toi] represent the departure and the arrival airports of one flight. Reconstruct the itinerary in order and return it.
      All of the tickets belong to a man who departs from "JFK", thus, the itinerary must begin with "JFK". If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string.
@@ -655,7 +698,7 @@ class Solution {
             return result.reversed()
         }
     }
-
+    
     /*
      331. Verify Preorder Serialization of a Binary Tree
      One way to serialize a binary tree is to use preorder traversal. When we encounter a non-null node, we record the node's value. If it is a null node, we record using a sentinel value such as '#'.
@@ -710,7 +753,7 @@ class Solution {
             return slots == 0
         }
     }
-
+    
     /*
      330. Patching Array Hard Topics premium lock icon Companies Given a sorted integer array nums and an integer n, add/patch elements to the array such that any number in the range [1, n] inclusive can be formed by the sum of some elements in the array. Return the minimum number of patches required. Example 1: Input: nums = [1,3], n = 6 Output: 1 Explanation: Combinations of nums are [1], [3], [1,3], which form possible sums of: 1, 3, 4. Now if we add/patch 2 to nums, the combinations are: [1], [2], [3], [1,3], [2,3], [1,2,3]. Possible sums are 1, 2, 3, 4, 5, 6, which now covers the range [1, 6]. So we only need 1 patch. Example 2: Input: nums = [1,5,10], n = 20 Output: 2 Explanation: The two patches can be [2, 4]. Example 3: Input: nums = [1,2,2], n = 5 Output: 0 Constraints: 1 <= nums.length <= 1000 1 <= nums[i] <= 104 nums is sorted in ascending order. 1 <= n <= 231 - 1
      */
@@ -740,7 +783,7 @@ class Solution {
             return patches
         }
     }
-
+    
     /*
      329. Longest Increasing Path in a Matrix     Hard
      Given an m x n integers matrix, return the length of the longest increasing path in matrix.
@@ -840,16 +883,16 @@ class Solution {
             return maxLength
         }
     }
-
+    
     /*
      https://www.techiedelight.com/external-merge-sort/
      External Merge Sort Algorithm
      The external merge sort algorithm is used to efficiently sort massive amounts of data when the data being sorted cannot be fit into the main memory (usually RAM) and resides in the slower external memory (usually a HDD).
-
+     
      External merge sort uses a hybrid sort-merge technique. The chunks of data small enough to fit in the RAM are read, sorted, and written out to a temporary file during the sorting phase. In the merge phase, the sorted sub-files are combined into a single larger file.
-
-      In other words, external merge sort sorts the chunks of data that fits in the main memory, then merges the sorted chunks, i.e.,
-
+     
+     In other words, external merge sort sorts the chunks of data that fits in the main memory, then merges the sorted chunks, i.e.,
+     
      First, divide the file into runs such that the size of a run is small enough to fit into the main memory.
      Next, sort each run in main memory using the standard merge sort sorting algorithm.
      Finally, merge the resulting runs into successively bigger runs until the file is sorted.
@@ -950,7 +993,7 @@ class Solution {
                 .compactMap { Int($0) }
         }
     }
-
+    
     /*
      328. Odd Even Linked List
      Given the head of a singly linked list, group all the nodes with odd indices together followed by the nodes with even indices, and return the reordered list.
@@ -1035,17 +1078,17 @@ class Solution {
             return result
         }
     }
-
+    
     /*
      327. Count of Range Sum Hard
      Given an integer array nums and two integers lower and upper, return the number of range sums that lie in [lower, upper] inclusive.
      Range sum S(i, j) is defined as the sum of the elements in nums between indices i and j inclusive, where i <= j.
-
+     
      Input: nums = [-2,5,-1], lower = -2, upper = 2
      Output: 3
      Explanation: The three ranges are: [0,0], [2,2], and [0,2] and their respective sums are: -2, -1, 2.
      Example 2:
-
+     
      Input: nums = [0], lower = 0, upper = 0
      Output: 1
      Constraints:
@@ -1138,7 +1181,7 @@ class Solution {
             return count
         }
     }
-
+    
     /*
      324. Wiggle Sort II
      Given an integer array nums, reorder it such that nums[0] < nums[1] > nums[2] < nums[3]....
@@ -1188,7 +1231,7 @@ class Solution {
             }
         }
     }
-
+    
     /*
      322. Coin Change
      You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
@@ -1237,7 +1280,7 @@ class Solution {
             return dp[amount] > amount ? -1 : dp[amount]
         }
     }
-
+    
     /*
      321. Create Maximum Number     Hard
      You are given two integer arrays nums1 and nums2 of lengths m and n respectively. nums1 and nums2 represent the digits of two numbers. You are also given an integer k.
@@ -1403,7 +1446,7 @@ class Solution {
             return maxProduct
         }
     }
-
+    
     /*
      316. Remove Duplicate Letters
      Given a string s, remove duplicate letters so that every letter appears once and only once. You must make sure your result is the smallest in lexicographical order among all possible results.
@@ -1469,7 +1512,7 @@ class Solution {
             return String(stack)
         }
     }
-
+    
     /*
      315. Count of Smaller Numbers After Self     Hard
      Given an integer array nums, return an integer array counts where counts[i] is the number of smaller elements to the right of nums[i].
@@ -1525,8 +1568,8 @@ class Solution {
             return result.reversed()
         }
     }
-
-
+    
+    
     /*
      313. Super Ugly Number
      A super ugly number is a positive integer whose prime factors are in the array primes.
@@ -1617,8 +1660,8 @@ class Solution {
                     
                     for k in (left + 1)..<right {
                         let coins = dp[left][k]
-                                  + arr[left] * arr[k] * arr[right]
-                                  + dp[k][right]
+                        + arr[left] * arr[k] * arr[right]
+                        + dp[k][right]
                         
                         dp[left][right] = max(dp[left][right], coins)
                     }
@@ -1628,7 +1671,7 @@ class Solution {
             return dp[0][n + 1]
         }
     }
-
+    
     /*
      310. Minimum Height Trees
      A tree is an undirected graph in which any two vertices are connected by exactly one path. In other words, any connected graph without simple cycles is a tree.
@@ -1701,7 +1744,7 @@ class Solution {
             return queue
         }
     }
-
+    
     /*
      309. Best Time to Buy and Sell Stock with Cooldown
      You are given an array prices where prices[i] is the price of a given stock on the ith day.
@@ -1720,52 +1763,52 @@ class Solution {
      0 <= prices[i] <= 1000
      */
     final class BestTimeToBuyAndSellStockWithCooldown {
-
+        
         /// Demo entry point
         static func runDemo() {
             let prices = [1, 2, 3, 0, 2]
             let result = maxProfit(prices)
             print("Max profit:", result) // Expected output: 3
         }
-
+        
         /// Returns the maximum profit with cooldown restriction
         private static func maxProfit(_ prices: [Int]) -> Int {
             // Edge case: no prices
             if prices.isEmpty {
                 return 0
             }
-
+            
             // State when holding a stock
             var hold = -prices[0]
-
+            
             // State when just sold a stock
             var sold = 0
-
+            
             // State when resting (cooldown or doing nothing)
             var rest = 0
-
+            
             // Iterate through each day
             for i in 1..<prices.count {
                 let prevHold = hold
                 let prevSold = sold
                 let prevRest = rest
-
+                
                 // Either keep holding or buy today
                 hold = max(prevHold, prevRest - prices[i])
-
+                
                 // Sell the stock today
                 sold = prevHold + prices[i]
-
+                
                 // Either stay in rest or enter rest after selling
                 rest = max(prevRest, prevSold)
             }
-
+            
             // Final profit cannot include holding a stock
             return max(sold, rest)
         }
     }
-
-     /*
+    
+    /*
      307. Range Sum Query - Mutable
      Given an integer array nums, handle multiple queries of the following types:
      Update the value of an element in nums.
@@ -1774,7 +1817,7 @@ class Solution {
      NumArray(int[] nums) Initializes the object with the integer array nums.
      void update(int index, int val) Updates the value of nums[index] to be val.
      int sumRange(int left, int right) Returns the sum of the elements of nums between indices left and right inclusive (i.e. nums[left] + nums[left + 1] + ... + nums[right]).
-
+     
      Example 1:
      Input
      ["NumArray", "sumRange", "update", "sumRange"]
@@ -1786,10 +1829,10 @@ class Solution {
      numArray.sumRange(0, 2); // return 1 + 3 + 5 = 9
      numArray.update(1, 2);   // nums = [1, 2, 5]
      numArray.sumRange(0, 2); // return 1 + 2 + 5 = 8
-      
-
+     
+     
      Constraints:
-
+     
      1 <= nums.length <= 3 * 104
      -100 <= nums[i] <= 100
      0 <= index < nums.length
@@ -1845,7 +1888,7 @@ class Solution {
             return sum
         }
     }
-
+    
     /*
      306. Additive Number
      An additive number is a string whose digits can form an additive sequence.
@@ -1938,7 +1981,7 @@ class Solution {
             return result
         }
     }
-
+    
     /*
      304. Range Sum Query 2D - Immutable
      Given a 2D matrix matrix, handle multiple queries of the following type:
@@ -1968,30 +2011,30 @@ class Solution {
      At most 104 calls will be made to sumRegion.
      */
     final class LC304_NumMatrix {
-
+        
         private var prefix: [[Int]]
-
+        
         init(_ matrix: [[Int]]) {
             let m = matrix.count
             let n = matrix.first?.count ?? 0
-
+            
             // prefix[r][c] = sum of rectangle (0,0) -> (r-1,c-1)
             prefix = Array(
                 repeating: Array(repeating: 0, count: n + 1),
                 count: m + 1
             )
-
+            
             for r in 0..<m {
                 for c in 0..<n {
                     prefix[r + 1][c + 1] =
-                        prefix[r][c + 1]
-                      + prefix[r + 1][c]
-                      - prefix[r][c]
-                      + matrix[r][c]
+                    prefix[r][c + 1]
+                    + prefix[r + 1][c]
+                    - prefix[r][c]
+                    + matrix[r][c]
                 }
             }
         }
-
+        
         func sumRegion(
             _ row1: Int,
             _ col1: Int,
@@ -1999,12 +2042,12 @@ class Solution {
             _ col2: Int
         ) -> Int {
             return
-                prefix[row2 + 1][col2 + 1]
-              - prefix[row1][col2 + 1]
-              - prefix[row2 + 1][col1]
-              + prefix[row1][col1]
+            prefix[row2 + 1][col2 + 1]
+            - prefix[row1][col2 + 1]
+            - prefix[row2 + 1][col1]
+            + prefix[row1][col1]
         }
-
+        
         // Demo
         static func runDemo() {
             let matrix = [
@@ -2014,15 +2057,15 @@ class Solution {
                 [4, 1, 0, 1, 7],
                 [1, 0, 3, 0, 5]
             ]
-
+            
             let numMatrix = LC304_NumMatrix(matrix)
-
+            
             print(numMatrix.sumRegion(2, 1, 4, 3)) // 8
             print(numMatrix.sumRegion(1, 1, 2, 2)) // 11
             print(numMatrix.sumRegion(1, 2, 2, 4)) // 12
         }
     }
-
+    
     /*
      303. Range Sum Query - Immutable
      Given an integer array nums, handle multiple queries of the following type:
@@ -2030,7 +2073,7 @@ class Solution {
      Implement the NumArray class:
      NumArray(int[] nums) Initializes the object with the integer array nums.
      int sumRange(int left, int right) Returns the sum of the elements of nums between indices left and right inclusive (i.e. nums[left] + nums[left + 1] + ... + nums[right]).
-      
+     
      Example 1:
      Input
      ["NumArray", "sumRange", "sumRange", "sumRange"]
@@ -2049,34 +2092,34 @@ class Solution {
      At most 104 calls will be made to sumRange.
      */
     class LC303_NumArray {
-
+        
         private var prefix: [Int]
-
+        
         init(_ nums: [Int]) {
             // Prefix sum array:
             // prefix[i] stores sum of elements from index 0 to i-1
             prefix = Array(repeating: 0, count: nums.count + 1)
-
+            
             for i in 0..<nums.count {
                 prefix[i + 1] = prefix[i] + nums[i]
             }
         }
-
+        
         func sumRange(_ left: Int, _ right: Int) -> Int {
             // Sum from left to right inclusive
             return prefix[right + 1] - prefix[left]
         }
-
+        
         // Demo method
         static func runDemo() {
             let numArray = LC303_NumArray([-2, 0, 3, -5, 2, -1])
-
+            
             print(numArray.sumRange(0, 2)) // 1
             print(numArray.sumRange(2, 5)) // -1
             print(numArray.sumRange(0, 5)) // -3
         }
     }
-
+    
     /*
      301. Remove Invalid Parentheses  Hard
      Given a string s that contains parentheses and letters, remove the minimum number of invalid parentheses to make the input string valid.
@@ -2164,27 +2207,27 @@ class Solution {
      Follow up: Can you come up with an algorithm that runs in O(n log(n)) time complexity?
      */
     func lengthOfLIS300(_ nums: [Int]) -> Int {
-           guard !nums.isEmpty else { return 0 }
-           
-           var dp = Array(repeating: 1, count: nums.count)
-           var result = 1
-           
-           for i in 0..<nums.count {
-               for j in 0..<i {
-                   if nums[j] < nums[i] {
-                       dp[i] = max(dp[i], dp[j] + 1)
-                   }
-               }
-               result = max(result, dp[i])
-           }
-           
-           return result
-       }
+        guard !nums.isEmpty else { return 0 }
+        
+        var dp = Array(repeating: 1, count: nums.count)
+        var result = 1
+        
+        for i in 0..<nums.count {
+            for j in 0..<i {
+                if nums[j] < nums[i] {
+                    dp[i] = max(dp[i], dp[j] + 1)
+                }
+            }
+            result = max(result, dp[i])
+        }
+        
+        return result
+    }
     /*
      299. Bulls and Cows
      You are playing the Bulls and Cows game with your friend.
      You write down a secret number and ask your friend to guess what the number is. When your friend makes a guess, you provide a hint with the following info:
-    
+     
      The number of "bulls", which are digits in the guess that are in the correct position.
      The number of "cows", which are digits in the guess that are in your secret number but are located in the wrong position. Specifically, the non-bull digits in the guess that could be rearranged such that they become bulls.
      Given the secret number secret and your friend's guess guess, return the hint for your friend's guess.
@@ -2194,15 +2237,15 @@ class Solution {
      Output: "1A3B"
      Explanation: Bulls are connected with a '|' and cows are underlined:
      "1807"
-       |
+     |
      "7810"
      Example 2:
-
+     
      Input: secret = "1123", guess = "0111"
      Output: "1A1B"
      Explanation: Bulls are connected with a '|' and cows are underlined:
      "1123"        "1123"
-       |      or     |
+     |      or     |
      "0111"        "0111"
      Note that only one of the two unmatched 1s is counted as a cow since the non-bull digits can only be rearranged to allow one 1 to be a bull.
      Constraints:
@@ -2211,36 +2254,36 @@ class Solution {
      secret and guess consist of digits only.
      */
     func getHint299(_ secret: String, _ guess: String) -> String {
-         let s = Array(secret)
-         let g = Array(guess)
-         
-         var bulls = 0
-         var freq = Array(repeating: 0, count: 10)
-         
-         // 1️⃣ считаем bulls и частоты secret
-         for i in 0..<s.count {
-             if s[i] == g[i] {
-                 bulls += 1
-             } else {
-                 let digit = Int(String(s[i]))!
-                 freq[digit] += 1
-             }
-         }
-         
-         // 2️⃣ считаем cows
-         var cows = 0
-         for i in 0..<g.count {
-             if s[i] != g[i] {
-                 let digit = Int(String(g[i]))!
-                 if freq[digit] > 0 {
-                     cows += 1
-                     freq[digit] -= 1
-                 }
-             }
-         }
-         
-         return "\(bulls)A\(cows)B"
-     }
+        let s = Array(secret)
+        let g = Array(guess)
+        
+        var bulls = 0
+        var freq = Array(repeating: 0, count: 10)
+        
+        // 1️⃣ считаем bulls и частоты secret
+        for i in 0..<s.count {
+            if s[i] == g[i] {
+                bulls += 1
+            } else {
+                let digit = Int(String(s[i]))!
+                freq[digit] += 1
+            }
+        }
+        
+        // 2️⃣ считаем cows
+        var cows = 0
+        for i in 0..<g.count {
+            if s[i] != g[i] {
+                let digit = Int(String(g[i]))!
+                if freq[digit] > 0 {
+                    cows += 1
+                    freq[digit] -= 1
+                }
+            }
+        }
+        
+        return "\(bulls)A\(cows)B"
+    }
     /*
      297. Serialize and Deserialize Binary Tree Hard
      Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
@@ -2254,7 +2297,7 @@ class Solution {
      Output: []
      */
     final class Codec297 {
-
+        
         // Serialize tree to string using preorder traversal
         func serialize(_ root: TreeNode?) -> String {
             var result: [String] = []
@@ -2272,7 +2315,7 @@ class Solution {
             dfs(root)
             return result.joined(separator: ",")
         }
-
+        
         // Deserialize string back to tree
         func deserialize(_ data: String) -> TreeNode? {
             let values = data.split(separator: ",").map(String.init)
@@ -2293,7 +2336,7 @@ class Solution {
             
             return dfs()
         }
-
+        
         // Demo
         static func demo() {
             let root = TreeNode(1)
@@ -2301,24 +2344,24 @@ class Solution {
             root.right = TreeNode(3)
             root.right?.left = TreeNode(4)
             root.right?.right = TreeNode(5)
-
+            
             let codec = Codec297()
             let s = codec.serialize(root)
             print("Serialized:", s)
-
+            
             let restored = codec.deserialize(s)
             print("Restored root:", restored?.val ?? "nil")
         }
     }
-
+    
     /*
      295. Find Median from Data Stream Hard
      The median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values.
-
+     
      For example, for arr = [2,3,4], the median is 3.
      For example, for arr = [2,3], the median is (2 + 3) / 2 = 2.5.
      Implement the MedianFinder class:
-
+     
      MedianFinder() initializes the MedianFinder object.
      void addNum(int num) adds the integer num from the data stream to the data structure.
      double findMedian() returns the median of all elements so far. Answers within 10-5 of the actual answer will be accepted.
@@ -2344,29 +2387,29 @@ class Solution {
      If 99% of all integer numbers from the stream are in the range [0, 100], how would you optimize your solution?
      */
     final class MedianFinder295 {
-
+        
         private var left: [Int] = []   // max-heap
         private var right: [Int] = []  // min-heap
-
+        
         init() {}
-
+        
         // MARK: - Public API
-
+        
         func addNum(_ num: Int) {
             // Step 1: push into max-heap
             pushMax(&left, num)
-
+            
             // Step 2: move largest from left to right
             let moved = popMax(&left)
             pushMin(&right, moved)
-
+            
             // Step 3: rebalance sizes
             if right.count > left.count {
                 let back = popMin(&right)
                 pushMax(&left, back)
             }
         }
-
+        
         func findMedian() -> Double {
             if left.count > right.count {
                 return Double(left[0])
@@ -2374,14 +2417,14 @@ class Solution {
                 return (Double(left[0]) + Double(right[0])) / 2.0
             }
         }
-
+        
         // MARK: - Max Heap (left)
-
+        
         private func pushMax(_ heap: inout [Int], _ value: Int) {
             heap.append(value)
             siftUpMax(&heap, heap.count - 1)
         }
-
+        
         private func popMax(_ heap: inout [Int]) -> Int {
             let res = heap[0]
             heap.swapAt(0, heap.count - 1)
@@ -2389,14 +2432,14 @@ class Solution {
             siftDownMax(&heap, 0)
             return res
         }
-
+        
         // MARK: - Min Heap (right)
-
+        
         private func pushMin(_ heap: inout [Int], _ value: Int) {
             heap.append(value)
             siftUpMin(&heap, heap.count - 1)
         }
-
+        
         private func popMin(_ heap: inout [Int]) -> Int {
             let res = heap[0]
             heap.swapAt(0, heap.count - 1)
@@ -2404,9 +2447,9 @@ class Solution {
             siftDownMin(&heap, 0)
             return res
         }
-
+        
         // MARK: - Heap helpers
-
+        
         private func siftUpMax(_ heap: inout [Int], _ i: Int) {
             var child = i
             while child > 0 {
@@ -2417,23 +2460,23 @@ class Solution {
                 } else { break }
             }
         }
-
+        
         private func siftDownMax(_ heap: inout [Int], _ i: Int) {
             var parent = i
             while true {
                 let l = parent * 2 + 1
                 let r = l + 1
                 var best = parent
-
+                
                 if l < heap.count && heap[l] > heap[best] { best = l }
                 if r < heap.count && heap[r] > heap[best] { best = r }
-
+                
                 if best == parent { break }
                 heap.swapAt(parent, best)
                 parent = best
             }
         }
-
+        
         private func siftUpMin(_ heap: inout [Int], _ i: Int) {
             var child = i
             while child > 0 {
@@ -2444,25 +2487,25 @@ class Solution {
                 } else { break }
             }
         }
-
+        
         private func siftDownMin(_ heap: inout [Int], _ i: Int) {
             var parent = i
             while true {
                 let l = parent * 2 + 1
                 let r = l + 1
                 var best = parent
-
+                
                 if l < heap.count && heap[l] < heap[best] { best = l }
                 if r < heap.count && heap[r] < heap[best] { best = r }
-
+                
                 if best == parent { break }
                 heap.swapAt(parent, best)
                 parent = best
             }
         }
     }
-
-     /*
+    
+    /*
      292. Nim Game
      You are playing the following Nim Game with your friend:
      Initially, there is a heap of stones on the table.
@@ -2489,22 +2532,22 @@ class Solution {
      */
     // LeetCode 292. Nim Game
     // Determines whether the first player can win with optimal play
-
+    
     final class Task292NimGame {
-
+        
         /// Returns true if the first player can win
         /// Time Complexity: O(1)
         /// Space Complexity: O(1)
         static func canWinNim(_ n: Int) -> Bool {
-
+            
             // If n is divisible by 4, current player loses
             return n % 4 != 0
         }
-
+        
         // MARK: - Demo
-
+        
         static func demo() {
-
+            
             print(canWinNim(1))  // true
             print(canWinNim(2))  // true
             print(canWinNim(3))  // true
@@ -2514,27 +2557,27 @@ class Solution {
             print(canWinNim(100)) // false
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      Explanation: SQL vs Swift thinking
      ------------------------------------------------------------
-
+     
      SQL:
      - Precomputed losing states
      - WHERE n % 4 = 0 → losing positions
-
+     
      Swift:
      - Mathematical invariant
      - Single modulo operation
-
+     
      Key insight:
      - Game reduces to checking a single condition
      - No loops, no DP, no simulation needed
-
+     
      ------------------------------------------------------------
      */
-
+    
     /*
      290. Word Pattern
      Easy
@@ -2542,42 +2585,42 @@ class Solution {
      premium lock icon
      Companies
      Given a pattern and a string s, find if s follows the same pattern.
-
+     
      Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty word in s. Specifically:
-
+     
      Each letter in pattern maps to exactly one unique word in s.
      Each unique word in s maps to exactly one letter in pattern.
      No two letters map to the same word, and no two words map to the same letter.
-      
-
+     
+     
      Example 1:
-
+     
      Input: pattern = "abba", s = "dog cat cat dog"
-
+     
      Output: true
-
+     
      Explanation:
-
+     
      The bijection can be established as:
-
+     
      'a' maps to "dog".
      'b' maps to "cat".
      Example 2:
-
+     
      Input: pattern = "abba", s = "dog cat cat fish"
-
+     
      Output: false
-
+     
      Example 3:
-
+     
      Input: pattern = "aaaa", s = "dog cat cat dog"
-
+     
      Output: false
-
-      
-
+     
+     
+     
      Constraints:
-
+     
      1 <= pattern.length <= 300
      pattern contains only lower-case English letters.
      1 <= s.length <= 3000
@@ -2587,32 +2630,32 @@ class Solution {
      */
     // LeetCode 290. Word Pattern
     // Checks whether a string follows a given pattern using bijection mapping
-
+    
     final class Task290WordPattern {
-
+        
         /// Main solution method
         /// Time Complexity: O(n)
         /// Space Complexity: O(n)
         static func wordPattern(_ pattern: String, _ s: String) -> Bool {
-
+            
             let words = s.split(separator: " ").map(String.init)
             let chars = Array(pattern)
-
+            
             // Length mismatch → impossible to match
             if chars.count != words.count {
                 return false
             }
-
+            
             // Pattern char → word
             var charToWord: [Character: String] = [:]
-
+            
             // Word → pattern char
             var wordToChar: [String: Character] = [:]
-
+            
             for i in 0..<chars.count {
                 let ch = chars[i]
                 let word = words[i]
-
+                
                 // Check char → word mapping
                 if let mappedWord = charToWord[ch] {
                     if mappedWord != word {
@@ -2621,7 +2664,7 @@ class Solution {
                 } else {
                     charToWord[ch] = word
                 }
-
+                
                 // Check word → char mapping
                 if let mappedChar = wordToChar[word] {
                     if mappedChar != ch {
@@ -2631,14 +2674,14 @@ class Solution {
                     wordToChar[word] = ch
                 }
             }
-
+            
             return true
         }
-
+        
         // MARK: - Demo
-
+        
         static func demo() {
-
+            
             print(wordPattern("abba", "dog cat cat dog"))   // true
             print(wordPattern("abba", "dog cat cat fish")) // false
             print(wordPattern("aaaa", "dog cat cat dog"))  // false
@@ -2646,51 +2689,51 @@ class Solution {
             print(wordPattern("abc", "one one one"))       // false
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      Explanation: SQL vs Swift mindset
      ------------------------------------------------------------
-
+     
      SQL:
      - pattern table
      - words table
      - JOIN + GROUP BY to ensure uniqueness
-
+     
      Swift:
      - Dictionary<Character, String>
      - Dictionary<String, Character>
      - Enforce bijection explicitly
-
+     
      Key idea:
      - One-to-one mapping must work BOTH ways
-
+     
      ------------------------------------------------------------
      */
-
-
+    
+    
     /*
      ------------------------------------------------------------
      SQL vs Swift comparison (conceptual)
      ------------------------------------------------------------
-
+     
      SQL:
      - Board is a table
      - Neighbors are JOINs
      - Update requires temp table
-
+     
      Swift:
      - Board is a 2D array
      - Neighbors via index math
      - In-place update with state encoding
-
+     
      Toroidal world:
      SQL: modulo arithmetic in JOIN conditions
      Swift: (index + size) % size
-
+     
      ------------------------------------------------------------
      */
-
+    
     /*
      287. Find the Duplicate Number
      Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive.
@@ -2716,84 +2759,84 @@ class Solution {
      */
     // LeetCode 287. Find the Duplicate Number
     // Floyd's Tortoise and Hare (Cycle Detection)
-
+    
     final class Task287FindTheDuplicateNumber {
-
+        
         // MARK: - Solution
-
+        
         static func findDuplicate(_ nums: [Int]) -> Int {
-
+            
             // Phase 1: Detect intersection point in the cycle
             var slow = nums[0]
             var fast = nums[0]
-
+            
             repeat {
                 slow = nums[slow]              // move 1 step
                 fast = nums[nums[fast]]        // move 2 steps
             } while slow != fast
-
+            
             // Phase 2: Find entrance to the cycle (duplicate number)
             slow = nums[0]
-
+            
             while slow != fast {
                 slow = nums[slow]
                 fast = nums[fast]
             }
-
+            
             return slow
         }
-
+        
         // MARK: - Demo
-
+        
         static func demo() {
-
+            
             let nums1 = [1, 3, 4, 2, 2]
             let nums2 = [3, 1, 3, 4, 2]
             let nums3 = [3, 3, 3, 3, 3]
-
+            
             print(findDuplicate(nums1)) // 2
             print(findDuplicate(nums2)) // 3
             print(findDuplicate(nums3)) // 3
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      Explanation step by step
      ------------------------------------------------------------
-
+     
      Treat array as a linked list:
-       index -> nums[index]
-
+     index -> nums[index]
+     
      Example:
-       nums = [1,3,4,2,2]
-
-       0 -> 1 -> 3 -> 2 -> 4 -> 2 -> 4 -> ...
-
+     nums = [1,3,4,2,2]
+     
+     0 -> 1 -> 3 -> 2 -> 4 -> 2 -> 4 -> ...
+     
      A cycle exists because of duplicate "2".
-
+     
      ------------------------------------------------------------
-
+     
      Phase 1:
-       Use slow (1 step) and fast (2 steps)
-       They must meet inside the cycle
-
+     Use slow (1 step) and fast (2 steps)
+     They must meet inside the cycle
+     
      ------------------------------------------------------------
-
+     
      Phase 2:
-       Move one pointer to start
-       Move both pointers one step at a time
-       The meeting point is the duplicate number
-
+     Move one pointer to start
+     Move both pointers one step at a time
+     The meeting point is the duplicate number
+     
      ------------------------------------------------------------
-
+     
      Why it works:
-       This is exactly Floyd's cycle detection algorithm,
-       applied to array indexing instead of pointers.
-
+     This is exactly Floyd's cycle detection algorithm,
+     applied to array indexing instead of pointers.
+     
      ------------------------------------------------------------
      */
-
+    
     /*
      185. Department Top Three Salaries     Hard
      +--------------+---------+
@@ -2866,61 +2909,61 @@ class Solution {
      */
     // LeetCode 185. Department Top Three Salaries
     // Swift simulation of SQL logic
-
+    
     final class Task185DepartmentTopThreeSalaries {
-
+        
         // MARK: - Models (simulate tables)
-
+        
         struct Employee {
             let id: Int
             let name: String
             let salary: Int
             let departmentId: Int
         }
-
+        
         struct Department {
             let id: Int
             let name: String
         }
-
+        
         // MARK: - Solution
-
+        
         static func topThreeSalaries(
             employees: [Employee],
             departments: [Department]
         ) -> [(department: String, employee: String, salary: Int)] {
-
+            
             // Group employees by departmentId
             let employeesByDept = Dictionary(grouping: employees) { $0.departmentId }
-
+            
             var result: [(String, String, Int)] = []
-
+            
             for department in departments {
-
+                
                 guard let deptEmployees = employeesByDept[department.id] else {
                     continue
                 }
-
+                
                 // Get unique salaries sorted descending
                 let topSalaries = Array(
                     Set(deptEmployees.map { $0.salary })
                 )
-                .sorted(by: >)
-                .prefix(3)
-
+                    .sorted(by: >)
+                    .prefix(3)
+                
                 // Select employees whose salary is in top 3
                 for emp in deptEmployees where topSalaries.contains(emp.salary) {
                     result.append((department.name, emp.name, emp.salary))
                 }
             }
-
+            
             return result
         }
-
+        
         // MARK: - Demo
-
+        
         static func demo() {
-
+            
             let employees = [
                 Employee(id: 1, name: "Joe",   salary: 85000, departmentId: 1),
                 Employee(id: 2, name: "Henry", salary: 80000, departmentId: 2),
@@ -2930,86 +2973,86 @@ class Solution {
                 Employee(id: 6, name: "Randy", salary: 85000, departmentId: 1),
                 Employee(id: 7, name: "Will",  salary: 70000, departmentId: 1)
             ]
-
+            
             let departments = [
                 Department(id: 1, name: "IT"),
                 Department(id: 2, name: "Sales")
             ]
-
+            
             let result = topThreeSalaries(
                 employees: employees,
                 departments: departments
             )
-
+            
             for row in result {
                 print("\(row.department) | \(row.employee) | \(row.salary)")
             }
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      SQL vs Swift — line by line comparison
      ------------------------------------------------------------
-
+     
      SQL:
-       SELECT Department.name, Employee.name, Employee.salary
-
+     SELECT Department.name, Employee.name, Employee.salary
+     
      Swift:
-       result.append((department.name, emp.name, emp.salary))
-
+     result.append((department.name, emp.name, emp.salary))
+     
      ------------------------------------------------------------
-
+     
      SQL:
-       FROM Employee
-       JOIN Department ON Employee.departmentId = Department.id
-
+     FROM Employee
+     JOIN Department ON Employee.departmentId = Department.id
+     
      Swift:
-       Dictionary(grouping: employees) { $0.departmentId }
-
+     Dictionary(grouping: employees) { $0.departmentId }
+     
      ------------------------------------------------------------
-
+     
      SQL:
-       WHERE salary IN (
-           SELECT DISTINCT salary
-           FROM Employee
-           WHERE departmentId = ?
-           ORDER BY salary DESC
-           LIMIT 3
-       )
-
+     WHERE salary IN (
+     SELECT DISTINCT salary
+     FROM Employee
+     WHERE departmentId = ?
+     ORDER BY salary DESC
+     LIMIT 3
+     )
+     
      Swift:
-       let topSalaries = Set(deptEmployees.map { $0.salary })
-           .sorted(by: >)
-           .prefix(3)
-
+     let topSalaries = Set(deptEmployees.map { $0.salary })
+     .sorted(by: >)
+     .prefix(3)
+     
      ------------------------------------------------------------
-
+     
      SQL:
-       DISTINCT salary
-
+     DISTINCT salary
+     
      Swift:
-       Set(deptEmployees.map { $0.salary })
-
+     Set(deptEmployees.map { $0.salary })
+     
      ------------------------------------------------------------
-
+     
      SQL:
-       ORDER BY salary DESC
-
+     ORDER BY salary DESC
+     
      Swift:
-       .sorted(by: >)
-
+     .sorted(by: >)
+     
      ------------------------------------------------------------
-
+     
      SQL:
-       LIMIT 3
-
+     LIMIT 3
+     
      Swift:
-       .prefix(3)
-
+     .prefix(3)
+     
      ------------------------------------------------------------
      */
-
+    
     /*
      284. Peeking Iterator
      Design an iterator that supports the peek operation on an existing iterator in addition to the hasNext and the next operations.
@@ -3035,57 +3078,57 @@ class Solution {
     // LeetCode 284. Peeking Iterator
     // Wrapper over an iterator with one-element cache
     final class Task284PeekingIterator {
-
+        
         // Simple iterator simulation for Swift
         final class Iterator {
             private var data: [Int]
             private var index: Int = 0
-
+            
             init(_ nums: [Int]) {
                 self.data = nums
             }
-
+            
             func next() -> Int {
                 let value = data[index]
                 index += 1
                 return value
             }
-
+            
             func hasNext() -> Bool {
                 return index < data.count
             }
         }
-
+        
         // PeekingIterator implementation
         final class PeekingIterator {
-
+            
             private let iterator: Iterator
             private var nextValue: Int?
             private var hasCached: Bool = false
-
+            
             // Initialize with existing iterator
             init(_ iterator: Iterator) {
                 self.iterator = iterator
                 advance()
             }
-
+            
             // Returns the next element without moving the pointer
             func peek() -> Int {
                 return nextValue!
             }
-
+            
             // Returns the next element and advances iterator
             func next() -> Int {
                 let value = nextValue!
                 advance()
                 return value
             }
-
+            
             // Returns true if there are more elements
             func hasNext() -> Bool {
                 return hasCached
             }
-
+            
             // Loads next value from underlying iterator
             private func advance() {
                 if iterator.hasNext() {
@@ -3097,13 +3140,13 @@ class Solution {
                 }
             }
         }
-
+        
         // Demo method
         static func demo() {
-
+            
             let iterator = Iterator([1, 2, 3])
             let peekingIterator = PeekingIterator(iterator)
-
+            
             print(peekingIterator.next())    // 1
             print(peekingIterator.peek())    // 2
             print(peekingIterator.next())    // 2
@@ -3111,36 +3154,36 @@ class Solution {
             print(peekingIterator.hasNext()) // false
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      Explanation
      ------------------------------------------------------------
-
+     
      We wrap the original iterator and cache exactly one element.
-
+     
      Key idea:
      - Always keep the next element preloaded
      - peek() returns cached value without advancing
      - next() returns cached value and loads the next one
-
+     
      This guarantees:
      - O(1) time per operation
      - O(1) extra space
-
+     
      ------------------------------------------------------------
      Comparison: Iterator vs PeekingIterator
      ------------------------------------------------------------
-
+     
      SQL:
-       cursor.peek -> NOT SUPPORTED
-
+     cursor.peek -> NOT SUPPORTED
+     
      Swift:
-       nextValue cache allows peek without moving cursor
-
+     nextValue cache allows peek without moving cursor
+     
      ------------------------------------------------------------
      */
-
+    
     /*
      282. Expression Add Operator  Hard
      Given a string num that contains only digits and an integer target, return all possibilities to insert the binary operators '+', '-', and/or '*' between the digits of num so that the resultant expression evaluates to the target value.
@@ -3159,19 +3202,19 @@ class Solution {
      Output: []
      Explanation: There are no expressions that can be created from "3456237490" to evaluate to 9191.
      Constraints:
-
+     
      1 <= num.length <= 10
      num consists of only digits.
      -231 <= target <= 231 - 1
      */
     // LeetCode 282. Expression Add Operators
     // Backtracking with operator precedence handling
-
+    
     final class Task282ExpressionAddOperators {
-
+        
         // Entry point for console demo
         static func demo() {
-
+            
             let tests = [
                 ("123", 6),
                 ("232", 8),
@@ -3179,7 +3222,7 @@ class Solution {
                 ("00", 0),
                 ("3456237490", 9191)
             ]
-
+            
             for (num, target) in tests {
                 let result = addOperators282(num, target)
                 print("num = \(num), target = \(target)")
@@ -3187,13 +3230,13 @@ class Solution {
                 print("-----")
             }
         }
-
+        
         // Main solution method
         static func addOperators282(_ num: String, _ target: Int) -> [String] {
-
+            
             let chars = Array(num)
             var result: [String] = []
-
+            
             // DFS backtracking
             func dfs(
                 _ index: Int,
@@ -3201,7 +3244,7 @@ class Solution {
                 _ currentValue: Int64,
                 _ lastOperand: Int64
             ) {
-
+                
                 // If we consumed all digits
                 if index == chars.count {
                     if currentValue == Int64(target) {
@@ -3209,21 +3252,21 @@ class Solution {
                     }
                     return
                 }
-
+                
                 var number: Int64 = 0
-
+                
                 // Try all possible splits
                 for i in index..<chars.count {
-
+                    
                     // Prevent numbers with leading zero
                     if i > index && chars[index] == "0" {
                         break
                     }
-
+                    
                     number = number * 10 + Int64(String(chars[i]))!
-
+                    
                     let numberStr = String(number)
-
+                    
                     if index == 0 {
                         // First number: no operator
                         dfs(
@@ -3240,7 +3283,7 @@ class Solution {
                             currentValue + number,
                             number
                         )
-
+                        
                         // Subtraction
                         dfs(
                             i + 1,
@@ -3248,7 +3291,7 @@ class Solution {
                             currentValue - number,
                             -number
                         )
-
+                        
                         // Multiplication (handle precedence)
                         dfs(
                             i + 1,
@@ -3259,40 +3302,40 @@ class Solution {
                     }
                 }
             }
-
+            
             dfs(0, "", 0, 0)
             return result
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      Explanation
      ------------------------------------------------------------
-
+     
      We use DFS to try all possible ways to insert '+', '-', '*'
      between digits.
-
+     
      Parameters:
      - index: current position in the string
      - expression: built expression so far
      - currentValue: evaluated value so far
      - lastOperand: last added operand (used for '*')
-
+     
      Multiplication handling:
      Example: 1 + 2 * 3
      When '*' is added:
-       currentValue = (1 + 2) - 2 + (2 * 3)
-
+     currentValue = (1 + 2) - 2 + (2 * 3)
+     
      Leading zeros are prevented by:
-       if i > index && chars[index] == '0' -> break
-
+     if i > index && chars[index] == '0' -> break
+     
      ------------------------------------------------------------
      Time Complexity: Exponential (bounded by input size <= 10)
      Space Complexity: O(n) recursion depth
      ------------------------------------------------------------
      */
-
+    
     /*
      279. Perfect Squares
      Given an integer n, return the least number of perfect square numbers that sum to n.
@@ -3310,77 +3353,77 @@ class Solution {
      */
     // LeetCode 279. Perfect Squares
     // Dynamic Programming solution
-
+    
     final class Task279PerfectSquares {
-
+        
         // Entry point for console demo
         static func demo() {
-
+            
             let testCases = [1, 12, 13, 43, 100]
-
+            
             for n in testCases {
                 let result = numSquares279(n)
                 print("n = \(n) -> minimum squares = \(result)")
             }
         }
-
+        
         // Returns the least number of perfect square numbers that sum to n
         static func numSquares279(_ n: Int) -> Int {
-
+            
             // dp[i] = minimum number of perfect squares that sum to i
             var dp = Array(repeating: Int.max, count: n + 1)
             dp[0] = 0
-
+            
             // Build the DP table from 1 to n
             for i in 1...n {
-
+                
                 var j = 1
                 while j * j <= i {
                     let square = j * j
-
+                    
                     // Transition: use one square and solve the rest
                     dp[i] = min(dp[i], dp[i - square] + 1)
-
+                    
                     j += 1
                 }
             }
-
+            
             return dp[n]
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      Explanation
      ------------------------------------------------------------
-
+     
      dp[i] represents the minimum number of perfect squares
      that sum up to the value i.
-
+     
      For each i, we try all perfect squares j*j <= i and choose
      the best option:
-
-         dp[i] = min(dp[i], dp[i - j*j] + 1)
-
+     
+     dp[i] = min(dp[i], dp[i - j*j] + 1)
+     
      Example:
      n = 12
-
+     
      dp[12] = min(
-         dp[12 - 1] + 1,   // 1*1
-         dp[12 - 4] + 1,   // 2*2
-         dp[12 - 9] + 1    // 3*3
+     dp[12 - 1] + 1,   // 1*1
+     dp[12 - 4] + 1,   // 2*2
+     dp[12 - 9] + 1    // 3*3
      )
-
+     
      dp[12] = min(4, 3, 4) = 3
-
+     
      Answer: 12 = 4 + 4 + 4
-
+     
      ------------------------------------------------------------
      Time Complexity: O(n * sqrt(n))
      Space Complexity: O(n)
      ------------------------------------------------------------
      */
-
+    
     /*
      275. H-Index II
      Given an array of integers citations where citations[i] is the number of citations a researcher received for their ith paper and citations is sorted in non-descending order, return the researcher's h-index.
@@ -3402,12 +3445,12 @@ class Solution {
      */
     // LeetCode 275. H-Index II
     // Binary Search solution (O(log n))
-
+    
     final class Task275HIndexII {
-
+        
         // Entry point for console demo
         static func demo() {
-
+            
             let testCases = [
                 [0, 1, 3, 5, 6],
                 [1, 2, 100],
@@ -3415,24 +3458,24 @@ class Solution {
                 [10, 10, 10],
                 [0, 1, 2, 4, 5, 6]
             ]
-
+            
             for citations in testCases {
                 let h = hIndex275(citations)
                 print("Citations: \(citations) -> H-Index: \(h)")
             }
         }
-
+        
         // Computes the H-Index using binary search
         static func hIndex275(_ citations: [Int]) -> Int {
-
+            
             let n = citations.count
             var left = 0
             var right = n - 1
-
+            
             while left <= right {
                 let mid = left + (right - left) / 2
                 let papersWithAtLeastThisManyCitations = n - mid
-
+                
                 if citations[mid] >= papersWithAtLeastThisManyCitations {
                     // Try to find a smaller index on the left
                     right = mid - 1
@@ -3441,38 +3484,38 @@ class Solution {
                     left = mid + 1
                 }
             }
-
+            
             // left is the first index satisfying the condition
             return n - left
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      Explanation
      ------------------------------------------------------------
-
+     
      Given sorted citations in ascending order.
-
+     
      At index i:
      - Number of papers with citations >= citations[i] is (n - i)
      - H-index condition:
-         citations[i] >= (n - i)
-
+     citations[i] >= (n - i)
+     
      We binary search for the first index i where the condition is true.
-
+     
      Example:
      citations = [0, 1, 3, 5, 6]
      n = 5
-
+     
      i = 2:
      citations[2] = 3
      n - i = 3
      3 >= 3 ✔
-
+     
      First such index is i = 2
      H-index = n - i = 3
-
+     
      ------------------------------------------------------------
      Time Complexity: O(log n)
      Space Complexity: O(1)
@@ -3482,12 +3525,12 @@ class Solution {
      274. H-Index
      Given an array of integers citations where citations[i] is the number of citations a researcher received for their ith paper, return the researcher's h-index.
      According to the definition of h-index on Wikipedia: The h-index is defined as the maximum value of h such that the given researcher has published at least h papers that have each been cited at least h times.
-Example 1:
+     Example 1:
      Input: citations = [3,0,6,1,5]
      Output: 3
      Explanation: [3,0,6,1,5] means the researcher has 5 papers in total and each of them had received 3, 0, 6, 1, 5 citations respectively.
      Since the researcher has 3 papers with at least 3 citations each and the remaining two with no more than 3 citations each, their h-index is 3.
-Example 2:
+     Example 2:
      Input: citations = [1,3,1]
      Output: 1
      Constraints:
@@ -3497,12 +3540,12 @@ Example 2:
      */
     // LeetCode 274. H-Index
     // Sorting-based solution
-
+    
     final class Task274HIndex {
-
+        
         // Entry point for console demo
         static func demo() {
-
+            
             let testCases = [
                 [3, 0, 6, 1, 5],
                 [1, 3, 1],
@@ -3510,21 +3553,21 @@ Example 2:
                 [10, 8, 5, 4, 3],
                 [25, 8, 5, 3, 3]
             ]
-
+            
             for citations in testCases {
                 let h = hIndex274(citations)
                 print("Citations: \(citations) -> H-Index: \(h)")
             }
         }
-
+        
         // Computes the H-Index using sorting
         static func hIndex274(_ citations: [Int]) -> Int {
-
+            
             // Sort citations in descending order
             let sorted = citations.sorted(by: >)
-
+            
             var h = 0
-
+            
             // Iterate and check the H-index condition
             for i in 0..<sorted.count {
                 if sorted[i] >= i + 1 {
@@ -3533,40 +3576,40 @@ Example 2:
                     break
                 }
             }
-
+            
             return h
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      Explanation
      ------------------------------------------------------------
-
+     
      1) Sort citations in descending order
      2) For each index i:
-        - Check if citations[i] >= i + 1
-        - If true, we can have at least (i + 1) papers
-          with at least (i + 1) citations
+     - Check if citations[i] >= i + 1
+     - If true, we can have at least (i + 1) papers
+     with at least (i + 1) citations
      3) The largest valid (i + 1) is the H-index
-
+     
      Example:
      citations = [3, 0, 6, 1, 5]
      sorted    = [6, 5, 3, 1, 0]
-
+     
      i = 0 → 6 >= 1 ✔
      i = 1 → 5 >= 2 ✔
      i = 2 → 3 >= 3 ✔
      i = 3 → 1 >= 4 ✘ → stop
-
+     
      H-index = 3
-
+     
      ------------------------------------------------------------
      Time Complexity: O(n log n)
      Space Complexity: O(n)
      ------------------------------------------------------------
      */
-
+    
     /*
      273. Integer to English Words
      Convert a non-negative integer num to its English words representation.
@@ -3584,12 +3627,12 @@ Example 2:
      */
     // LeetCode 273. Integer to English & German Words
     // English and German number-to-words conversion
-
+    
     final class Task273IntegerToEnglishWords {
-
+        
         // Entry point for console demo
         static func demo() {
-
+            
             let testCases = [
                 0,
                 7,
@@ -3599,121 +3642,121 @@ Example 2:
                 12345,
                 1_000_001
             ]
-
+            
             for num in testCases {
                 let en = numberToWords273(num)
                 let de = numberToWords273DE(num)
-
+                
                 print("Number: \(num)")
                 print("EN: \(en)")
                 print("DE: \(de)")
                 print("------------")
             }
         }
-
+        
         // MARK: - English Version
-
+        
         static func numberToWords273(_ num: Int) -> String {
-
+            
             if num == 0 { return "Zero" }
-
+            
             var num = num
             var result = ""
-
+            
             if num >= 1_000_000_000 {
                 result += convertBelowThousandEN(num / 1_000_000_000) + " Billion"
                 num %= 1_000_000_000
             }
-
+            
             if num >= 1_000_000 {
                 if !result.isEmpty { result += " " }
                 result += convertBelowThousandEN(num / 1_000_000) + " Million"
                 num %= 1_000_000
             }
-
+            
             if num >= 1_000 {
                 if !result.isEmpty { result += " " }
                 result += convertBelowThousandEN(num / 1_000) + " Thousand"
                 num %= 1_000
             }
-
+            
             if num > 0 {
                 if !result.isEmpty { result += " " }
                 result += convertBelowThousandEN(num)
             }
-
+            
             return result
         }
-
+        
         private static func convertBelowThousandEN(_ num: Int) -> String {
-
+            
             let belowTwenty = [
                 "", "One", "Two", "Three", "Four", "Five",
                 "Six", "Seven", "Eight", "Nine", "Ten",
                 "Eleven", "Twelve", "Thirteen", "Fourteen",
                 "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
             ]
-
+            
             let tens = [
                 "", "", "Twenty", "Thirty", "Forty",
                 "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
             ]
-
+            
             var num = num
             var words = ""
-
+            
             if num >= 100 {
                 words += belowTwenty[num / 100] + " Hundred"
                 num %= 100
             }
-
+            
             if num >= 20 {
                 if !words.isEmpty { words += " " }
                 words += tens[num / 10]
                 num %= 10
             }
-
+            
             if num > 0 {
                 if !words.isEmpty { words += " " }
                 words += belowTwenty[num]
             }
-
+            
             return words
         }
-
+        
         // MARK: - German Version 🇩🇪
-
+        
         static func numberToWords273DE(_ num: Int) -> String {
-
+            
             if num == 0 { return "null" }
-
+            
             var num = num
             var result = ""
-
+            
             if num >= 1_000_000 {
                 let millions = num / 1_000_000
                 result += convertBelowThousandDE(millions)
                 result += millions == 1 ? " Million" : " Millionen"
                 num %= 1_000_000
             }
-
+            
             if num >= 1_000 {
                 if !result.isEmpty { result += " " }
                 result += convertBelowThousandDE(num / 1_000) + "tausend"
                 num %= 1_000
             }
-
+            
             if num > 0 {
                 if !result.isEmpty { result += " " }
                 result += convertBelowThousandDE(num)
             }
-
+            
             return result
         }
-
+        
         // Converts numbers from 1 to 999 (German rules)
         private static func convertBelowThousandDE(_ num: Int) -> String {
-
+            
             let ones = [
                 "", "ein", "zwei", "drei", "vier", "fünf",
                 "sechs", "sieben", "acht", "neun", "zehn",
@@ -3721,25 +3764,25 @@ Example 2:
                 "fünfzehn", "sechzehn", "siebzehn",
                 "achtzehn", "neunzehn"
             ]
-
+            
             let tens = [
                 "", "", "zwanzig", "dreißig", "vierzig",
                 "fünfzig", "sechzig", "siebzig",
                 "achtzig", "neunzig"
             ]
-
+            
             var num = num
             var words = ""
-
+            
             if num >= 100 {
                 words += ones[num / 100] + "hundert"
                 num %= 100
             }
-
+            
             if num >= 20 {
                 let unit = num % 10
                 let ten = num / 10
-
+                
                 if unit > 0 {
                     words += ones[unit] + "und" + tens[ten]
                 } else {
@@ -3748,37 +3791,37 @@ Example 2:
             } else if num > 0 {
                 words += ones[num]
             }
-
+            
             return words
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      English vs German comparison
      ------------------------------------------------------------
-
+     
      English:
      - "Twenty One"
      - tens before ones
      - words separated by spaces
-
+     
      German:
      - "einundzwanzig"
      - ones before tens
      - words written together
-
+     
      Example:
      21
      EN -> Twenty One
      DE -> einundzwanzig
-
+     
      ------------------------------------------------------------
      Time Complexity: O(1)
      Space Complexity: O(1)
      ------------------------------------------------------------
      */
-
+    
     /*
      268. Missing Number
      Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
@@ -3800,79 +3843,79 @@ Example 2:
      */
     // LeetCode 268. Missing Number
     // Finds the missing number in range [0, n] using XOR
-
+    
     final class Task268MissingNumber {
-
+        
         // Entry point for console demo
         static func demo() {
-
+            
             let testCases = [
                 [3, 0, 1],
                 [0, 1],
                 [9, 6, 4, 2, 3, 5, 7, 0, 1]
             ]
-
+            
             for nums in testCases {
                 let result = missingNumber268(nums)
                 print("nums = \(nums) -> missing = \(result)")
             }
         }
-
+        
         // Returns the missing number
         static func missingNumber268(_ nums: [Int]) -> Int {
-
+            
             let n = nums.count
-
+            
             // XOR of all indices and values
             var xorResult = 0
-
+            
             // XOR all numbers from 0 to n
             for i in 0...n {
                 xorResult ^= i
             }
-
+            
             // XOR all elements in the array
             for num in nums {
                 xorResult ^= num
             }
-
+            
             // Remaining value is the missing number
             return xorResult
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      Explanation
      ------------------------------------------------------------
-
+     
      XOR properties:
      1) a ^ a = 0
      2) a ^ 0 = a
      3) XOR is commutative and associative
-
+     
      Idea:
      - XOR all numbers from 0 to n
      - XOR all numbers present in the array
      - All matching pairs cancel out
      - The remaining value is the missing number
-
+     
      Example:
      nums = [3, 0, 1], n = 3
-
+     
      Full range XOR:   0 ^ 1 ^ 2 ^ 3
      Array XOR:        3 ^ 0 ^ 1
      Result:           2
-
+     
      ------------------------------------------------------------
      Time Complexity: O(n)
      Space Complexity: O(1)
      ------------------------------------------------------------
-    */
-
+     */
+    
     /*
      264. Ugly Number II
-    An ugly number is a positive integer whose prime factors are limited to 2, 3, and 5.
+     An ugly number is a positive integer whose prime factors are limited to 2, 3, and 5.
      Given an integer n, return the nth ugly number.
      Example 1:
      Input: n = 10
@@ -3887,48 +3930,48 @@ Example 2:
      */
     // LeetCode 264. Ugly Number II
     // Finds the n-th ugly number using dynamic programming
-
+    
     final class Task264UglyNumberII {
-
+        
         // Entry point for console demo
         static func demo() {
-
+            
             let testValues = [1, 10, 15]
-
+            
             for n in testValues {
                 let result = nthUglyNumber264(n)
                 print("n = \(n), nth ugly number = \(result)")
             }
         }
-
+        
         // Returns the n-th ugly number
         static func nthUglyNumber264(_ n: Int) -> Int {
-
+            
             // Base case
             if n == 1 {
                 return 1
             }
-
+            
             // DP array to store ugly numbers
             var ugly = Array(repeating: 0, count: n)
             ugly[0] = 1
-
+            
             // Three pointers for multiples of 2, 3, and 5
             var i2 = 0
             var i3 = 0
             var i5 = 0
-
+            
             for index in 1..<n {
-
+                
                 // Next possible ugly numbers
                 let next2 = ugly[i2] * 2
                 let next3 = ugly[i3] * 3
                 let next5 = ugly[i5] * 5
-
+                
                 // Choose the smallest candidate
                 let nextUgly = min(next2, next3, next5)
                 ugly[index] = nextUgly
-
+                
                 // Move pointers that produced the minimum
                 if nextUgly == next2 {
                     i2 += 1
@@ -3940,125 +3983,125 @@ Example 2:
                     i5 += 1
                 }
             }
-
+            
             return ugly[n - 1]
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      Explanation
      ------------------------------------------------------------
-
+     
      We generate ugly numbers in ascending order using DP.
-
+     
      Key idea:
      Every ugly number is produced by multiplying a previous ugly number
      by 2, 3, or 5.
-
+     
      We maintain:
      - ugly[] : list of generated ugly numbers
      - i2, i3, i5 : pointers to positions whose multiples are candidates
-
+     
      At each step:
      1. Compute next candidates (ugly[i2]*2, ugly[i3]*3, ugly[i5]*5)
      2. Pick the smallest one
      3. Move all pointers that generated this value
-
+     
      This avoids duplicates (e.g. 6 from 2*3 and 3*2).
-
+     
      ------------------------------------------------------------
      Time Complexity: O(n)
      Space Complexity: O(n)
      ------------------------------------------------------------
-    */
+     */
     /*
      263. Ugly Number
      An ugly number is a positive integer which does not have a prime factor other than 2, 3, and 5.
      Given an integer n, return true if n is an ugly number.
-Example 1:
+     Example 1:
      Input: n = 6
      Output: true
      Explanation: 6 = 2 × 3
-Example 2:
+     Example 2:
      Input: n = 1
      Output: true
      Explanation: 1 has no prime factors.
-Example 3:
+     Example 3:
      Input: n = 14
      Output: false
      Explanation: 14 is not ugly since it includes the prime factor 7.
      */
     // LeetCode 263. Ugly Number
     // Determines whether a number has no prime factors other than 2, 3, and 5
-
+    
     final class Task263UglyNumber {
-
+        
         // Entry point for console demo
         static func demo() {
-
+            
             let testValues = [6, 1, 14, 8, 0, -5]
-
+            
             for n in testValues {
                 print("n = \(n), isUgly = \(isUgly263(n))")
             }
         }
-
+        
         // Checks if a number is an ugly number
         static func isUgly263(_ n: Int) -> Bool {
-
+            
             // Ugly numbers must be positive
             if n <= 0 {
                 return false
             }
-
+            
             var value = n
-
+            
             // Remove all factors of 2
             while value % 2 == 0 {
                 value /= 2
             }
-
+            
             // Remove all factors of 3
             while value % 3 == 0 {
                 value /= 3
             }
-
+            
             // Remove all factors of 5
             while value % 5 == 0 {
                 value /= 5
             }
-
+            
             // If only 1 remains, number is ugly
             return value == 1
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      Explanation
      ------------------------------------------------------------
-
+     
      An ugly number is a number whose prime factors are limited to 2, 3, and 5.
-
+     
      Algorithm:
      1. If n <= 0 → return false
      2. Repeatedly divide n by 2 while possible
      3. Repeatedly divide n by 3 while possible
      4. Repeatedly divide n by 5 while possible
      5. If the final result is 1 → ugly number
-
+     
      ------------------------------------------------------------
      Time Complexity: O(log n)
      Space Complexity: O(1)
      ------------------------------------------------------------
-    */
-
+     */
+    
     /*
      262. Trips and Users
      Hard + SQL Schema
      Table: Trips
-
+     
      +-------------+----------+
      | Column Name | Type     |
      +-------------+----------+
@@ -4072,9 +4115,9 @@ Example 3:
      id is the primary key (column with unique values) for this table.
      The table holds all taxi trips. Each trip has a unique id, while client_id and driver_id are foreign keys to the users_id at the Users table.
      Status is an ENUM (category) type of ('completed', 'cancelled_by_driver', 'cancelled_by_client').
-
+     
      Table: Users
-
+     
      +-------------+----------+
      | Column Name | Type     |
      +-------------+----------+
@@ -4085,19 +4128,19 @@ Example 3:
      users_id is the primary key (column with unique values) for this table.
      The table holds all users. Each user has a unique users_id, and role is an ENUM type of ('client', 'driver', 'partner').
      banned is an ENUM (category) type of ('Yes', 'No').
-
+     
      The cancellation rate is computed by dividing the number of canceled (by client or driver) requests with unbanned users by the total number of requests with unbanned users on that day.
-
+     
      Write a solution to find the cancellation rate of requests with unbanned users (both client and driver must not be banned) each day between "2013-10-01" and "2013-10-03" with at least one trip. Round Cancellation Rate to two decimal points.
-
+     
      Return the result table in any order.
-
+     
      The result format is in the following example.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input:
      Trips table:
      +----+-----------+-----------+---------+---------------------+------------+
@@ -4137,57 +4180,57 @@ Example 3:
      +------------+-------------------+
      Explanation:
      On 2013-10-01:
-       - There were 4 requests in total, 2 of which were canceled.
-       - However, the request with Id=2 was made by a banned client (User_Id=2), so it is ignored in the calculation.
-       - Hence there are 3 unbanned requests in total, 1 of which was canceled.
-       - The Cancellation Rate is (1 / 3) = 0.33
+     - There were 4 requests in total, 2 of which were canceled.
+     - However, the request with Id=2 was made by a banned client (User_Id=2), so it is ignored in the calculation.
+     - Hence there are 3 unbanned requests in total, 1 of which was canceled.
+     - The Cancellation Rate is (1 / 3) = 0.33
      On 2013-10-02:
-       - There were 3 requests in total, 0 of which were canceled.
-       - The request with Id=6 was made by a banned client, so it is ignored.
-       - Hence there are 2 unbanned requests in total, 0 of which were canceled.
-       - The Cancellation Rate is (0 / 2) = 0.00
+     - There were 3 requests in total, 0 of which were canceled.
+     - The request with Id=6 was made by a banned client, so it is ignored.
+     - Hence there are 2 unbanned requests in total, 0 of which were canceled.
+     - The Cancellation Rate is (0 / 2) = 0.00
      On 2013-10-03:
-       - There were 3 requests in total, 1 of which was canceled.
-       - The request with Id=8 was made by a banned client, so it is ignored.
-       - Hence there are 2 unbanned request in total, 1 of which were canceled.
-       - The Cancellation Rate is (1 / 2) = 0.50
+     - There were 3 requests in total, 1 of which was canceled.
+     - The request with Id=8 was made by a banned client, so it is ignored.
+     - Hence there are 2 unbanned request in total, 1 of which were canceled.
+     - The Cancellation Rate is (1 / 2) = 0.50
      SELECT
-         t.request_at AS Day,
-         ROUND(
-             SUM(
-                 CASE
-                     WHEN t.status IN ('cancelled_by_driver', 'cancelled_by_client')
-                     THEN 1 ELSE 0
-                 END
-             ) / COUNT(*),
-             2
-         ) AS "Cancellation Rate"
+     t.request_at AS Day,
+     ROUND(
+     SUM(
+     CASE
+     WHEN t.status IN ('cancelled_by_driver', 'cancelled_by_client')
+     THEN 1 ELSE 0
+     END
+     ) / COUNT(*),
+     2
+     ) AS "Cancellation Rate"
      FROM Trips t
      JOIN Users c
-         ON t.client_id = c.users_id
-         AND c.banned = 'No'
+     ON t.client_id = c.users_id
+     AND c.banned = 'No'
      JOIN Users d
-         ON t.driver_id = d.users_id
-         AND d.banned = 'No'
+     ON t.driver_id = d.users_id
+     AND d.banned = 'No'
      WHERE t.request_at BETWEEN '2013-10-01' AND '2013-10-03'
      GROUP BY t.request_at;
      */
     // LeetCode 262. Trips and Users
     // Emulation of SQL solution using pure Swift (console project)
-
+    
     final class Task262TripsAndUsers {
-
+        
         // Entry point for demo execution
         static func demo() {
-
+            
             // MARK: - Models (Tables)
-
+            
             // Represents a row from Users table
             struct User {
                 let id: Int
                 let banned: Bool
             }
-
+            
             // Represents a row from Trips table
             struct Trip {
                 let id: Int
@@ -4196,15 +4239,15 @@ Example 3:
                 let status: Status
                 let date: String
             }
-
+            
             enum Status {
                 case completed
                 case cancelledByClient
                 case cancelledByDriver
             }
-
+            
             // MARK: - Data (Same as problem example)
-
+            
             let users: [Int: User] = [
                 1: User(id: 1, banned: false),
                 2: User(id: 2, banned: true),
@@ -4215,60 +4258,60 @@ Example 3:
                 12: User(id: 12, banned: false),
                 13: User(id: 13, banned: false)
             ]
-
+            
             let trips: [Trip] = [
                 Trip(id: 1, clientId: 1, driverId: 10, status: .completed, date: "2013-10-01"),
                 Trip(id: 2, clientId: 2, driverId: 11, status: .cancelledByDriver, date: "2013-10-01"),
                 Trip(id: 3, clientId: 3, driverId: 12, status: .completed, date: "2013-10-01"),
                 Trip(id: 4, clientId: 4, driverId: 13, status: .cancelledByClient, date: "2013-10-01"),
-
+                
                 Trip(id: 5, clientId: 1, driverId: 10, status: .completed, date: "2013-10-02"),
                 Trip(id: 6, clientId: 2, driverId: 11, status: .completed, date: "2013-10-02"),
                 Trip(id: 7, clientId: 3, driverId: 12, status: .completed, date: "2013-10-02"),
-
+                
                 Trip(id: 8, clientId: 2, driverId: 12, status: .completed, date: "2013-10-03"),
                 Trip(id: 9, clientId: 3, driverId: 10, status: .completed, date: "2013-10-03"),
                 Trip(id: 10, clientId: 4, driverId: 13, status: .cancelledByDriver, date: "2013-10-03")
             ]
-
+            
             // MARK: - Calculation Logic
-
+            
             // Allowed date range
             let validDates = Set(["2013-10-01", "2013-10-02", "2013-10-03"])
-
+            
             // Day -> (total trips, cancelled trips)
             var stats: [String: (total: Int, cancelled: Int)] = [:]
-
+            
             for trip in trips {
-
+                
                 // WHERE request_at BETWEEN dates
                 guard validDates.contains(trip.date) else { continue }
-
+                
                 // JOIN Users (client and driver)
                 guard
                     let client = users[trip.clientId],
                     let driver = users[trip.driverId]
                 else { continue }
-
+                
                 // WHERE client.banned = 'No' AND driver.banned = 'No'
                 guard !client.banned && !driver.banned else { continue }
-
+                
                 // GROUP BY request_at (initialize if needed)
                 if stats[trip.date] == nil {
                     stats[trip.date] = (0, 0)
                 }
-
+                
                 // COUNT(*)
                 stats[trip.date]!.total += 1
-
+                
                 // COUNT cancelled trips
                 if trip.status != .completed {
                     stats[trip.date]!.cancelled += 1
                 }
             }
-
+            
             // MARK: - Output
-
+            
             for (day, value) in stats.sorted(by: { $0.key < $1.key }) {
                 let rate = Double(value.cancelled) / Double(value.total)
                 let rounded = String(format: "%.2f", rate)
@@ -4276,65 +4319,65 @@ Example 3:
             }
         }
     }
-
+    
     /*
      ------------------------------------------------------------
      SQL vs Swift (line by line comparison)
      ------------------------------------------------------------
-
+     
      SQL:
      SELECT request_at AS Day,
-            ROUND(
-                SUM(status != 'completed') / COUNT(*), 2
-            ) AS Cancellation Rate
-
+     ROUND(
+     SUM(status != 'completed') / COUNT(*), 2
+     ) AS Cancellation Rate
+     
      Swift:
      let rate = Double(cancelled) / Double(total)
      let rounded = String(format: "%.2f", rate)
-
+     
      ------------------------------------------------------------
-
+     
      SQL:
      FROM Trips t
      JOIN Users c ON t.client_id = c.users_id
      JOIN Users d ON t.driver_id = d.users_id
-
+     
      Swift:
      let client = users[trip.clientId]
      let driver = users[trip.driverId]
-
+     
      ------------------------------------------------------------
-
+     
      SQL:
      WHERE c.banned = 'No'
-       AND d.banned = 'No'
-
+     AND d.banned = 'No'
+     
      Swift:
      guard !client.banned && !driver.banned else { continue }
-
+     
      ------------------------------------------------------------
-
+     
      SQL:
      AND request_at BETWEEN '2013-10-01' AND '2013-10-03'
-
+     
      Swift:
      guard validDates.contains(trip.date) else { continue }
-
+     
      ------------------------------------------------------------
-
+     
      SQL:
      GROUP BY request_at
-
+     
      Swift:
      stats[trip.date] = (total, cancelled)
-
+     
      ------------------------------------------------------------
-    */
-
+     */
+    
     /*
      260. Single Number III
      Given an integer array nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once. You can return the answer in any order.
-
+     
      You must write an algorithm that runs in linear runtime complexity and uses only constant extra space.
      Example 1:
      Input: nums = [1,2,1,3,2,5]
@@ -4346,33 +4389,33 @@ Example 3:
      Example 3:
      Input: nums = [0,1]
      Output: [1,0]
-      
-
+     
+     
      Constraints:
-
+     
      2 <= nums.length <= 3 * 104
      -231 <= nums[i] <= 231 - 1
      Each integer in nums will appear twice, only two integers will appear once.     */
     // 260. Single Number III
     // Time Complexity: O(n)
     // Space Complexity: O(1)
-
+    
     class LC260_SingleNumberIII {
-
+        
         func singleNumber(_ nums: [Int]) -> [Int] {
             var xorAll = 0
-
+            
             // Step 1: XOR of all numbers (result = x ^ y)
             for num in nums {
                 xorAll ^= num
             }
-
+            
             // Step 2: Find a distinguishing bit (rightmost set bit)
             let diffBit = xorAll & -xorAll
-
+            
             var num1 = 0
             var num2 = 0
-
+            
             // Step 3: Split numbers into two groups based on diffBit
             for num in nums {
                 if (num & diffBit) == 0 {
@@ -4381,7 +4424,7 @@ Example 3:
                     num2 ^= num
                 }
             }
-
+            
             return [num1, num2]
         }
     }
@@ -4402,23 +4445,23 @@ Example 3:
     // 242. Valid Anagram
     // Time Complexity: O(n)
     // Space Complexity: O(1)
-
+    
     class LC242_ValidAnagram {
-
+        
         func isAnagram(_ s: String, _ t: String) -> Bool {
             // If lengths differ, they cannot be anagrams
             if s.count != t.count {
                 return false
             }
-
+            
             var count = Array(repeating: 0, count: 26)
             let aAscii = Int(Character("a").asciiValue!)
-
+            
             // Count characters in s
             for ch in s {
                 count[Int(ch.asciiValue!) - aAscii] += 1
             }
-
+            
             // Subtract characters in t
             for ch in t {
                 let index = Int(ch.asciiValue!) - aAscii
@@ -4427,11 +4470,11 @@ Example 3:
                     return false
                 }
             }
-
+            
             return true
         }
     }
-
+    
     /*
      241. Different Ways to Add Parentheses
      Given a string expression of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. You may return the answer in any order.
@@ -4461,26 +4504,26 @@ Example 3:
     // Divide & Conquer with recursion
     // Time Complexity: Exponential (Catalan number growth)
     // Space Complexity: Exponential (results + recursion stack)
-
+    
     class LC241_DifferentWaysToAddParentheses {
-
+        
         func diffWaysToCompute(_ expression: String) -> [Int] {
             return compute(expression)
         }
-
+        
         private func compute(_ expr: String) -> [Int] {
             var results: [Int] = []
-
+            
             // Try every operator as a split point
             for (i, char) in expr.enumerated() {
                 if char == "+" || char == "-" || char == "*" {
-
+                    
                     let leftExpr = String(expr.prefix(i))
                     let rightExpr = String(expr.suffix(expr.count - i - 1))
-
+                    
                     let leftResults = compute(leftExpr)
                     let rightResults = compute(rightExpr)
-
+                    
                     // Combine results from left and right parts
                     for l in leftResults {
                         for r in rightResults {
@@ -4498,12 +4541,12 @@ Example 3:
                     }
                 }
             }
-
+            
             // Base case: the expression is a single number
             if results.isEmpty {
                 results.append(Int(expr)!)
             }
-
+            
             return results
         }
     }
@@ -4530,20 +4573,20 @@ Example 3:
     // 240. Search a 2D Matrix II
     // Time Complexity: O(m + n)
     // Space Complexity: O(1)
-
+    
     class LC240_Search2DMatrixII {
-
+        
         func searchMatrix(_ matrix: [[Int]], _ target: Int) -> Bool {
             let rows = matrix.count
             let cols = matrix[0].count
-
+            
             // Start from the top-right corner
             var row = 0
             var col = cols - 1
-
+            
             while row < rows && col >= 0 {
                 let value = matrix[row][col]
-
+                
                 if value == target {
                     return true
                 } else if value > target {
@@ -4554,11 +4597,11 @@ Example 3:
                     row += 1
                 }
             }
-
+            
             return false
         }
     }
-
+    
     /*
      239. Sliding Window Maximum     Hard
      You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
@@ -4570,19 +4613,19 @@ Example 3:
      Window position                Max
      ---------------               -----
      [1  3  -1] -3  5  3  6  7       3
-      1 [3  -1  -3] 5  3  6  7       3
-      1  3 [-1  -3  5] 3  6  7       5
-      1  3  -1 [-3  5  3] 6  7       5
-      1  3  -1  -3 [5  3  6] 7       6
-      1  3  -1  -3  5 [3  6  7]      7
+     1 [3  -1  -3] 5  3  6  7       3
+     1  3 [-1  -3  5] 3  6  7       5
+     1  3  -1 [-3  5  3] 6  7       5
+     1  3  -1  -3 [5  3  6] 7       6
+     1  3  -1  -3  5 [3  6  7]      7
      Example 2:
-
+     
      Input: nums = [1], k = 1
      Output: [1]
-      
-
+     
+     
      Constraints:
-
+     
      1 <= nums.length <= 105
      -104 <= nums[i] <= 104
      1 <= k <= nums.length
@@ -4590,40 +4633,40 @@ Example 3:
     // 239. Sliding Window Maximum
     // Time Complexity: O(n)
     // Space Complexity: O(k)
-
+    
     class LC239_SlidingWindowMaximum {
-
+        
         func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
             guard !nums.isEmpty, k > 0 else { return [] }
-
+            
             var deque: [Int] = []   // Stores indices
             var result: [Int] = []
-
+            
             for i in 0..<nums.count {
-
+                
                 // Remove indices that are out of the current window
                 if let first = deque.first, first <= i - k {
                     deque.removeFirst()
                 }
-
+                
                 // Remove elements smaller than current from the back
                 while let last = deque.last, nums[last] < nums[i] {
                     deque.removeLast()
                 }
-
+                
                 // Add current index
                 deque.append(i)
-
+                
                 // The front of the deque is the maximum of the window
                 if i >= k - 1 {
                     result.append(nums[deque.first!])
                 }
             }
-
+            
             return result
         }
     }
-
+    
     /*
      238. Product of Array Except Self
      Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
@@ -4644,13 +4687,13 @@ Example 3:
     // 238. Product of Array Except Self
     // Time Complexity: O(n)
     // Space Complexity: O(1) extra space (output array does not count)
-
+    
     class LC238_ProductOfArrayExceptSelf {
-
+        
         func productExceptSelf(_ nums: [Int]) -> [Int] {
             let n = nums.count
             var result = Array(repeating: 1, count: n)
-
+            
             // Step 1: Calculate prefix products
             // result[i] will contain the product of all elements to the left of i
             var prefix = 1
@@ -4658,7 +4701,7 @@ Example 3:
                 result[i] = prefix
                 prefix *= nums[i]
             }
-
+            
             // Step 2: Calculate suffix products and multiply with prefix products
             // suffix holds the product of all elements to the right of i
             var suffix = 1
@@ -4666,21 +4709,21 @@ Example 3:
                 result[i] *= suffix
                 suffix *= nums[i]
             }
-
+            
             return result
         }
     }
-
+    
     /*
      237. Delete Node in a Linked List
      There is a singly-linked list head and we want to delete a node node in it.
-
+     
      You are given the node to be deleted node. You will not be given access to the first node of head.
-
+     
      All the values of the linked list are unique, and it is guaranteed that the given node node is not the last node in the linked list.
-
+     
      Delete the given node. Note that by deleting the node, we do not mean removing it from memory. We mean:
-
+     
      The value of the given node should not exist in the linked list.
      The number of nodes in the linked list should decrease by one.
      All the values before node should be in the same order.
@@ -4706,22 +4749,22 @@ Example 3:
     // 237. Delete Node in a Linked List
     // Time Complexity: O(1)
     // Space Complexity: O(1)
-
+    
     class LC237_DeleteNodeInLinkedList {
-
+        
         func deleteNode(_ node: ListNode?) {
             guard let node = node, let next = node.next else {
                 return
             }
-
+            
             // Copy the value from the next node
             node.val = next.val
-
+            
             // Skip the next node
             node.next = next.next
         }
     }
-
+    
     /*
      236. Lowest Common Ancestor of a Binary Tree
      Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.
@@ -4771,13 +4814,13 @@ Example 3:
             _ p: TreeNode?,
             _ q: TreeNode?
         ) -> TreeNode? {
-
+            
             var current = root
-
+            
             while let node = current,
                   let pVal = p?.val,
                   let qVal = q?.val {
-
+                
                 // Both nodes are in the left subtree
                 if pVal < node.val && qVal < node.val {
                     current = node.left
@@ -4791,7 +4834,7 @@ Example 3:
                     return node
                 }
             }
-
+            
             return nil
         }
     }
@@ -4815,12 +4858,12 @@ Example 3:
             let n = n
             var digit = 1
             var res = 0
-
+            
             while n / digit > 0 {
                 let high = n / (digit * 10)
                 let cur  = (n / digit) % 10
                 let low  = n % digit
-
+                
                 if cur == 0 {
                     res += high * digit
                 } else if cur == 1 {
@@ -4828,15 +4871,15 @@ Example 3:
                 } else {
                     res += (high + 1) * digit
                 }
-
+                
                 // move to next higher digit
                 digit *= 10
             }
-
+            
             return res
         }
     }
-
+    
     /*
      230. Kth Smallest Element in a BST
      Given the root of a binary search tree, and an integer k, return the kth smallest value (1-indexed) of all the values of the nodes in the tree.
@@ -4854,26 +4897,26 @@ Example 3:
      */
     // MARK: - 230. Kth Smallest Element in a BST
     class LC230_KthSmallestInBST {
-
+        
         // Returns the k-th smallest element (1-indexed)
         func kthSmallest(_ root: TreeNode?, _ k: Int) -> Int {
             var k = k
             var result = 0
-
+            
             func inorder(_ node: TreeNode?) {
                 guard let node = node, k > 0 else { return }
-
+                
                 inorder(node.left)
-
+                
                 k -= 1
                 if k == 0 {
                     result = node.val
                     return
                 }
-
+                
                 inorder(node.right)
             }
-
+            
             inorder(root)
             return result
         }
@@ -4881,7 +4924,7 @@ Example 3:
     /*
      229. Majority Element II
      Given an integer array of size n, find all elements that appear more than ⌊ n/3 ⌋ times.
-Example 1:
+     Example 1:
      Input: nums = [3,2,3]
      Output: [3]
      Example 2:
@@ -4898,14 +4941,14 @@ Example 1:
     // 229. Majority Element II
     // This solution uses the Boyer–Moore majority vote algorithm extended to two candidates.
     // Time: O(n), Space: O(1)
-
+    
     class LC229_MajorityElementII {
         func majorityElement(_ nums: [Int]) -> [Int] {
             var candidate1: Int? = nil
             var candidate2: Int? = nil
             var count1 = 0
             var count2 = 0
-
+            
             // First pass: find potential candidates
             for num in nums {
                 if let c1 = candidate1, c1 == num {
@@ -4923,31 +4966,31 @@ Example 1:
                     count2 -= 1
                 }
             }
-
+            
             // Second pass: verify the candidates
             count1 = 0
             count2 = 0
-
+            
             for num in nums {
                 if num == candidate1 { count1 += 1 }
                 else if num == candidate2 { count2 += 1 }
             }
-
+            
             // Check if they exceed n/3 threshold
             let threshold = nums.count / 3
             var result = [Int]()
-
+            
             if let c1 = candidate1, count1 > threshold {
                 result.append(c1)
             }
             if let c2 = candidate2, count2 > threshold {
                 result.append(c2)
             }
-
+            
             return result
         }
     }
-
+    
     /*
      228. Summary Ranges
      You are given a sorted unique integer array nums.
@@ -4973,32 +5016,32 @@ Example 1:
      [8,9] --> "8->9"
      */
     func summaryRanges228(_ nums: [Int]) -> [String] {
-            guard !nums.isEmpty else { return [] }
-
-            var res = [String]()
-            var start = nums[0]
-
-            for i in 1..<nums.count {
-                // проверяем разрыв последовательности
-                if nums[i] != nums[i - 1] + 1 {
-                    if start == nums[i - 1] {
-                        res.append("\(start)")
-                    } else {
-                        res.append("\(start)->\(nums[i - 1])")
-                    }
-                    start = nums[i]
+        guard !nums.isEmpty else { return [] }
+        
+        var res = [String]()
+        var start = nums[0]
+        
+        for i in 1..<nums.count {
+            // проверяем разрыв последовательности
+            if nums[i] != nums[i - 1] + 1 {
+                if start == nums[i - 1] {
+                    res.append("\(start)")
+                } else {
+                    res.append("\(start)->\(nums[i - 1])")
                 }
+                start = nums[i]
             }
-
-            // записываем последний диапазон
-            if start == nums.last! {
-                res.append("\(start)")
-            } else {
-                res.append("\(start)->\(nums.last!)")
-            }
-
-            return res
         }
+        
+        // записываем последний диапазон
+        if start == nums.last! {
+            res.append("\(start)")
+        } else {
+            res.append("\(start)->\(nums.last!)")
+        }
+        
+        return res
+    }
     /*
      227. Basic Calculator II
      Given a string s which represents an expression, evaluate this expression and return its value.
@@ -5022,39 +5065,39 @@ Example 1:
      The answer is guaranteed to fit in a 32-bit integer.
      */
     func calculate227(_ s: String) -> Int {
-            var num = 0
-            var lastOp: Character = "+"
-            var stack = [Int]()
-            let chars = Array(s)
+        var num = 0
+        var lastOp: Character = "+"
+        var stack = [Int]()
+        let chars = Array(s)
+        
+        for i in 0..<chars.count {
+            let ch = chars[i]
             
-            for i in 0..<chars.count {
-                let ch = chars[i]
-                
-                if let d = ch.wholeNumberValue {
-                    num = num * 10 + d
-                }
-                
-                if (!ch.isNumber && ch != " ") || i == chars.count - 1 {
-                    switch lastOp {
-                    case "+":
-                        stack.append(num)
-                    case "-":
-                        stack.append(-num)
-                    case "*":
-                        stack.append(stack.removeLast() * num)
-                    case "/":
-                        stack.append(stack.removeLast() / num)
-                    default:
-                        break
-                    }
-                    
-                    lastOp = ch
-                    num = 0
-                }
+            if let d = ch.wholeNumberValue {
+                num = num * 10 + d
             }
             
-            return stack.reduce(0, +)
+            if (!ch.isNumber && ch != " ") || i == chars.count - 1 {
+                switch lastOp {
+                case "+":
+                    stack.append(num)
+                case "-":
+                    stack.append(-num)
+                case "*":
+                    stack.append(stack.removeLast() * num)
+                case "/":
+                    stack.append(stack.removeLast() / num)
+                default:
+                    break
+                }
+                
+                lastOp = ch
+                num = 0
+            }
         }
+        
+        return stack.reduce(0, +)
+    }
     /*
      226. Invert Binary Tree
      Given the root of a binary tree, invert the tree, and return its root.
@@ -5074,7 +5117,7 @@ Example 1:
     /// LeetCode 226. Invert Binary Tree
     /// Recursively swaps left and right children for each node
     class Solution226InvertBinaryTree {
-
+        
         /// Binary tree node
         public class TreeNode {
             public var val: Int
@@ -5086,26 +5129,26 @@ Example 1:
                 self.right = nil
             }
         }
-
+        
         /// Inverts the binary tree and returns the root
         func invertTree(_ root: TreeNode?) -> TreeNode? {
             guard let node = root else {
                 return nil
             }
-
+            
             // swap left and right children
             let temp = node.left
             node.left = node.right
             node.right = temp
-
+            
             // recursively invert subtrees
             _ = invertTree(node.left)
             _ = invertTree(node.right)
-
+            
             return node
         }
     }
-
+    
     /*
      225. Implement Stack using Queues
      Implement a last-in-first-out (LIFO) stack using only two queues. The implemented stack should support all the functions of a normal stack (push, top, pop, and empty).
@@ -5134,43 +5177,43 @@ Example 1:
     /// LeetCode 225. Implement Stack using Queues
     /// Two-queue implementation
     class Solution225MyStack {
-
+        
         private var q1: [Int] = []  // main queue
         private var q2: [Int] = []  // helper queue
-
+        
         /// Push element x to top of stack
         func push(_ x: Int) {
             // Step 1: enqueue new element to q2
             q2.append(x)
-
+            
             // Step 2: move everything from q1 to q2
             while !q1.isEmpty {
                 q2.append(q1.removeFirst())
             }
-
+            
             // Step 3: swap queues
             let temp = q1
             q1 = q2
             q2 = temp
             q2.removeAll()
         }
-
+        
         /// Removes top element and returns it
         func pop() -> Int {
             return q1.removeFirst()
         }
-
+        
         /// Returns top element without removing it
         func top() -> Int {
             return q1.first!
         }
-
+        
         /// Returns whether stack is empty
         func empty() -> Bool {
             return q1.isEmpty
         }
     }
-
+    
     /*
      224. Basic Calculator
      Given a string s representing a valid expression, implement a basic calculator to evaluate it, and return the result of the evaluation.
@@ -5251,7 +5294,7 @@ Example 1:
             return result + sign * currentNumber
         }
     }
-
+    
     /*
      223. Rectangle Area
      Given the coordinates of two rectilinear rectangles in a 2D plane, return the total area covered by the two rectangles.
@@ -5292,7 +5335,7 @@ Example 1:
             return areaA + areaB - overlapArea
         }
     }
-
+    
     /*
      222. Count Complete Tree Nodes
      Given the root of a complete binary tree, return the number of the nodes in the tree.
@@ -5327,9 +5370,9 @@ Example 1:
      *     }
      * }
      */
-
+    
     class Solution222 {
-
+        
         // Main function
         // Counts nodes in a complete binary tree in O(log^2 n)
         func countNodes(_ root: TreeNode?) -> Int {
@@ -5385,7 +5428,7 @@ Example 1:
      */
     // 221. Maximal Square
     // Dynamic Programming, O(m*n) time, O(m*n) space
-
+    
     class Solution221 {
         func maximalSquare(_ matrix: [[Character]]) -> Int {
             guard !matrix.isEmpty else { return 0 }
@@ -5411,7 +5454,7 @@ Example 1:
             return maxSide * maxSide
         }
     }
-
+    
     /*
      220. Contains Duplicate III
      Hard
@@ -5435,7 +5478,7 @@ Example 1:
      Explanation: After trying all the possible pairs (i, j), we cannot satisfy the three conditions, so we return false.
      */
     class Solution220 {
-
+        
         // ============================================================
         // METHOD 1 — BUCKET HASHING  (BEST PERFORMANCE)
         // Time:   O(n)
@@ -5449,16 +5492,16 @@ Example 1:
         // ============================================================
         /* ============================================================
          COMPARISON SUMMARY
-
+         
          | Method                           | Time        | Memory | Notes                             |
          |----------------------------------|-------------|--------|-----------------------------------|
          | Bucket Hashing                   | O(n)        | O(n)   | Fastest, best for large inputs    |
          | TreeSet (Sorted window + BS)     | O(n log n)  | O(n)   | Simpler logic, but slower         |
-
+         
          Recommended solution → Bucket Hashing (Method 1)
          ============================================================ */
-
-
+        
+        
         func containsNearbyAlmostDuplicate_Bucket(_ nums: [Int], _ indexDiff: Int, _ valueDiff: Int) -> Bool {
             if valueDiff < 0 { return false } // impossible to satisfy
             
@@ -5476,7 +5519,7 @@ Example 1:
                 // 2) Check left and right neighboring buckets
                 if let left = buckets[bucketID - 1], abs(left - num) <= valueDiff { return true }
                 if let right = buckets[bucketID + 1], abs(right - num) <= valueDiff { return true }
-
+                
                 // Insert into bucket
                 buckets[bucketID] = num
                 
@@ -5488,8 +5531,8 @@ Example 1:
             }
             return false
         }
-
-
+        
+        
         // ============================================================
         // METHOD 2 — SORTED WINDOW + BINARY SEARCH (TREESET ANALOG)
         // Time:   O(n log n)
@@ -5504,7 +5547,7 @@ Example 1:
         
         func containsNearbyAlmostDuplicate_TreeSet(_ nums: [Int], _ indexDiff: Int, _ valueDiff: Int) -> Bool {
             var window = [Int]() // sorted sliding window
-
+            
             for i in 0..<nums.count {
                 let num = nums[i]
                 let pos = window.binarySearch(num) // position if inserted
@@ -5513,10 +5556,10 @@ Example 1:
                 if pos < window.count && abs(window[pos] - num) <= valueDiff { return true }
                 // Check left neighbor
                 if pos > 0 && abs(window[pos - 1] - num) <= valueDiff { return true }
-
+                
                 // Insert current number into sorted array
                 window.insert(num, at: pos)
-
+                
                 // Restrict window size to indexDiff
                 if i >= indexDiff {
                     let removePos = window.binarySearch(nums[i - indexDiff])
@@ -5546,7 +5589,7 @@ Example 1:
      */
     // 219. Contains Duplicate II
     // Sliding window + Set, O(n) time, O(k) memory
-
+    
     class Solution219 {
         func containsNearbyDuplicate(_ nums: [Int], _ k: Int) -> Bool {
             var window = Set<Int>()   // stores last k numbers
@@ -5569,20 +5612,20 @@ Example 1:
             return false
         }
     }
-
+    
     /*
      218. The Skyline Problem
      A city's skyline is the outer contour of the silhouette formed by all the buildings in that city when viewed from a distance. Given the locations and heights of all the buildings, return the skyline formed by these buildings collectively.
-
+     
      The geometric information of each building is given in the array buildings where buildings[i] = [lefti, righti, heighti]:
-
+     
      lefti is the x coordinate of the left edge of the ith building.
      righti is the x coordinate of the right edge of the ith building.
      heighti is the height of the ith building.
      You may assume all buildings are perfect rectangles grounded on an absolutely flat surface at height 0.
-
+     
      The skyline should be represented as a list of "key points" sorted by their x-coordinate in the form [[x1,y1],[x2,y2],...]. Each key point is the left endpoint of some horizontal segment in the skyline except the last point in the list, which always has a y-coordinate 0 and is used to mark the skyline's termination where the rightmost building ends. Any ground between the leftmost and rightmost buildings should be part of the skyline's contour.
-
+     
      Note: There must be no consecutive horizontal lines of equal height in the output skyline. For instance, [...,[2 3],[4 5],[7 5],[11 5],[12 7],...] is not acceptable; the three lines of height 5 should be merged into one in the final output as such: [...,[2 3],[4 5],[12 7],...]
      Example 1:
      Input: buildings = [[2,9,10],[3,7,15],[5,12,12],[15,20,10],[19,24,8]]
@@ -5591,13 +5634,13 @@ Example 1:
      Figure A shows the buildings of the input.
      Figure B shows the skyline formed by those buildings. The red points in figure B represent the key points in the output list.
      Example 2:
-
+     
      Input: buildings = [[0,2,3],[2,5,3]]
      Output: [[0,3],[5,0]]
-      
-
+     
+     
      Constraints:
-
+     
      1 <= buildings.length <= 104
      0 <= lefti < righti <= 231 - 1
      1 <= heighti <= 231 - 1
@@ -5605,7 +5648,7 @@ Example 1:
      */
     // 218. The Skyline Problem
     // Sweep line + max heap approach
-
+    
     class Solution218 {
         func getSkyline(_ buildings: [[Int]]) -> [[Int]] {
             // List of events: (x, height), entering positive height, leaving negative
@@ -5667,7 +5710,7 @@ Example 1:
             return result
         }
     }
-
+    
     /*
      216. Combination Sum III
      Find all valid combinations of k numbers that sum up to n such that the following conditions are true:
@@ -5701,7 +5744,7 @@ Example 1:
         func combinationSum3(_ k: Int, _ n: Int) -> [[Int]] {
             var result: [[Int]] = []
             var current: [Int] = []
-
+            
             func backtrack(_ start: Int, _ remainingK: Int, _ remainingSum: Int) {
                 // If k numbers chosen & sum reached → store solution
                 if remainingK == 0 && remainingSum == 0 {
@@ -5710,7 +5753,7 @@ Example 1:
                 }
                 // If impossible to continue → prune early
                 if remainingK < 0 || remainingSum < 0 { return }
-
+                
                 // Choose next candidate from 1...9 without repetition
                 for num in start...9 {
                     current.append(num)
@@ -5718,12 +5761,12 @@ Example 1:
                     current.removeLast()  // backtrack step
                 }
             }
-
+            
             backtrack(1, k, n)
             return result
         }
     }
-
+    
     /*
      215. Kth Largest Element in an Array
      Given an integer array nums and an integer k, return the kth largest element in the array.
@@ -5782,7 +5825,7 @@ Example 1:
             return i
         }
     }
-
+    
     /*
      214. Shortest Palindrome
      You are given a string s. You can convert s to a palindrome by adding characters in front of it.
@@ -5827,42 +5870,42 @@ Example 1:
                     }
                 }
             }
-
+            
             // lps.last gives the longest palindromic prefix length in s
             // We must prepend the reverse of remaining suffix
             let prefixLength = lps.last!
             let suffix = rev.dropFirst(prefixLength)
-
+            
             return String(suffix) + s
         }
     }
     /*
      213. House Robber II
      You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed. All houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, adjacent houses have a security system connected, and it will automatically contact the police if two adjacent houses were broken into on the same night.
-
+     
      Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input: nums = [2,3,2]
      Output: 3
      Explanation: You cannot rob house 1 (money = 2) and then rob house 3 (money = 2), because they are adjacent houses.
      Example 2:
-
+     
      Input: nums = [1,2,3,1]
      Output: 4
      Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
      Total amount you can rob = 1 + 3 = 4.
      Example 3:
-
+     
      Input: nums = [1,2,3]
      Output: 3
-      
-
+     
+     
      Constraints:
-
+     
      1 <= nums.length <= 100
      0 <= nums[i] <= 1000
      */
@@ -5900,9 +5943,9 @@ Example 1:
     /*
      212. Word Search II
      Hard
-
+     
      Given an m x n board of characters and a list of strings words, return all words on the board.
-
+     
      Each word must be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.
      Example 1:
      Input: board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]
@@ -5928,11 +5971,11 @@ Example 1:
         // Holds the complete word when the end of a valid inserted word is reached
         var word: String? = nil
     }
-
+    
     // Trie structure for fast prefix lookup
     class Trie212 {
         let root = TrieNode212()
-
+        
         // Inserts a word into the Trie
         func insert(_ word: String) {
             var node = root
@@ -5946,31 +5989,31 @@ Example 1:
             node.word = word    // Mark the end of a valid word
         }
     }
-
+    
     class WordSearch212 {
-
+        
         // Main function: returns all words from `words` that appear in the board
         func findWords(_ board: [[Character]], _ words: [String]) -> [String] {
             let trie = Trie212()
-
+            
             // Build Trie from all words
             for w in words { trie.insert(w) }
-
+            
             var result = Set<String>()
             var board = board
             let m = board.count
             let n = board[0].count
-
+            
             // Start DFS from every cell
             for i in 0..<m {
                 for j in 0..<n {
                     dfs(&board, i, j, trie.root, &result)
                 }
             }
-
+            
             return Array(result)
         }
-
+        
         // DFS search that walks the board following Trie prefixes
         private func dfs(
             _ board: inout [[Character]],
@@ -5981,36 +6024,36 @@ Example 1:
         ) {
             let m = board.count
             let n = board[0].count
-
+            
             // Out of bounds check
             if i < 0 || j < 0 || i >= m || j >= n { return }
-
+            
             let ch = board[i][j]
-
+            
             // Cell already visited (marked as '#')
             if ch == "#" { return }
-
+            
             // Convert character to Trie index
             let idx = Int(ch.asciiValue! - Character("a").asciiValue!)
-
+            
             // No matching prefix in Trie → stop search
             guard let next = node.children[idx] else { return }
-
+            
             // If this path forms a complete word → add to result
             if let word = next.word {
                 result.insert(word)
                 next.word = nil   // Optimization: remove to avoid duplicates
             }
-
+            
             // Mark current cell as visited
             board[i][j] = "#"
-
+            
             // Explore neighbors (4-directional)
             dfs(&board, i + 1, j, next, &result)
             dfs(&board, i - 1, j, next, &result)
             dfs(&board, i, j + 1, next, &result)
             dfs(&board, i, j - 1, next, &result)
-
+            
             // Restore original character after DFS
             board[i][j] = ch
         }
@@ -6045,16 +6088,16 @@ Example 1:
      At most 104 calls will be made to addWord and search.
      */
     class WordDictionary211 {
-
+        
         class TrieNode211 {
             var children = Array<TrieNode211?>(repeating: nil, count: 26)
             var isEnd = false
         }
-
+        
         private let root = TrieNode211()
-
+        
         init() {}
-
+        
         func addWord(_ word: String) {
             var node = root
             for ch in word {
@@ -6066,21 +6109,21 @@ Example 1:
             }
             node.isEnd = true
         }
-
+        
         func search(_ word: String) -> Bool {
             let chars = Array(word)
             return dfs(chars, 0, root)
         }
-
+        
         private func dfs(_ chars: [Character], _ index: Int, _ node: TrieNode211?) -> Bool {
             guard let node = node else { return false }
-
+            
             if index == chars.count {
                 return node.isEnd
             }
-
+            
             let ch = chars[index]
-
+            
             if ch == "." {
                 // try every child
                 for child in node.children {
@@ -6095,7 +6138,7 @@ Example 1:
             }
         }
     }
-
+    
     /*
      210. Course Schedule II
      Medium
@@ -6104,7 +6147,7 @@ Example 1:
      Companies
      Hint
      There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
-
+     
      For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
      Return the ordering of courses you should take to finish all courses. If there are many valid answers, return any of them. If it is impossible to finish all courses, return an empty array.
      Example 1:
@@ -6170,7 +6213,7 @@ Example 1:
             return order.count == numCourses ? order : []
         }
     }
-
+    
     /*
      209. Minimum Size Subarray Sum
      Given an array of positive integers nums and a positive integer target, return the minimal length of a subarray whose sum is greater than or equal to target. If there is no such subarray, return 0 instead.
@@ -6191,7 +6234,7 @@ Example 1:
      Follow up: If you have figured out the O(n) solution, try coding another solution of which the time complexity is O(n log(n)).
      */
     class Solution209 {
-
+        
         // ---------------------------------------------------------
         // Method 1: Sliding Window (O(n))
         // Time Complexity: O(n)
@@ -6273,7 +6316,7 @@ Example 1:
             print(minSubArrayLenBinarySearch(11, nums3))  // 0
         }
     }
-
+    
     /*
      208. Implement Trie (Prefix Tree)
      A trie (pronounced as "try") or prefix tree is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.
@@ -6305,13 +6348,13 @@ Example 1:
         var children: [Character: TrieNode] = [:]
         var isWord = false
     }
-
+    
     class Trie {
-
+        
         private let root = TrieNode()
-
+        
         init() {}
-
+        
         func insert(_ word: String) {
             var node = root
             for ch in word {
@@ -6322,7 +6365,7 @@ Example 1:
             }
             node.isWord = true
         }
-
+        
         func search(_ word: String) -> Bool {
             var node = root
             for ch in word {
@@ -6331,7 +6374,7 @@ Example 1:
             }
             return node.isWord
         }
-
+        
         func startsWith(_ prefix: String) -> Bool {
             var node = root
             for ch in prefix {
@@ -6344,7 +6387,7 @@ Example 1:
     /*
      207. Course Schedule
      There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
-
+     
      For example, the pair [0, 1], indicates that to take course 0 you have to first take course 1.
      Return true if you can finish all courses. Otherwise, return false.
      Example 1:
@@ -6353,14 +6396,14 @@ Example 1:
      Explanation: There are a total of 2 courses to take.
      To take course 1 you should have finished course 0. So it is possible.
      Example 2:
-
+     
      Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
      Output: false
      Explanation: There are a total of 2 courses to take.
      To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
      */
     class Solution207 {
-
+        
         // ---------------------------------------------------------
         // Method 1: DFS + Cycle Detection
         // Detects cycles using a recursion stack.
@@ -6374,30 +6417,30 @@ Example 1:
             for pair in prerequisites {
                 graph[pair[1]].append(pair[0]) // bi → ai
             }
-
+            
             // 0 = unvisited, 1 = visiting, 2 = visited
             var state = Array(repeating: 0, count: numCourses)
-
+            
             func dfs(_ course: Int) -> Bool {
                 if state[course] == 1 { return false }  // Found cycle
                 if state[course] == 2 { return true }   // Already checked
-
+                
                 state[course] = 1 // Mark as visiting
-
+                
                 for next in graph[course] {
                     if !dfs(next) { return false }
                 }
-
+                
                 state[course] = 2 // Mark as done
                 return true
             }
-
+            
             for c in 0..<numCourses {
                 if !dfs(c) { return false }
             }
             return true
         }
-
+        
         // ---------------------------------------------------------
         // Method 2: BFS (Kahn’s Algorithm)
         // Uses indegree array to detect whether a topological order exists.
@@ -6408,26 +6451,26 @@ Example 1:
         static func canFinishBFS(_ numCourses: Int, _ prerequisites: [[Int]]) -> Bool {
             var graph = Array(repeating: [Int](), count: numCourses)
             var indegree = Array(repeating: 0, count: numCourses)
-
+            
             for pair in prerequisites {
                 let course = pair[0]
                 let pre = pair[1]
                 graph[pre].append(course)
                 indegree[course] += 1
             }
-
+            
             // Queue for courses with no prerequisites
             var queue: [Int] = []
             for i in 0..<numCourses {
                 if indegree[i] == 0 { queue.append(i) }
             }
-
+            
             var taken = 0
-
+            
             while !queue.isEmpty {
                 let current = queue.removeFirst()
                 taken += 1
-
+                
                 for next in graph[current] {
                     indegree[next] -= 1
                     if indegree[next] == 0 {
@@ -6435,24 +6478,24 @@ Example 1:
                     }
                 }
             }
-
+            
             return taken == numCourses
         }
-
+        
         // ---------------------------------------------------------
         // Default method — BFS (fastest and simplest)
         // ---------------------------------------------------------
         static func canFinish(_ numCourses: Int, _ prerequisites: [[Int]]) -> Bool {
             return canFinishBFS(numCourses, prerequisites)
         }
-
+        
         // For testing
         static func runDemo() {
             print(canFinish(2, [[1,0]]))          // true
             print(canFinish(2, [[1,0],[0,1]]))    // false
         }
     }
-
+    
     /*
      204. Count Primes
      Given an integer n, return the number of prime numbers that are strictly less than n.
@@ -6468,7 +6511,7 @@ Example 1:
      Output: 0
      */
     class Solution204 {
-
+        
         // ---------------------------------------------------------
         // Method 1: Basic primality test (Brute Force)
         // Time Complexity:  O(n * sqrt(n))
@@ -6491,7 +6534,7 @@ Example 1:
             }
             return count
         }
-
+        
         // ---------------------------------------------------------
         // Method 2: Optimized primality test using 6k ± 1
         // Time Complexity:  O(n * sqrt(n)) but faster in practice
@@ -6519,7 +6562,7 @@ Example 1:
             }
             return count
         }
-
+        
         // ---------------------------------------------------------
         // Method 3: Sieve of Eratosthenes (Optimal)
         // Time Complexity:  O(n log log n)
@@ -6546,7 +6589,7 @@ Example 1:
             
             return sieve.filter { $0 }.count
         }
-
+        
         // Demo
         static func runDemo() {
             print(countPrimes(10)) // 4
@@ -6554,7 +6597,7 @@ Example 1:
             print(countPrimes(1))  // 0
         }
     }
-
+    
     /*
      201. Bitwise AND of Numbers Range
      Given two integers left and right that represent the range [left, right], return the bitwise AND of all numbers in this range, inclusive.
@@ -6596,26 +6639,26 @@ Example 1:
             print(rangeBitwiseAnd(1, 2147483647)) // 0
         }
     }
-
+    
     /*
      200. Number of Islands
      Given an m x n 2D binary grid grid which represents a map of '1's (land) and '0's (water), return the number of islands.
      An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
-
+     
      Example 1:
      Input: grid = [
-       ["1","1","1","1","0"],
-       ["1","1","0","1","0"],
-       ["1","1","0","0","0"],
-       ["0","0","0","0","0"]
+     ["1","1","1","1","0"],
+     ["1","1","0","1","0"],
+     ["1","1","0","0","0"],
+     ["0","0","0","0","0"]
      ]
      Output: 1
      Example 2:
      Input: grid = [
-       ["1","1","0","0","0"],
-       ["1","1","0","0","0"],
-       ["0","0","1","0","0"],
-       ["0","0","0","1","1"]
+     ["1","1","0","0","0"],
+     ["1","1","0","0","0"],
+     ["0","0","1","0","0"],
+     ["0","0","0","1","1"]
      ]
      Output: 3
      Constraints:
@@ -6673,7 +6716,7 @@ Example 1:
             print(numIslands(&grid)) // Expected: 3
         }
     }
-
+    
     /*
      199. Binary Tree Right Side View
      Given the root of a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
@@ -6683,7 +6726,7 @@ Example 1:
      Example 2:
      Input: root = [1,2,3,4,null,null,null,5]
      Output: [1,3,4,5]
-      Example 3:
+     Example 3:
      Input: root = [1,null,3]
      Output: [1,3]
      Example 4:
@@ -6703,7 +6746,7 @@ Example 1:
             self.right = right
         }
     }
-
+    
     class Solution199 {
         /// Returns the right side view of a binary tree.
         ///
@@ -6743,12 +6786,12 @@ Example 1:
         /// Optional demo runner
         static func runDemo() {
             let root = TreeNode199(1,
-                                    TreeNode199(2, nil, TreeNode199(5)),
-                                    TreeNode199(3, nil, TreeNode199(4)))
+                                   TreeNode199(2, nil, TreeNode199(5)),
+                                   TreeNode199(3, nil, TreeNode199(4)))
             print(rightSideView(root)) // [1, 3, 4]
         }
     }
-
+    
     // Uncomment to test
     // Solution199.runDemo()
     /*
@@ -6785,12 +6828,12 @@ Example 1:
             return robPrev
         }
     }
-
+    
     /*
      197. Rising Temperature
      Pandas Schema
      Table: Weather
-
+     
      +---------------+---------+
      | Column Name   | Type    |
      +---------------+---------+
@@ -6801,18 +6844,18 @@ Example 1:
      id is the column with unique values for this table.
      There are no different rows with the same recordDate.
      This table contains information about the temperature on a certain day.
-      
-
+     
+     
      Write a solution to find all dates' id with higher temperatures compared to its previous dates (yesterday).
-
+     
      Return the result table in any order.
-
+     
      The result format is in the following example.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input:
      Weather table:
      +----+------------+-------------+
@@ -6844,7 +6887,7 @@ Example 1:
         let recordDate: Date
         let temperature: Int
     }
-
+    
     class Solution197 {
         /// Finds all IDs where the temperature is higher than the previous day.
         ///
@@ -6875,7 +6918,7 @@ Example 1:
      SQL Schema
      Pandas Schema
      Table: Person
-
+     
      +-------------+---------+
      | Column Name | Type    |
      +-------------+---------+
@@ -6884,22 +6927,22 @@ Example 1:
      +-------------+---------+
      id is the primary key (column with unique values) for this table.
      Each row of this table contains an email. The emails will not contain uppercase letters.
-      
-
+     
+     
      Write a solution to delete all duplicate emails, keeping only one unique email with the smallest id.
-
+     
      For SQL users, please note that you are supposed to write a DELETE statement and not a SELECT one.
-
+     
      For Pandas users, please note that you are supposed to modify Person in place.
-
+     
      After running your script, the answer shown is the Person table. The driver will first compile and run your piece of code and then show the Person table. The final order of the Person table does not matter.
-
+     
      The result format is in the following example.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input:
      Person table:
      +----+------------------+
@@ -6923,12 +6966,12 @@ Example 1:
      ON p1.email = p2.email
      WHERE p1.id > p2.id;
      */
-
+    
     struct Person196 {
         let id: Int
         let email: String
     }
-
+    
     class Solution196 {
         /// Removes duplicate emails, keeping only the record with the smallest ID for each email.
         ///
@@ -6955,14 +6998,14 @@ Example 1:
             return uniquePersons
         }
     }
-
+    
     /*
      195. Tenth Line
      Given a text file file.txt, print just the 10th line of the file.
      Example:
      Assume that file.txt has the following content:
      Line 1
-....
+     ....
      Line 10
      Your script should output the tenth line, which is:
      Line 10
@@ -7001,7 +7044,7 @@ Example 1:
             }
         }
     }
-
+    
     /*
      194. Transpose File
      Given a text file file.txt, transpose its content.
@@ -7050,24 +7093,24 @@ Example 1:
             }
         }
     }
-
+    
     /*
      193. Valid Phone Numbers
      Given a text file file.txt that contains a list of phone numbers (one per line), write a one-liner bash script to print all valid phone numbers.
-
+     
      You may assume that a valid phone number must appear in one of the following two formats: (xxx) xxx-xxxx or xxx-xxx-xxxx. (x means a digit)
-
+     
      You may also assume each line in the text file must not contain leading or trailing white spaces.
-
+     
      Example:
-
+     
      Assume that file.txt has the following content:
-
+     
      987-123-4567
      123 456 7890
      (123) 456-7890
      Your script should output the following valid phone numbers:
-
+     
      987-123-4567
      (123) 456-7890
      */
@@ -7107,7 +7150,7 @@ Example 1:
             }
         }
     }
-
+    
     /*
      192. Word Frequency
      Medium
@@ -7115,26 +7158,26 @@ Example 1:
      premium lock icon
      Companies
      Write a bash script to calculate the frequency of each word in a text file words.txt.
-
+     
      For simplicity sake, you may assume:
-
+     
      words.txt contains only lowercase characters and space ' ' characters.
      Each word must consist of lowercase characters only.
      Words are separated by one or more whitespace characters.
      Example:
-
+     
      Assume that words.txt has the following content:
-
+     
      the day is sunny the the
      the sunny is is
      Your script should output the following, sorted by descending frequency:
-
+     
      the 4
      is 3
      sunny 2
      day 1
      Note:
-
+     
      Don't worry about handling ties, it is guaranteed that each word's frequency count is unique.
      Could you write it in one-line using Unix pipes?
      */
@@ -7174,7 +7217,7 @@ Example 1:
             }
         }
     }
-
+    
     /*
      191. Number of 1 Bits
      Given a positive integer n, write a function that returns the number of set bits in its binary representation (also known as the Hamming weight).
@@ -7208,15 +7251,15 @@ Example 1:
         static func hammingWeight(_ n: UInt32) -> Int {
             var num = n
             var count = 0
-
+            
             for _ in 0..<32 {
                 count += Int(num & 1)
                 num >>= 1
             }
-
+            
             return count
         }
-
+        
         // MARK: - Optimized Method (Brian Kernighan’s Algorithm)
         //
         // Time Complexity: O(k), where k = number of 1 bits.
@@ -7228,23 +7271,23 @@ Example 1:
         static func hammingWeightOptimized(_ n: UInt32) -> Int {
             var num = n
             var count = 0
-
+            
             while num != 0 {
                 num &= (num - 1)  // clear the lowest set bit
                 count += 1
             }
-
+            
             return count
         }
-
+        
         // MARK: - Demo Runner
         static func runDemo() {
             let examples: [UInt32] = [11, 128, 2147483645]
-
+            
             for n in examples {
                 let simple = hammingWeight(n)
                 let optimized = hammingWeightOptimized(n)
-
+                
                 print("Input: \(n)")
                 print("→ Simple Count: \(simple)")
                 print("→ Optimized (Kernighan): \(optimized)")
@@ -7253,10 +7296,10 @@ Example 1:
             }
         }
     }
-
+    
     // Uncomment to test in Playground
     // Solution191.runDemo()
-
+    
     /*
      190. Reverse Bits
      Reverse bits of a given 32 bits signed integer.
@@ -7301,18 +7344,18 @@ Example 1:
             }
             return result
         }
-
+        
         // MARK: - Demo Runner
         static func runDemo() {
             let n1: UInt32 = 43261596
             let n2: UInt32 = 2147483644
-
+            
             let reversed1 = reverseBits(n1)
             let reversed2 = reverseBits(n2)
-
+            
             print("Input 1: \(n1) → Output: \(reversed1)")
             print("Input 2: \(n2) → Output: \(reversed2)")
-
+            
             // For binary clarity
             print("\nBinary comparison:")
             print(String(n1, radix: 2).leftPad(toLength: 32))
@@ -7321,7 +7364,7 @@ Example 1:
     }
     // Uncomment to test in Playground
     // Solution190.runDemo()
-
+    
     /*
      189. Rotate Array
      Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
@@ -7356,16 +7399,16 @@ Example 1:
             guard n > 0 else { return }
             let shift = k % n
             guard shift > 0 else { return }
-
+            
             // Copy last k elements + first n-k elements
             let rotated = Array(nums[n - shift..<n]) + Array(nums[0..<n - shift])
-
+            
             // Copy back to original array
             for i in 0..<n {
                 nums[i] = rotated[i]
             }
         }
-
+        
         // MARK: - Method 2: Reverse Array In-Place
         // Time Complexity: O(n)
         // Space Complexity: O(1)
@@ -7375,7 +7418,7 @@ Example 1:
             guard n > 0 else { return }
             let shift = k % n
             guard shift > 0 else { return }
-
+            
             func reverse(_ start: Int, _ end: Int) {
                 var l = start, r = end
                 while l < r {
@@ -7384,12 +7427,12 @@ Example 1:
                     r -= 1
                 }
             }
-
+            
             reverse(0, n - 1)
             reverse(0, shift - 1)
             reverse(shift, n - 1)
         }
-
+        
         // MARK: - Method 3: Cyclic Replacements
         // Time Complexity: O(n)
         // Space Complexity: O(1)
@@ -7399,15 +7442,15 @@ Example 1:
             guard n > 0 else { return }
             let shift = k % n
             guard shift > 0 else { return }
-
+            
             var count = 0
             var start = 0
-
+            
             // Process cycles until all elements are moved
             while count < n {
                 var current = start
                 var prev = nums[start]
-
+                
                 repeat {
                     let next = (current + shift) % n
                     let temp = nums[next]
@@ -7416,36 +7459,36 @@ Example 1:
                     current = next
                     count += 1
                 } while start != current
-
+                
                 start += 1
             }
         }
-
+        
         // MARK: - Demo Runner
         static func runDemo() {
             var nums1 = [1, 2, 3, 4, 5, 6, 7]
             var nums2 = [1, 2, 3, 4, 5, 6, 7]
             var nums3 = [1, 2, 3, 4, 5, 6, 7]
             let k = 3
-
+            
             rotateUsingExtraArray(&nums1, k)
             print("Method 1 (Extra Array): \(nums1)")
-
+            
             rotateUsingReverse(&nums2, k)
             print("Method 2 (Reverse In-Place): \(nums2)")
-
+            
             rotateUsingCycle(&nums3, k)
             print("Method 3 (Cyclic Replacement): \(nums3)")
         }
     }
-
+    
     // Uncomment to test in Playground
     // Solution189.runDemo()
-
+    
     /*
      188. Best Time to Buy and Sell Stock IV
      You are given an integer array prices where prices[i] is the price of a given stock on the ith day, and an integer k.
-
+     
      Find the maximum profit you can achieve. You may complete at most k transactions: i.e. you may buy at most k times and sell at most k times.
      Note: You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).
      Example 1:
@@ -7453,14 +7496,14 @@ Example 1:
      Output: 2
      Explanation: Buy on day 1 (price = 2) and sell on day 2 (price = 4), profit = 4-2 = 2.
      Example 2:
-
+     
      Input: k = 2, prices = [3,2,6,5,0,3]
      Output: 7
      Explanation: Buy on day 2 (price = 2) and sell on day 3 (price = 6), profit = 6-2 = 4. Then buy on day 5 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.
-      
-
+     
+     
      Constraints:
-
+     
      1 <= k <= 100
      1 <= prices.length <= 1000
      0 <= prices[i] <= 1000
@@ -7468,43 +7511,43 @@ Example 1:
     class Solution188 {
         // O(n)
         static func maxProfitOpt(_ k: Int, _ prices: [Int]) -> Int {
-              let n = prices.count
-              if n == 0 { return 0 }
-              
-              // If k is large enough, treat as infinite transactions
-              if k >= n / 2 {
-                  var profit = 0
-                  for i in 1..<n {
-                      if prices[i] > prices[i - 1] {
-                          profit += prices[i] - prices[i - 1]
-                      }
-                  }
-                  return profit
-              }
-              
-              // prev[j] = dp[i-1][j]
-              // curr[j] = dp[i][j]
-              var prev = Array(repeating: 0, count: n)
-              var curr = Array(repeating: 0, count: n)
-              
+            let n = prices.count
+            if n == 0 { return 0 }
+            
+            // If k is large enough, treat as infinite transactions
+            if k >= n / 2 {
+                var profit = 0
+                for i in 1..<n {
+                    if prices[i] > prices[i - 1] {
+                        profit += prices[i] - prices[i - 1]
+                    }
+                }
+                return profit
+            }
+            
+            // prev[j] = dp[i-1][j]
+            // curr[j] = dp[i][j]
+            var prev = Array(repeating: 0, count: n)
+            var curr = Array(repeating: 0, count: n)
+            
             for _ in 1...k {
-                  var maxDiff = -prices[0]
-                  
-                  for j in 1..<n {
-                      // Option 1: do nothing (carry profit)
-                      // Option 2: sell today (use maxDiff)
-                      curr[j] = max(curr[j - 1], prices[j] + maxDiff)
-                      
-                      // Update maxDiff for the next day
-                      maxDiff = max(maxDiff, prev[j] - prices[j])
-                  }
-                  
-                  // Move current row to previous for next transaction
-                  prev = curr
-              }
-              
-              return prev[n - 1]
-          }
+                var maxDiff = -prices[0]
+                
+                for j in 1..<n {
+                    // Option 1: do nothing (carry profit)
+                    // Option 2: sell today (use maxDiff)
+                    curr[j] = max(curr[j - 1], prices[j] + maxDiff)
+                    
+                    // Update maxDiff for the next day
+                    maxDiff = max(maxDiff, prev[j] - prices[j])
+                }
+                
+                // Move current row to previous for next transaction
+                prev = curr
+            }
+            
+            return prev[n - 1]
+        }
         // O(k × n)
         static func maxProfit(_ k: Int, _ prices: [Int]) -> Int {
             let n = prices.count
@@ -7552,7 +7595,7 @@ Example 1:
             print(result2)  // 7
         }
     }
-
+    
     /*
      187. Repeated DNA Sequences
      The DNA sequence is composed of a series of nucleotides abbreviated as 'A', 'C', 'G', and 'T'.
@@ -7791,13 +7834,13 @@ Example 1:
             }
         }
     }
-
+    
     /*
      184. Department Highest Salary
      SQL Schema
      Pandas Schema
      Table: Employee
-
+     
      +--------------+---------+
      | Column Name  | Type    |
      +--------------+---------+
@@ -7809,10 +7852,10 @@ Example 1:
      id is the primary key (column with unique values) for this table.
      departmentId is a foreign key (reference columns) of the ID from the Department table.
      Each row of this table indicates the ID, name, and salary of an employee. It also contains the ID of their department.
-      
-
+     
+     
      Table: Department
-
+     
      +-------------+---------+
      | Column Name | Type    |
      +-------------+---------+
@@ -7821,18 +7864,18 @@ Example 1:
      +-------------+---------+
      id is the primary key (column with unique values) for this table. It is guaranteed that department name is not NULL.
      Each row of this table indicates the ID of a department and its name.
-      
-
+     
+     
      Write a solution to find employees who have the highest salary in each of the departments.
-
+     
      Return the result table in any order.
-
+     
      The result format is in the following example.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input:
      Employee table:
      +----+-------+--------+--------------+
@@ -7868,28 +7911,28 @@ Example 1:
         let salary: Int
         let departmentId: Int
     }
-
+    
     struct Department184 {
         let id: Int
         let name: String
     }
-
+    
     struct DepartmentHighestSalary184 {
         let department: String
         let employee: String
         let salary: Int
     }
-
+    
     class Solution184 {
         static func departmentHighestSalary(employees: [Employee184], departments: [Department184]) -> [DepartmentHighestSalary184] {
-//            SELECT d.name AS Department, e.name AS Employee, e.salary AS Salary
-//            FROM Employee e
-//            JOIN Department d ON e.departmentId = d.id
-//            WHERE e.salary = (
-//                SELECT MAX(salary)
-//                FROM Employee
-//                WHERE departmentId = e.departmentId
-//            );
+            //            SELECT d.name AS Department, e.name AS Employee, e.salary AS Salary
+            //            FROM Employee e
+            //            JOIN Department d ON e.departmentId = d.id
+            //            WHERE e.salary = (
+            //                SELECT MAX(salary)
+            //                FROM Employee
+            //                WHERE departmentId = e.departmentId
+            //            );
             // Step 1: Group employees by departmentId
             var deptToEmployees = [Int: [Employee184]]()
             for e in employees {
@@ -7938,7 +7981,7 @@ Example 1:
             }
         }
     }
-
+    
     /*
      183. Customers Who Never Order
      Easy
@@ -7948,7 +7991,7 @@ Example 1:
      SQL Schema
      Pandas Schema
      Table: Customers
-
+     
      +-------------+---------+
      | Column Name | Type    |
      +-------------+---------+
@@ -7957,10 +8000,10 @@ Example 1:
      +-------------+---------+
      id is the primary key (column with unique values) for this table.
      Each row of this table indicates the ID and name of a customer.
-      
-
+     
+     
      Table: Orders
-
+     
      +-------------+------+
      | Column Name | Type |
      +-------------+------+
@@ -7970,18 +8013,18 @@ Example 1:
      id is the primary key (column with unique values) for this table.
      customerId is a foreign key (reference columns) of the ID from the Customers table.
      Each row of this table indicates the ID of an order and the ID of the customer who ordered it.
-      
-
+     
+     
      Write a solution to find all customers who never order anything.
-
+     
      Return the result table in any order.
-
+     
      The result format is in the following example.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input:
      Customers table:
      +----+-------+
@@ -8012,12 +8055,12 @@ Example 1:
         let id: Int
         let name: String
     }
-
+    
     struct Order183 {
         let id: Int
         let customerId: Int
     }
-
+    
     // Solution class with a unique name
     class Solution183 {
         static func customersWhoNeverOrder(customers: [Customer183], orders: [Order183]) -> [String] {
@@ -8028,12 +8071,12 @@ Example 1:
             let result = customers
                 .filter { !orderedCustomerIds.contains($0.id) }
                 .map { $0.name }
-          //SELECT name AS Customers
-//            FROM Customers
-//            WHERE id NOT IN (
-//                SELECT customerId
-//                FROM Orders
-//            );
+            //SELECT name AS Customers
+            //            FROM Customers
+            //            WHERE id NOT IN (
+            //                SELECT customerId
+            //                FROM Orders
+            //            );
             return result
         }
         
@@ -8055,18 +8098,18 @@ Example 1:
             print(result) // ["Henry", "Max"]
         }
     }
-
+    
     /*
      SQL equivalent (LeetCode style):
-
+     
      SELECT name AS Customers
      FROM Customers
      WHERE id NOT IN (
-         SELECT customerId
-         FROM Orders
+     SELECT customerId
+     FROM Orders
      );
-    */
-
+     */
+    
     /*
      182. Duplicate Emails
      SQL Schema
@@ -8101,12 +8144,12 @@ Example 1:
      +---------+
      Explanation: a@b.com is repeated two times.
      */
-
+    
     struct Person182 {
         let id: Int
         let email: String
     }
-
+    
     class Solution182 {
         static func duplicateEmails(_ persons: [Person182]) -> [String] {
             var emailCount = [String: Int]()
@@ -8124,7 +8167,7 @@ Example 1:
             return duplicates
         }
     }
-
+    
     // Example usage
     func runDemo182() {
         let persons = [
@@ -8136,14 +8179,14 @@ Example 1:
         let result = Solution182.duplicateEmails(persons)
         print(result) // ["a@b.com"]
     }
-
-
+    
+    
     /*
      181. Employees Earning More Than Their Managers
      SQL Schema
      Pandas Schema
      Table: Employee
-
+     
      +-------------+---------+
      | Column Name | Type    |
      +-------------+---------+
@@ -8176,14 +8219,14 @@ Example 1:
      +----------+
      Explanation: Joe is the only employee who earns more than his manager.
      */
-
+    
     struct Employee181 {
         let id: Int
         let name: String
         let salary: Int
         let managerId: Int?
     }
-
+    
     class Solution181 {
         static func employeesEarningMoreThanManagers(_ employees: [Employee181]) -> [String] {
             var byId = [Int: Employee181]()
@@ -8204,7 +8247,7 @@ Example 1:
             return result
         }
     }
-
+    
     func runDemo() {
         let employees = [
             Employee181(id: 1, name: "Joe", salary: 70000, managerId: 3),
@@ -8216,7 +8259,7 @@ Example 1:
         let result = Solution181.employeesEarningMoreThanManagers(employees)
         print(result) // ["Joe"]
     }
-
+    
     /*
      180. Consecutive Numbers
      Medium
@@ -8226,7 +8269,7 @@ Example 1:
      SQL Schema
      Pandas Schema
      Table: Logs
-
+     
      +-------------+---------+
      | Column Name | Type    |
      +-------------+---------+
@@ -8235,18 +8278,18 @@ Example 1:
      +-------------+---------+
      In SQL, id is the primary key for this table.
      id is an autoincrement column starting from 1.
-      
-
+     
+     
      Find all numbers that appear at least three times consecutively.
-
+     
      Return the result table in any order.
-
+     
      The result format is in the following example.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input:
      Logs table:
      +----+-----+
@@ -8344,13 +8387,13 @@ Example 1:
             print("Input: \(nums3) → Output: \(largestNumber(nums3))")
         }
     }
-
+    
     /*
      178. Rank Scores
      SQL Schema
      Pandas Schema
      Table: Scores
-
+     
      +-------------+---------+
      | Column Name | Type    |
      +-------------+---------+
@@ -8359,21 +8402,21 @@ Example 1:
      +-------------+---------+
      id is the primary key (column with unique values) for this table.
      Each row of this table contains the score of a game. Score is a floating point value with two decimal places.
-      
-
+     
+     
      Write a solution to find the rank of the scores. The ranking should be calculated according to the following rules:
-
+     
      The scores should be ranked from the highest to the lowest.
      If there is a tie between two scores, both should have the same ranking.
      After a tie, the next ranking number should be the next consecutive integer value. In other words, there should be no holes between ranks.
      Return the result table ordered by score in descending order.
-
+     
      The result format is in the following example.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input:
      Scores table:
      +----+-------+
@@ -8398,15 +8441,15 @@ Example 1:
      | 3.50  | 4    |
      
      SELECT
-         score,
-         DENSE_RANK() OVER (ORDER BY score DESC) AS rank
+     score,
+     DENSE_RANK() OVER (ORDER BY score DESC) AS rank
      FROM Scores;
      */
     struct Score {
         let id: Int
         let score: Double
     }
-
+    
     class RankScoresDemo {
         
         // Function to calculate ranks
@@ -8450,7 +8493,7 @@ Example 1:
             
             // Print results
             print("+-------+------+\n| score | rank |\n+-------+------+")
-
+            
             for (score, rank) in ranked {
                 print(String(format: "| %.2f  | %d    |", score, rank))
             }
@@ -8467,7 +8510,7 @@ Example 1:
      SQL Schema
      Pandas Schema
      Table: Employee
-
+     
      +-------------+------+
      | Column Name | Type |
      +-------------+------+
@@ -8476,16 +8519,16 @@ Example 1:
      +-------------+------+
      id is the primary key (column with unique values) for this table.
      Each row of this table contains information about the salary of an employee.
-      
-
+     
+     
      Write a solution to find the nth highest distinct salary from the Employee table. If there are less than n distinct salaries, return null.
-
+     
      The result format is in the following example.
-
-      
-
+     
+     
+     
      Example 1:
-
+     
      Input:
      Employee table:
      +----+--------+
@@ -8503,7 +8546,7 @@ Example 1:
      | 200                    |
      +------------------------+
      Example 2:
-
+     
      Input:
      Employee table:
      +----+--------+
@@ -8520,12 +8563,12 @@ Example 1:
      +------------------------+
      CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT AS
      BEGIN
-       RETURN (
-           SELECT DISTINCT salary
-           FROM Employee
-           ORDER BY salary DESC
-           LIMIT 1 OFFSET N-1
-       );
+     RETURN (
+     SELECT DISTINCT salary
+     FROM Employee
+     ORDER BY salary DESC
+     LIMIT 1 OFFSET N-1
+     );
      END
      */
     class NthHighestSalaryDemo {
@@ -8582,7 +8625,7 @@ Example 1:
      id is the primary key (column with unique values) for this table.
      Each row of this table contains information about the salary of an employee.
      Write a solution to find the second highest distinct salary from the Employee table. If there is no second highest salary, return null (return None in Pandas).
-
+     
      The result format is in the following example.
      Example 1:
      Input:
@@ -8619,7 +8662,7 @@ Example 1:
         let id: Int
         let salary: Int
     }
-
+    
     class SecondHighestSalaryDemo {
         
         static func runDemo() {
@@ -8712,7 +8755,7 @@ Example 1:
      Output: 7
      Explanation: The initial health of the knight must be at least 7 if he follows the optimal path: RIGHT-> RIGHT -> DOWN -> DOWN.
      Example 2:
-
+     
      Input: dungeon = [[0]]
      Output: 1
      */
@@ -8722,7 +8765,7 @@ Example 1:
         let lastName: String
         let firstName: String
     }
-
+    
     // Define Address model
     struct Address {
         let addressId: Int
@@ -8730,7 +8773,7 @@ Example 1:
         let city: String
         let state: String
     }
-
+    
     class CombineTwoTablesDemo {
         
         static func runDemo() {
@@ -8791,7 +8834,7 @@ Example 1:
             print("Dungeon 2 minimum HP: \(calculateMinimumHP(dungeon2))") // 1
         }
     }
-
+    
     class Leetcode168_ExcelSheetColumnTitle {
         // Convert a given column number to its corresponding Excel column title.
         //
@@ -9078,24 +9121,24 @@ Example 1:
         func maximumGap(_ nums: [Int]) -> Int {
             // If less than two numbers, no gap
             guard nums.count > 1 else { return 0 }
-
+            
             // Find min and max in array
             let minVal = nums.min()!
             let maxVal = nums.max()!
-
+            
             // If all numbers are the same, gap is zero
             if minVal == maxVal { return 0 }
-
+            
             // Calculate bucket size and number of buckets
             let n = nums.count
             let bucketSize = max(1, (maxVal - minVal) / (n - 1))
             let bucketCount = (maxVal - minVal) / bucketSize + 1
-
+            
             // Initialize buckets with nil values
             var bucketMin = Array(repeating: Int.max, count: bucketCount)
             var bucketMax = Array(repeating: Int.min, count: bucketCount)
             var bucketUsed = Array(repeating: false, count: bucketCount)
-
+            
             // Distribute numbers into buckets
             for num in nums {
                 let idx = (num - minVal) / bucketSize
@@ -9103,20 +9146,20 @@ Example 1:
                 bucketMax[idx] = max(bucketMax[idx], num)
                 bucketUsed[idx] = true
             }
-
+            
             // Find maximum gap between buckets
             var prevMax = minVal
             var maxGap = 0
-
+            
             for i in 0..<bucketCount {
                 if !bucketUsed[i] { continue } // skip empty bucket
                 maxGap = max(maxGap, bucketMin[i] - prevMax)
                 prevMax = bucketMax[i]
             }
-
+            
             return maxGap
         }
-
+        
         // Demo
         static func runDemo() {
             let solver = MaximumGap()
@@ -9157,9 +9200,9 @@ Example 1:
     class MinStack {
         private var stack: [Int] = []
         private var minStack: [Int] = []
-
+        
         init() {}
-
+        
         // Push value onto the stack
         func push(_ val: Int) {
             stack.append(val)
@@ -9170,23 +9213,23 @@ Example 1:
                 minStack.append(val)
             }
         }
-
+        
         // Remove the top element
         func pop() {
             stack.removeLast()
             minStack.removeLast()
         }
-
+        
         // Get the top element
         func top() -> Int {
             return stack.last!
         }
-
+        
         // Retrieve the minimum element in constant time
         func getMin() -> Int {
             return minStack.last!
         }
-
+        
         // Demo
         static func runDemo() {
             let minStack = MinStack()
@@ -9219,11 +9262,11 @@ Example 1:
         func findMin(_ nums: [Int]) -> Int {
             var left = 0
             var right = nums.count - 1
-
+            
             // Modified binary search
             while left < right {
                 let mid = (left + right) / 2
-
+                
                 if nums[mid] > nums[right] {
                     // Minimum is in the right half
                     left = mid + 1
@@ -9235,20 +9278,20 @@ Example 1:
                     right -= 1
                 }
             }
-
+            
             // left == right -> points to the smallest element
             return nums[left]
         }
-
+        
         // Demo
         static func runDemo() {
             let solver = FindMinimumInRotatedSortedArrayII()
-
+            
             let nums1 = [1, 3, 5]
             let nums2 = [2, 2, 2, 0, 1]
             let nums3 = [10, 10, 10, 1, 10]
             let nums4 = [1, 1, 1, 1, 1]
-
+            
             print(solver.findMin(nums1)) // Output: 1
             print(solver.findMin(nums2)) // Output: 0
             print(solver.findMin(nums3)) // Output: 1
@@ -9286,7 +9329,7 @@ Example 1:
         func findMin(_ nums: [Int]) -> Int {
             var left = 0
             var right = nums.count - 1
-
+            
             // Binary search to find the point of rotation
             while left < right {
                 let mid = (left + right) / 2
@@ -9300,25 +9343,25 @@ Example 1:
                     right = mid
                 }
             }
-
+            
             // After loop, left == right, pointing to the minimum element
             return nums[left]
         }
-
+        
         // Demo to test the solution
         static func runDemo() {
             let solver = FindMinimumInRotatedSortedArray()
-
+            
             let nums1 = [3,4,5,1,2]
             let nums2 = [4,5,6,7,0,1,2]
             let nums3 = [11,13,15,17]
-
+            
             print(solver.findMin(nums1)) // Output: 1
             print(solver.findMin(nums2)) // Output: 0
             print(solver.findMin(nums3)) // Output: 11
         }
     }
-
+    
     /*
      152. Maximum Product Subarray
      Given an integer array nums, find a subarray that has the largest product, and return the product.
@@ -9372,11 +9415,11 @@ Example 1:
         // MARK: - Time and Space Complexity
         /*
          Time Complexity:  O(n)
-           - We iterate through the array once, performing O(1) work per element.
+         - We iterate through the array once, performing O(1) work per element.
          
          Space Complexity: O(1)
-           - Only a few variables are used regardless of input size.
-        */
+         - Only a few variables are used regardless of input size.
+         */
         
         // MARK: - Demo
         static func runDemo() {
@@ -9436,12 +9479,12 @@ Example 1:
         // MARK: - Time and Space Complexity
         /*
          Time Complexity:  O(n)
-           - We scan the string once to split it into words.
-           - Then we reverse the array and join it — all linear operations.
+         - We scan the string once to split it into words.
+         - Then we reverse the array and join it — all linear operations.
          
          Space Complexity: O(n)
-           - We store an array of words and build a new output string.
-        */
+         - We store an array of words and build a new output string.
+         */
         
         // MARK: - Demo
         static func runDemo() {
@@ -9822,7 +9865,7 @@ Example 1:
             print(demo.toArray(sorted2)) // [-1, 0, 3, 4, 5]
         }
     }
-
+    
     /*
      140. Word Break II
      Given a string s and a dictionary of strings wordDict, add spaces in s to construct a sentence where each word is a valid dictionary word. Return all such possible sentences in any order.
@@ -9909,7 +9952,7 @@ Example 1:
             print("Output:", solver.wordBreak(s3, dict3)) // []
         }
     }
-
+    
     /*
      139. Word Break
      Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of one or more dictionary words.
@@ -9974,7 +10017,7 @@ Example 1:
             print("Input: \(s3), dict: \(dict3) → \(solver.wordBreak(s3, dict3))") // false
         }
     }
-
+    
     /*
      138. Copy List with Random Pointer
      A linked list of length n is given such that each node contains an additional random pointer, which could point to any node in the list, or null.
@@ -10076,7 +10119,7 @@ Example 1:
             }
         }
     }
-
+    
     /*
      137. Single Number II
      Given an integer array nums where every element appears three times except for one, which appears exactly once. Find the single element and return it.
@@ -10162,7 +10205,7 @@ Example 1:
             print("Example 3:", solver.singleNumber(nums3)) // Expected 1
         }
     }
-
+    
     /*
      135. Candy
      There are n children standing in a line. Each child is assigned a rating value given in the integer array ratings.
@@ -10287,20 +10330,20 @@ Example 1:
             print("Example 2:", solver.canCompleteCircuit(gas2, cost2)) // Expected: -1
         }
     }
-
+    
     /*
      133. Clone Graph
      Given a reference of a node in a connected undirected graph.
      Return a deep copy (clone) of the graph.
      Each node in the graph contains a value (int) and a list (List[Node]) of its neighbors.
      class Node {
-         public int val;
-         public List<Node> neighbors;
+     public int val;
+     public List<Node> neighbors;
      }
      Test case format:
      For simplicity, each node's value is the same as the node's index (1-indexed). For example, the first node with val == 1, the second node with val == 2, and so on. The graph is represented in the test case using an adjacency list.
      An adjacency list is a collection of unordered lists used to represent a finite graph. Each list describes the set of neighbors of a node in the graph.
-
+     
      The given node will always be the first node with val = 1. You must return the copy of the given node as a reference to the cloned graph.
      Example 1:
      Input: adjList = [[2,4],[1,3],[2,4],[1,3]]
@@ -10315,7 +10358,7 @@ Example 1:
      Output: [[]]
      Explanation: Note that the input contains one empty list. The graph consists of only one node with val = 1 and it does not have any neighbors.
      Example 3:
-
+     
      Input: adjList = []
      Output: []
      Explanation: This an empty graph, it does not have any nodes.
@@ -10448,14 +10491,14 @@ Example 1:
             var result = [[String]]()
             var path = [String]()
             let chars = Array(s)
-
+            
             // Backtracking helper
             func backtrack(_ start: Int) {
                 if start == chars.count {
                     result.append(path)
                     return
                 }
-
+                
                 for end in start..<chars.count {
                     if isPalindrome(chars, start, end) {
                         let substring = String(chars[start...end])
@@ -10465,11 +10508,11 @@ Example 1:
                     }
                 }
             }
-
+            
             backtrack(0)
             return result
         }
-
+        
         // Check if substring s[l...r] is palindrome
         private func isPalindrome(_ chars: [Character], _ l: Int, _ r: Int) -> Bool {
             var left = l
@@ -10491,12 +10534,12 @@ Example 1:
             print("Palindrome Partitioning of \(input): \(result)")
         }
     }
-
-
+    
+    
     /*
      130. Surrounded Regions
      You are given an m x n matrix board containing letters 'X' and 'O', capture regions that are surrounded:
-    Connect: A cell is connected to adjacent cells horizontally or vertically.
+     Connect: A cell is connected to adjacent cells horizontally or vertically.
      Region: To form a region connect every 'O' cell.
      Surround: The region is surrounded with 'X' cells if you can connect the region with 'X' cells and none of the region cells are on the edge of the board.
      To capture a surrounded region, replace all 'O's with 'X's in-place within the original board. You do not need to return anything.
@@ -10702,7 +10745,7 @@ Example 1:
             return longest
         }
     }
-
+    
     /*
      126. Word Ladder II
      A transformation sequence from word beginWord to word endWord using a dictionary wordList is a sequence of words beginWord -> s1 -> s2 -> ... -> sk such that:
@@ -10809,7 +10852,7 @@ Example 1:
             // []
         }
     }
-
+    
     /*
      124. Binary Tree Maximum Path Sum
      A path in a binary tree is a sequence of nodes where each pair of adjacent nodes in the sequence has an edge connecting them. A node can only appear in the sequence at most once. Note that the path does not need to pass through the root.
@@ -10913,7 +10956,7 @@ Example 1:
             self.next = nil
         }
     }
-
+    
     class NextRightConnector {
         
         // 116. Populating Next Right Pointers in Each Node
@@ -10946,7 +10989,7 @@ Example 1:
             return root
         }
     }
-
+    
     /*
      114. Flatten Binary Tree to Linked List
      Given the root of a binary tree, flatten the tree into a "linked list":
@@ -11004,104 +11047,104 @@ Example 1:
             }
         }
         // 104. Maximum Depth of Binary Tree
-            func maxDepth(_ root: TreeNode?) -> Int {
-                guard let node = root else { return 0 }
-                let leftDepth = maxDepth(node.left)
-                let rightDepth = maxDepth(node.right)
-                return 1 + max(leftDepth, rightDepth)
+        func maxDepth(_ root: TreeNode?) -> Int {
+            guard let node = root else { return 0 }
+            let leftDepth = maxDepth(node.left)
+            let rightDepth = maxDepth(node.right)
+            return 1 + max(leftDepth, rightDepth)
+        }
+        // 104
+        
+        // 108. Convert Sorted Array to Binary Search Tree
+        func sortedArrayToBST(_ nums: [Int]) -> TreeNode? {
+            func helper(_ left: Int, _ right: Int) -> TreeNode? {
+                if left > right { return nil }
+                let mid = (left + right) / 2
+                let root = TreeNode(nums[mid])
+                root.left = helper(left, mid - 1)
+                root.right = helper(mid + 1, right)
+                return root
             }
-            // 104
-            
-            // 108. Convert Sorted Array to Binary Search Tree
-            func sortedArrayToBST(_ nums: [Int]) -> TreeNode? {
-                func helper(_ left: Int, _ right: Int) -> TreeNode? {
-                    if left > right { return nil }
-                    let mid = (left + right) / 2
-                    let root = TreeNode(nums[mid])
-                    root.left = helper(left, mid - 1)
-                    root.right = helper(mid + 1, right)
-                    return root
-                }
-                return helper(0, nums.count - 1)
+            return helper(0, nums.count - 1)
+        }
+        // 108
+        
+        // 109. Convert Sorted List to Binary Search Tree
+        func sortedListToBST(_ head: ListNode?) -> TreeNode? {
+            var values = [Int]()
+            var current = head
+            while let node = current {
+                values.append(node.val)
+                current = node.next
             }
-            // 108
-            
-            // 109. Convert Sorted List to Binary Search Tree
-            func sortedListToBST(_ head: ListNode?) -> TreeNode? {
-                var values = [Int]()
-                var current = head
-                while let node = current {
-                    values.append(node.val)
-                    current = node.next
-                }
-                func helper(_ left: Int, _ right: Int) -> TreeNode? {
-                    if left > right { return nil }
-                    let mid = (left + right) / 2
-                    let root = TreeNode(values[mid])
-                    root.left = helper(left, mid - 1)
-                    root.right = helper(mid + 1, right)
-                    return root
-                }
-                return helper(0, values.count - 1)
+            func helper(_ left: Int, _ right: Int) -> TreeNode? {
+                if left > right { return nil }
+                let mid = (left + right) / 2
+                let root = TreeNode(values[mid])
+                root.left = helper(left, mid - 1)
+                root.right = helper(mid + 1, right)
+                return root
             }
-            // 109
-            
-            // 110. Balanced Binary Tree
-            func isBalanced(_ root: TreeNode?) -> Bool {
-                func checkHeight(_ node: TreeNode?) -> Int {
-                    guard let n = node else { return 0 }
-                    let left = checkHeight(n.left)
-                    if left == -1 { return -1 }
-                    let right = checkHeight(n.right)
-                    if right == -1 { return -1 }
-                    if abs(left - right) > 1 { return -1 }
-                    return 1 + max(left, right)
-                }
-                return checkHeight(root) != -1
+            return helper(0, values.count - 1)
+        }
+        // 109
+        
+        // 110. Balanced Binary Tree
+        func isBalanced(_ root: TreeNode?) -> Bool {
+            func checkHeight(_ node: TreeNode?) -> Int {
+                guard let n = node else { return 0 }
+                let left = checkHeight(n.left)
+                if left == -1 { return -1 }
+                let right = checkHeight(n.right)
+                if right == -1 { return -1 }
+                if abs(left - right) > 1 { return -1 }
+                return 1 + max(left, right)
             }
-            // 110
-            
-            // 111. Minimum Depth of Binary Tree
-            func minDepth(_ root: TreeNode?) -> Int {
-                guard let node = root else { return 0 }
-                if node.left == nil { return 1 + minDepth(node.right) }
-                if node.right == nil { return 1 + minDepth(node.left) }
-                return 1 + min(minDepth(node.left), minDepth(node.right))
-            }
-            // 111
+            return checkHeight(root) != -1
+        }
+        // 110
+        
+        // 111. Minimum Depth of Binary Tree
+        func minDepth(_ root: TreeNode?) -> Int {
+            guard let node = root else { return 0 }
+            if node.left == nil { return 1 + minDepth(node.right) }
+            if node.right == nil { return 1 + minDepth(node.left) }
+            return 1 + min(minDepth(node.left), minDepth(node.right))
+        }
+        // 111
         func buildTree106(_ inorder: [Int], _ postorder: [Int]) -> TreeNode? {//106
-             // Map for quick lookup of index in inorder array
-             var inorderIndexMap = [Int: Int]()
-             for (index, value) in inorder.enumerated() {
-                 inorderIndexMap[value] = index
-             }
-             
-             var postorderIndex = postorder.count - 1 // Start from the last element of postorder
-             
-             func arrayToTree(_ left: Int, _ right: Int) -> TreeNode? {
-                 // If there are no elements to construct the subtree
-                 if left > right {
-                     return nil
-                 }
-                 
-                 // Select the current element as the root and move postorder pointer
-                 let rootVal = postorder[postorderIndex]
-                 postorderIndex -= 1
-                 
-                 let root = TreeNode(rootVal)
-                 
-                 // Build right and left subtrees
-                 // Important: build right subtree first because we are moving backwards in postorder
-                 if let index = inorderIndexMap[rootVal] {
-                     root.right = arrayToTree(index + 1, right)
-                     root.left = arrayToTree(left, index - 1)
-                 }
-                 
-                 return root
-             }
-             
-             return arrayToTree(0, inorder.count - 1)
-         }
+            // Map for quick lookup of index in inorder array
+            var inorderIndexMap = [Int: Int]()
+            for (index, value) in inorder.enumerated() {
+                inorderIndexMap[value] = index
+            }
+            
+            var postorderIndex = postorder.count - 1 // Start from the last element of postorder
+            
+            func arrayToTree(_ left: Int, _ right: Int) -> TreeNode? {
+                // If there are no elements to construct the subtree
+                if left > right {
+                    return nil
+                }
+                
+                // Select the current element as the root and move postorder pointer
+                let rootVal = postorder[postorderIndex]
+                postorderIndex -= 1
+                
+                let root = TreeNode(rootVal)
+                
+                // Build right and left subtrees
+                // Important: build right subtree first because we are moving backwards in postorder
+                if let index = inorderIndexMap[rootVal] {
+                    root.right = arrayToTree(index + 1, right)
+                    root.left = arrayToTree(left, index - 1)
+                }
+                
+                return root
+            }
+            
+            return arrayToTree(0, inorder.count - 1)
+        }
         func buildTree105(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
             // Map for quick lookup of index in inorder array
             var inorderIndexMap = [Int: Int]()
@@ -11407,7 +11450,7 @@ Example 1:
             return dp[n][m]
         }
     }
-
+    
     /*
      96. Unique Binary Search Trees
      Given an integer n, return the number of structurally unique BST's (binary search trees) which has exactly n nodes of unique values from 1 to n.
@@ -11458,27 +11501,27 @@ Example 1:
             var memo = [String: [TreeNode?]]()  // Memoization cache
             return buildTrees(1, n, &memo)
         }
-
+        
         // Recursive function to build BSTs for range [start...end]
         private static func buildTrees(_ start: Int, _ end: Int, _ memo: inout [String: [TreeNode?]]) -> [TreeNode?] {
             let key = "\(start)-\(end)"
             if let cached = memo[key] { return cached }  // Use cached result if exists
-
+            
             var result = [TreeNode?]()
-
+            
             // Base case: empty subtree
             if start > end {
                 result.append(nil)
                 memo[key] = result
                 return result
             }
-
+            
             // Choose root for each number in range
             for rootVal in start...end {
                 // Recursively build all possible left and right subtrees
                 let leftTrees = buildTrees(start, rootVal - 1, &memo)
                 let rightTrees = buildTrees(rootVal + 1, end, &memo)
-
+                
                 // Combine left and right subtrees with current root
                 for left in leftTrees {
                     for right in rightTrees {
@@ -11489,17 +11532,17 @@ Example 1:
                     }
                 }
             }
-
+            
             // Save computed result to cache
             memo[key] = result
             return result
         }
     }
-
+    
     /*
      93. Restore IP Addresses
      A valid IP address consists of exactly four integers separated by single dots. Each integer is between 0 and 255 (inclusive) and cannot have leading zeros.
-
+     
      For example, "0.1.2.201" and "192.168.1.1" are valid IP addresses, but "0.011.255.245", "192.168.1.312" and "192.168@1.1" are invalid IP addresses.
      Given a string s containing only digits, return all possible valid IP addresses that can be formed by inserting dots into s. You are not allowed to reorder or remove any digits in s. You may return the valid IP addresses in any order.
      Example 1:
@@ -11559,7 +11602,7 @@ Example 1:
             return result
         }
     }
-
+    
     /*
      91. Decode Ways
      Medium
@@ -11634,7 +11677,7 @@ Example 1:
             return dp[n]
         }
     }
-
+    
     /*
      90. Subsets II
      Medium
@@ -11792,7 +11835,7 @@ Example 1:
             for i in 1..<n {
                 // Case 1: No swap
                 let noSwap = helper(Array(s1[0..<i]), Array(s2[0..<i])) &&
-                             helper(Array(s1[i..<n]), Array(s2[i..<n]))
+                helper(Array(s1[i..<n]), Array(s2[i..<n]))
                 
                 if noSwap {
                     memo[key] = true
@@ -11801,7 +11844,7 @@ Example 1:
                 
                 // Case 2: With swap
                 let swap = helper(Array(s1[0..<i]), Array(s2[n-i..<n])) &&
-                           helper(Array(s1[i..<n]), Array(s2[0..<n-i]))
+                helper(Array(s1[i..<n]), Array(s2[0..<n-i]))
                 
                 if swap {
                     memo[key] = true
@@ -11813,7 +11856,7 @@ Example 1:
             return false
         }
     }
-
+    
     /*
      85. Maximal Rectangle     Hard
      Given a rows x cols binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
@@ -11921,7 +11964,7 @@ Example 1:
             return maxArea
         }
     }
-
+    
     func demo_MximalRectagle() {
         let matrix1: [[Character]] = [
             ["1","0","1","0","0"],
@@ -11929,13 +11972,13 @@ Example 1:
             ["1","1","1","1","1"],
             ["1","0","0","1","0"]
         ]
-
+        
         print(MaximalRectangleSolver.maximalRectangleBruteForce(matrix1)) // 6
         print(MaximalRectangleSolver.maximalRectangle(matrix1))          // 6
-
+        
         let matrix2: [[Character]] = [["0"]]
         print(MaximalRectangleSolver.maximalRectangle(matrix2))          // 0
-
+        
         let matrix3: [[Character]] = [["1"]]
         print(MaximalRectangleSolver.maximalRectangle(matrix3))          // 1
     }
@@ -12017,7 +12060,7 @@ Example 1:
             return maxArea
         }
     }
-
+    
     /*
      79. Word Search
      Given an m x n grid of characters board and a string word, return true if word exists in the grid.
@@ -12067,9 +12110,9 @@ Example 1:
             
             // Explore four possible directions
             let found = dfs(row + 1, col, index + 1) ||
-                        dfs(row - 1, col, index + 1) ||
-                        dfs(row, col + 1, index + 1) ||
-                        dfs(row, col - 1, index + 1)
+            dfs(row - 1, col, index + 1) ||
+            dfs(row, col + 1, index + 1) ||
+            dfs(row, col - 1, index + 1)
             
             // Backtrack: restore the character
             board[row][col] = temp
@@ -12087,7 +12130,7 @@ Example 1:
         
         return false
     }
-
+    
     // MARK: - Iterative DFS solution (Using stack)
     func wordSearch_iterative(_ board: [[Character]], _ word: String) -> Bool {
         let rows = board.count
@@ -12120,9 +12163,9 @@ Example 1:
                             
                             // Check bounds, visited status, and next character match
                             if nr >= 0 && nr < rows &&
-                               nc >= 0 && nc < cols &&
-                               !visited.contains([nr, nc]) &&
-                               board[nr][nc] == wordArray[index + 1] {
+                                nc >= 0 && nc < cols &&
+                                !visited.contains([nr, nc]) &&
+                                board[nr][nc] == wordArray[index + 1] {
                                 
                                 var newVisited = visited
                                 newVisited.insert([nr, nc])
@@ -12136,7 +12179,7 @@ Example 1:
         
         return false
     }
-
+    
     /*
      78. Subsets Medium Topics premium lock icon Companies Given an integer array nums of unique elements, return all possible subsets (the power set). The solution set must not contain duplicate subsets. Return the solution in any order. Example 1: Input: nums = [1,2,3] Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]] Example 2: Input: nums = [0] Output: [[],[0]] Constraints: 1 <= nums.length <= 10 -10 <= nums[i] <= 10 All the numbers of nums are unique.
      */
@@ -12330,12 +12373,12 @@ Example 1:
      You must do it in place.
      Example 1:
      Input: matrix = [  [1,1,1],
-                        [1,0,1],
-                        [1,1,1]]
+     [1,0,1],
+     [1,1,1]]
      
      Output: [          [1,0,1],
-                        [0,0,0],
-                        [1,0,1]]
+     [0,0,0],
+     [1,0,1]]
      Example 2:
      Input: matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
      Output: [[0,0,0,0],[0,4,5,0],[0,3,1,0]]
@@ -12486,17 +12529,17 @@ Example 1:
      Input: words = ["This", "is", "an", "example", "of", "text", "justification."], maxWidth = 16
      Output:
      [
-        "This    is    an",
-        "example  of text",
-        "justification.  "
+     "This    is    an",
+     "example  of text",
+     "justification.  "
      ]
      Example 2:
      Input: words = ["What","must","be","acknowledgment","shall","be"], maxWidth = 16
      Output:
      [
-       "What   must   be",
-       "acknowledgment  ",
-       "shall be        "
+     "What   must   be",
+     "acknowledgment  ",
+     "shall be        "
      ]
      Explanation: Note that the last line is "shall be    " instead of "shall     be", because the last line must be left-justified instead of fully-justified.
      Note that the second line is also left-justified because it contains only one word.
@@ -12504,12 +12547,12 @@ Example 1:
      Input: words = ["Science","is","what","we","understand","well","enough","to","explain","to","a","computer.","Art","is","everything","else","we","do"], maxWidth = 20
      Output:
      [
-       "Science  is  what we",
-       "understand      well",
-       "enough to explain to",
-       "a  computer.  Art is",
-       "everything  else  we",
-       "do                  "
+     "Science  is  what we",
+     "understand      well",
+     "enough to explain to",
+     "a  computer.  Art is",
+     "everything  else  we",
+     "do                  "
      ]
      Constraints:
      1 <= words.length <= 300
@@ -12859,9 +12902,9 @@ Example 1:
             }
             print(result) // [4, 5, 1, 2, 3]
         }
-
+        
     }
-
+    
     /*
      60. Permutation Sequence
      Hard
@@ -12931,8 +12974,8 @@ Example 1:
             }
         }
     }
-
-
+    
+    
     /*
      59. Spiral Matrix II
      Medium
@@ -13035,7 +13078,7 @@ Example 1:
             }
         }
     }
-
+    
     /*
      57. Insert Interval
      You are given an array of non-overlapping intervals intervals where intervals[i] = [starti, endi] represent the start and the end of the ith interval and intervals is sorted in ascending order by starti. You are also given an interval newInterval = [start, end] that represents the start and end of another interval.
@@ -13110,7 +13153,7 @@ Example 1:
         var start: Date
         var end: Date
     }
-
+    
     class TimeBookingManager {
         
         // Insert a new booking interval into the list
@@ -13171,7 +13214,7 @@ Example 1:
     }
     // Uncomment to test
     // InsertIntervalDemo.demo_insertInterval()
-
+    
     /*
      56. Merge Intervals
      Medium
@@ -13234,10 +13277,10 @@ Example 1:
             }
         }
     }
-
+    
     // Uncomment to test
     // MergeIntervalsDemo.demo_mergeIntervals()
-
+    
     /*
      55. Jump Game
      Medium
@@ -13316,10 +13359,10 @@ Example 1:
             }
         }
     }
-
+    
     // Uncomment to run
     // JumpGameDemo.demo_jumpGame()
-
+    
     /*
      54. Spiral Matrix
      Medium
@@ -13401,10 +13444,10 @@ Example 1:
             }
         }
     }
-
+    
     // Uncomment to run
     // SpiralMatrixDemo.demo_spiralMatrix()
-
+    
     /*
      53. Maximum Subarray
      Medium
@@ -13568,7 +13611,7 @@ Example 1:
             print(myPow(2.10000, 3))    // 9.261
             print(myPow(2.00000, -2))   // 0.25
         }
-
+        
         static func myPow(_ x: Double, _ n: Int) -> Double {
             var base = x
             var exp = n
@@ -13578,7 +13621,7 @@ Example 1:
             }
             return fastPow(base, exp)
         }
-
+        
         private static func fastPow(_ x: Double, _ n: Int) -> Double {
             if n == 0 { return 1.0 }
             let half = fastPow(x, n / 2)
@@ -13589,21 +13632,21 @@ Example 1:
             }
         }
     }
-
+    
     /*
-    Comparison of O() metrics (time and space):
-
-    Algorithm: Fast exponentiation (binary exponentiation)
-
-    Time Complexity:
-    - O(log n) — exponent is halved at each recursive step
-
-    Space Complexity:
-    - O(log n) due to recursion stack (can be reduced to O(1) with iterative implementation)
-
-    n = absolute value of exponent
-    */
-
+     Comparison of O() metrics (time and space):
+     
+     Algorithm: Fast exponentiation (binary exponentiation)
+     
+     Time Complexity:
+     - O(log n) — exponent is halved at each recursive step
+     
+     Space Complexity:
+     - O(log n) due to recursion stack (can be reduced to O(1) with iterative implementation)
+     
+     n = absolute value of exponent
+     */
+    
     /*
      49. Group Anagrams
      Medium
@@ -13628,14 +13671,14 @@ Example 1:
      1 <= strs.length <= 104
      0 <= strs[i].length <= 100
      strs[i] consists of lowercase English letters.
- ß    Comparison of O() metrics (time and space):
-
+     ß    Comparison of O() metrics (time and space):
+     
      Algorithm: Sort each string and group by sorted key
-
+     
      Time Complexity:
      - Sorting each word: O(k log k), where k = length of the word
      - For n words: O(n * k log k)
-
+     
      Space Complexity:
      - Dictionary for grouping: O(n * k)
      - Sorting uses O(k) extra space per word (Swift’s sort is not strictly i
@@ -13645,27 +13688,27 @@ Example 1:
             let strs1 = ["eat","tea","tan","ate","nat","bat"]
             print(groupAnagrams(strs1))
             // Possible output: [["bat"],["nat","tan"],["ate","eat","tea"]]
-
+            
             let strs2 = [""]
             print(groupAnagrams(strs2)) // [[""]]
-
+            
             let strs3 = ["a"]
             print(groupAnagrams(strs3)) // [["a"]]
         }
-
+        
         static func groupAnagrams(_ strs: [String]) -> [[String]] {
             var dict = [String: [String]]()
-
+            
             for word in strs {
                 // Sort characters to form the key
                 let key = String(word.sorted())
                 dict[key, default: []].append(word)
             }
-
+            
             return Array(dict.values)
         }
     }
-
+    
     /*
      48. Rotate Image
      Medium
@@ -13692,7 +13735,7 @@ Example 1:
                       [7,8,9]]
             rotate(&m1)
             print(m1) // [[7,4,1],[8,5,2],[9,6,3]]
-
+            
             var m2 = [[5,1,9,11],
                       [2,4,8,10],
                       [13,3,6,7],
@@ -13700,7 +13743,7 @@ Example 1:
             rotate(&m2)
             print(m2) // [[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]
         }
-
+        
         static func rotate(_ matrix: inout [[Int]]) {
             let n = matrix.count
             
@@ -13712,14 +13755,14 @@ Example 1:
                     matrix[j][i] = temp
                 }
             }
-
+            
             // Step 2: Reverse each row
             for i in 0..<n {
                 matrix[i].reverse()
             }
         }
     }
-
+    
     /*46. Permutations
      Given an array nums of distinct integers, return all the possible permutations. You can return the answer in any order.
      Example 1:
