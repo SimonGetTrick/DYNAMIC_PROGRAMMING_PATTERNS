@@ -27,6 +27,46 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     357. Count Numbers with Unique Digits
+     Given an integer n, return the count of all numbers with unique digits, x, where 0 <= x < 10n.
+     Example 1:
+     Input: n = 2
+     Output: 91
+     Explanation: The answer should be the total numbers in the range of 0 ≤ x < 100, excluding 11,22,33,44,55,66,77,88,99
+     Example 2:
+     Input: n = 0
+     Output: 1
+     Constraints:
+     0 <= n <= 8
+     */
+    class Solution357 {
+        
+        static func runDemo() {
+            print(countNumbersWithUniqueDigits(2)) // 91
+            print(countNumbersWithUniqueDigits(0)) // 1
+        }
+        
+        static func countNumbersWithUniqueDigits(_ n: Int) -> Int {
+            if n == 0 { return 1 }
+            
+            var total = 10   // for n = 1
+            var unique = 9   // first digit
+            var available = 9
+            
+            var k = 2
+            
+            while k <= n && available > 0 {
+                unique *= available
+                total += unique
+                available -= 1
+                k += 1
+            }
+            
+            return total
+        }
+    }
+
+    /*
      355. Design Twitter Medium
      Design a simplified version of Twitter where users can post tweets, follow/unfollow another user, and is able to see the 10 most recent tweets in the user's news feed.
      Implement the Twitter class:
