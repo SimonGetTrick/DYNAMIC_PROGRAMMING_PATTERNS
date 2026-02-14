@@ -27,6 +27,96 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     363. Max Sum of Rectangle No Larger Than K-- Hard
+     Given an m x n matrix matrix and an integer k, return the max sum of a rectangle in the matrix such that its sum is no larger than k.
+     It is guaranteed that there will be a rectangle with a sum no larger than k.
+     Example 1:
+     Input: matrix = [[1,0,1],[0,-2,3]], k = 2
+     Output: 2
+     Explanation: Because the sum of the blue rectangle [[0, 1], [-2, 3]] is 2, and 2 is the max number no larger than k (k = 2).
+     Example 2:
+     Input: matrix = [[2,2,-1]], k = 3
+     Output: 3
+     */
+    class Solution363 {
+        
+        static func maxSumSubmatrix(_ matrix: [[Int]], _ k: Int) -> Int {
+            let m = matrix.count
+            let n = matrix[0].count
+            
+            var result = Int.min
+            
+            for left in 0..<n {
+                var rowSum = Array(repeating: 0, count: m)
+                
+                for right in left..<n {
+                    
+                    for i in 0..<m {
+                        rowSum[i] += matrix[i][right]
+                    }
+                    
+                    result = max(result, maxSubArrayNoMoreThanK(rowSum, k))
+                    
+                    if result == k { return k } // best possible
+                }
+            }
+            
+            return result
+        }
+        
+        
+        private static func maxSubArrayNoMoreThanK(_ nums: [Int], _ k: Int) -> Int {
+            var set = [0]
+            var prefix = 0
+            var best = Int.min
+            
+            for num in nums {
+                prefix += num
+                
+                // binary search lower_bound(prefix - k)
+                let target = prefix - k
+                
+                var l = 0
+                var r = set.count
+                
+                while l < r {
+                    let mid = (l + r) / 2
+                    if set[mid] < target {
+                        l = mid + 1
+                    } else {
+                        r = mid
+                    }
+                }
+                
+                if l < set.count {
+                    best = max(best, prefix - set[l])
+                }
+                
+                insertSorted(&set, prefix)
+            }
+            
+            return best
+        }
+        
+        
+        private static func insertSorted(_ arr: inout [Int], _ val: Int) {
+            var l = 0
+            var r = arr.count
+            
+            while l < r {
+                let mid = (l + r) / 2
+                if arr[mid] < val {
+                    l = mid + 1
+                } else {
+                    r = mid
+                }
+            }
+            
+            arr.insert(val, at: l)
+        }
+    }
+
+    /*
      357. Count Numbers with Unique Digits
      Given an integer n, return the count of all numbers with unique digits, x, where 0 <= x < 10n.
      Example 1:
