@@ -27,6 +27,78 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     368. Largest Divisible Subset
+     Given a set of distinct positive integers nums, return the largest subset answer such that every pair (answer[i], answer[j]) of elements in this subset satisfies:
+     answer[i] % answer[j] == 0, or
+     answer[j] % answer[i] == 0
+     If there are multiple solutions, return any of them.
+     Example 1:
+     Input: nums = [1,2,3]
+     Output: [1,2]
+     Explanation: [1,3] is also accepted.
+     Example 2:
+     Input: nums = [1,2,4,8]
+     Output: [1,2,4,8]
+     Constraints:
+     1 <= nums.length <= 1000
+     1 <= nums[i] <= 2 * 109
+     All the integers in nums are unique.
+     */
+    class Task368_LargestDivisibleSubset {
+        
+        static func largestDivisibleSubset(_ nums: [Int]) -> [Int] {
+            if nums.isEmpty { return [] }
+            
+            // Sort numbers so that divisibility can be checked in order
+            let nums = nums.sorted()
+            let n = nums.count
+            
+            // dp[i] = length of largest divisible subset ending at i
+            var dp = Array(repeating: 1, count: n)
+            
+            // parent[i] = previous index in the subset chain
+            var parent = Array(repeating: -1, count: n)
+            
+            var maxLength = 1
+            var maxIndex = 0
+            
+            for i in 0..<n {
+                for j in 0..<i {
+                    // Extend subset if divisible
+                    if nums[i] % nums[j] == 0 && dp[j] + 1 > dp[i] {
+                        dp[i] = dp[j] + 1
+                        parent[i] = j
+                    }
+                }
+                
+                // Track best subset
+                if dp[i] > maxLength {
+                    maxLength = dp[i]
+                    maxIndex = i
+                }
+            }
+            
+            // Reconstruct result
+            var result: [Int] = []
+            var current = maxIndex
+            
+            while current != -1 {
+                result.append(nums[current])
+                current = parent[current]
+            }
+            
+            return result.reversed()
+        }
+        
+        
+        static func runDemo() {
+            let nums = [1, 2, 4, 8]
+            let result = largestDivisibleSubset(nums)
+            print("Result:", result)
+        }
+    }
+
+    /*
      365. Water and Jug Problem
      You are given two jugs with capacities x liters and y liters. You have an infinite water supply. Return whether the total amount of water in both jugs may reach target using the following operations:
      Fill either jug completely with water.
