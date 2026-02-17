@@ -27,6 +27,47 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     371. Sum of Two Integers
+     Given two integers a and b, return the sum of the two integers without using the operators + and -.
+     Example 1:
+     Input: a = 1, b = 2
+     Output: 3
+     Example 2:
+     Input: a = 2, b = 3
+     Output: 5
+     */
+    class Task371_SumOfTwoIntegers {
+        
+        static func getSum(_ a: Int, _ b: Int) -> Int {
+            
+            var x = a
+            var y = b
+            
+            // Iterate until there is no carry
+            while y != 0 {
+                
+                // Carry contains common set bits
+                let carry = (x & y) << 1
+                
+                // Sum without carry
+                x = x ^ y
+                
+                // Update carry
+                y = carry
+            }
+            
+            return x
+        }
+        
+        
+        static func runDemo() {
+            print(getSum(1, 2))  // 3
+            print(getSum(2, 3))  // 5
+            print(getSum(-2, 3)) // 1
+        }
+    }
+
+    /*
      368. Largest Divisible Subset
      Given a set of distinct positive integers nums, return the largest subset answer such that every pair (answer[i], answer[j]) of elements in this subset satisfies:
      answer[i] % answer[j] == 0, or
