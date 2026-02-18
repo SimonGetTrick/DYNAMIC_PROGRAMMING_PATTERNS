@@ -27,6 +27,68 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     372. Super Pow
+     Your task is to calculate ab mod 1337 where a is a positive integer and b is an extremely large positive integer given in the form of an array.
+     Example 1:
+     Input: a = 2, b = [3]
+     Output: 8
+     Example 2:
+     Input: a = 2, b = [1,0]
+     Output: 1024
+     Example 3:
+     Input: a = 1, b = [4,3,3,8,5,2]
+     Output: 1
+     */
+    class Task372_SuperPow {
+        
+        static let MOD = 1337
+        
+        static func superPow(_ a: Int, _ b: [Int]) -> Int {
+            
+            var result = 1
+            let base = a % MOD
+            
+            for digit in b {
+                
+                // result = result^10 * base^digit % MOD
+                result = modPow(result, 10)
+                result = (result * modPow(base, digit)) % MOD
+            }
+            
+            return result
+        }
+        
+        
+        // Fast exponentiation with modulo
+        private static func modPow(_ a: Int, _ k: Int) -> Int {
+            
+            var result = 1
+            var base = a % MOD
+            var exp = k
+            
+            while exp > 0 {
+                
+                if exp & 1 == 1 {
+                    result = (result * base) % MOD
+                }
+                
+                base = (base * base) % MOD
+                exp >>= 1
+            }
+            
+            return result
+        }
+        
+        
+        static func runDemo() {
+            
+            print(superPow(2, [3]))        // 8
+            print(superPow(2, [1,0]))      // 1024
+            print(superPow(1, [4,3,3,8,5,2])) // 1
+        }
+    }
+
+    /*
      371. Sum of Two Integers
      Given two integers a and b, return the sum of the two integers without using the operators + and -.
      Example 1:
