@@ -27,6 +27,126 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     373. Find K Pairs with Smallest Sums
+     You are given two integer arrays nums1 and nums2 sorted in non-decreasing order and an integer k.
+     Define a pair (u, v) which consists of one element from the first array and one element from the second array.
+     Return the k pairs (u1, v1), (u2, v2), ..., (uk, vk) with the smallest sums.
+     Example 1:
+     Input: nums1 = [1,7,11], nums2 = [2,4,6], k = 3
+     Output: [[1,2],[1,4],[1,6]]
+     Explanation: The first 3 pairs are returned from the sequence: [1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]
+     Example 2:
+     Input: nums1 = [1,1,2], nums2 = [1,2,3], k = 2
+     Output: [[1,1],[1,1]]
+     Explanation: The first 2 pairs are returned from the sequence: [1,1],[1,1],[1,2],[2,1],[1,2],[2,2],[1,3],[1,3],[2,3]
+     Constraints:
+     1 <= nums1.length, nums2.length <= 105
+     -109 <= nums1[i], nums2[i] <= 109
+     nums1 and nums2 both are sorted in non-decreasing order.
+     1 <= k <= 104
+     k <= nums1.length * nums2.length
+     */
+    class Task373_FindKPairsWithSmallestSums {
+        
+        struct Node {
+            let sum: Int
+            let i: Int
+            let j: Int
+        }
+        
+        static func kSmallestPairs(_ nums1: [Int], _ nums2: [Int], _ k: Int) -> [[Int]] {
+            
+            guard !nums1.isEmpty, !nums2.isEmpty, k > 0 else {
+                return []
+            }
+            
+            var result: [[Int]] = []
+            
+            // Min heap
+            var heap: [Node] = []
+            
+            func push(_ node: Node) {
+                heap.append(node)
+                siftUp(heap.count - 1)
+            }
+            
+            func pop() -> Node? {
+                guard !heap.isEmpty else { return nil }
+                
+                heap.swapAt(0, heap.count - 1)
+                let node = heap.removeLast()
+                siftDown(0)
+                return node
+            }
+            
+            func siftUp(_ index: Int) {
+                var child = index
+                var parent = (child - 1) / 2
+                
+                while child > 0 && heap[child].sum < heap[parent].sum {
+                    heap.swapAt(child, parent)
+                    child = parent
+                    parent = (child - 1) / 2
+                }
+            }
+            
+            func siftDown(_ index: Int) {
+                var parent = index
+                
+                while true {
+                    
+                    let left = parent * 2 + 1
+                    let right = parent * 2 + 2
+                    var smallest = parent
+                    
+                    if left < heap.count && heap[left].sum < heap[smallest].sum {
+                        smallest = left
+                    }
+                    
+                    if right < heap.count && heap[right].sum < heap[smallest].sum {
+                        smallest = right
+                    }
+                    
+                    if smallest == parent { break }
+                    
+                    heap.swapAt(parent, smallest)
+                    parent = smallest
+                }
+            }
+            
+            // Initialize heap with first column
+            for i in 0..<min(k, nums1.count) {
+                push(Node(sum: nums1[i] + nums2[0], i: i, j: 0))
+            }
+            
+            while result.count < k, let node = pop() {
+                
+                let i = node.i
+                let j = node.j
+                
+                result.append([nums1[i], nums2[j]])
+                
+                // Move to next element in nums2
+                if j + 1 < nums2.count {
+                    push(Node(sum: nums1[i] + nums2[j + 1], i: i, j: j + 1))
+                }
+            }
+            
+            return result
+        }
+        
+        
+        static func runDemo() {
+            
+            let nums1 = [1,7,11]
+            let nums2 = [2,4,6]
+            let k = 3
+            
+            let res = kSmallestPairs(nums1, nums2, k)
+            print(res) // [[1,2],[1,4],[1,6]]
+        }
+    }
+    /*
      372. Super Pow
      Your task is to calculate ab mod 1337 where a is a positive integer and b is an extremely large positive integer given in the form of an array.
      Example 1:
