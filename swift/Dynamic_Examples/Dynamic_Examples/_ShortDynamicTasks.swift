@@ -27,6 +27,92 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     378. Kth Smallest Element in a Sorted Matrix
+     Given an n x n matrix where each of the rows and columns is sorted in ascending order, return the kth smallest element in the matrix.
+     Note that it is the kth smallest element in the sorted order, not the kth distinct element.
+     You must find a solution with a memory complexity better than O(n2).
+     Example 1:
+     Input: matrix = [[1,5,9],[10,11,13],[12,13,15]], k = 8
+     Output: 13
+     Explanation: The elements in the matrix are [1,5,9,10,11,12,13,13,15], and the 8th smallest number is 13
+     Example 2:
+     Input: matrix = [[-5]], k = 1
+     Output: -5
+     Constraints:
+     n == matrix.length == matrix[i].length
+     1 <= n <= 300
+     -109 <= matrix[i][j] <= 109
+     All the rows and columns of matrix are guaranteed to be sorted in non-decreasing order.
+     1 <= k <= n2
+     Follow up:
+     Could you solve the problem with a constant memory (i.e., O(1) memory complexity)?
+     Could you solve the problem in O(n) time complexity? The solution may be too advanced for an interview but you may find reading this paper fun.
+     */
+    // 378. Kth Smallest Element in a Sorted Matrix
+    // Binary Search on Value + Counting <= mid
+    // Time: O(n * log(range))
+    // Space: O(1)
+
+    enum Leet378 {
+        
+        class KthSmallestInSortedMatrix {
+            
+            static func kthSmallest(_ matrix: [[Int]], _ k: Int) -> Int {
+                let n = matrix.count
+                
+                var left = matrix[0][0]
+                var right = matrix[n - 1][n - 1]
+                
+                while left < right {
+                    let mid = left + (right - left) / 2
+                    
+                    let count = countLessOrEqual(matrix, mid)
+                    
+                    if count < k {
+                        left = mid + 1
+                    } else {
+                        right = mid
+                    }
+                }
+                
+                return left
+            }
+            
+            // Counts numbers <= target in O(n)
+            private static func countLessOrEqual(_ matrix: [[Int]], _ target: Int) -> Int {
+                let n = matrix.count
+                
+                var row = n - 1
+                var col = 0
+                var count = 0
+                
+                while row >= 0 && col < n {
+                    if matrix[row][col] <= target {
+                        count += row + 1
+                        col += 1
+                    } else {
+                        row -= 1
+                    }
+                }
+                
+                return count
+            }
+            
+            static func runDemo() {
+                let matrix = [
+                    [1,5,9],
+                    [10,11,13],
+                    [12,13,15]
+                ]
+                
+                print(kthSmallest(matrix, 8)) // 13
+                
+                let matrix2 = [[-5]]
+                print(kthSmallest(matrix2, 1)) // -5
+            }
+        }
+    }
+    /*
      377. Combination Sum IV
      Given an array of distinct integers nums and a target integer target, return the number of possible combinations that add up to target.
      The test cases are generated so that the answer can fit in a 32-bit integer.
