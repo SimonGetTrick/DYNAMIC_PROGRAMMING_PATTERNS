@@ -27,6 +27,117 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     380. Insert Delete GetRandom O(1)
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Implement the RandomizedSet class:
+
+     RandomizedSet() Initializes the RandomizedSet object.
+     bool insert(int val) Inserts an item val into the set if not present. Returns true if the item was not present, false otherwise.
+     bool remove(int val) Removes an item val from the set if present. Returns true if the item was present, false otherwise.
+     int getRandom() Returns a random element from the current set of elements (it's guaranteed that at least one element exists when this method is called). Each element must have the same probability of being returned.
+     You must implement the functions of the class such that each function works in average O(1) time complexity.
+
+      
+
+     Example 1:
+
+     Input
+     ["RandomizedSet", "insert", "remove", "insert", "getRandom", "remove", "insert", "getRandom"]
+     [[], [1], [2], [2], [], [1], [2], []]
+     Output
+     [null, true, false, true, 2, true, false, 2]
+
+     Explanation
+     RandomizedSet randomizedSet = new RandomizedSet();
+     randomizedSet.insert(1); // Inserts 1 to the set. Returns true as 1 was inserted successfully.
+     randomizedSet.remove(2); // Returns false as 2 does not exist in the set.
+     randomizedSet.insert(2); // Inserts 2 to the set, returns true. Set now contains [1,2].
+     randomizedSet.getRandom(); // getRandom() should return either 1 or 2 randomly.
+     randomizedSet.remove(1); // Removes 1 from the set, returns true. Set now contains [2].
+     randomizedSet.insert(2); // 2 was already in the set, so return false.
+     randomizedSet.getRandom(); // Since 2 is the only number in the set, getRandom() will always return 2.
+      
+
+     Constraints:
+
+     -231 <= val <= 231 - 1
+     At most 2 * 105 calls will be made to insert, remove, and getRandom.
+     There will be at least one element in the data structure when getRandom is called.
+     */
+    // 380. Insert Delete GetRandom O(1)
+    // HashMap + Dynamic Array
+    // Time: O(1) average for all operations
+    // Space: O(n)
+
+    enum Leet380 {
+        
+        class RandomizedSet {
+            
+            // value -> index in array
+            private var indexMap: [Int: Int] = [:]
+            
+            // store values
+            private var values: [Int] = []
+            
+            init() {}
+            
+            // Insert value if not present
+            func insert(_ val: Int) -> Bool {
+                if indexMap[val] != nil {
+                    return false
+                }
+                
+                values.append(val)
+                indexMap[val] = values.count - 1
+                
+                return true
+            }
+            
+            // Remove value if present
+            func remove(_ val: Int) -> Bool {
+                guard let index = indexMap[val] else {
+                    return false
+                }
+                
+                let lastValue = values.last!
+                
+                // Move last element to deleted position
+                values[index] = lastValue
+                indexMap[lastValue] = index
+                
+                // Remove last
+                values.removeLast()
+                indexMap.removeValue(forKey: val)
+                
+                return true
+            }
+            
+            // Return random element
+            func getRandom() -> Int {
+                let randomIndex = Int.random(in: 0..<values.count)
+                return values[randomIndex]
+            }
+            
+            static func runDemo() {
+                let rs = RandomizedSet()
+                
+                print(rs.insert(1))   // true
+                print(rs.remove(2))   // false
+                print(rs.insert(2))   // true
+                
+                print(rs.getRandom()) // 1 or 2
+                
+                print(rs.remove(1))   // true
+                print(rs.insert(2))   // false
+                
+                print(rs.getRandom()) // 2
+            }
+        }
+    }
+    /*
      378. Kth Smallest Element in a Sorted Matrix
      Given an n x n matrix where each of the rows and columns is sorted in ascending order, return the kth smallest element in the matrix.
      Note that it is the kth smallest element in the sorted order, not the kth distinct element.
