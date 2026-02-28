@@ -27,6 +27,103 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     384. Shuffle an Array
+     Given an integer array nums, design an algorithm to randomly shuffle the array. All permutations of the array should be equally likely as a result of the shuffling.
+     Implement the Solution class:
+     Solution(int[] nums) Initializes the object with the integer array nums.
+     int[] reset() Resets the array to its original configuration and returns it.
+     int[] shuffle() Returns a random shuffling of the array.
+     Example 1:
+     Input
+     ["Solution", "shuffle", "reset", "shuffle"]
+     [[[1, 2, 3]], [], [], []]
+     Output
+     [null, [3, 1, 2], [1, 2, 3], [1, 3, 2]]
+
+     Explanation
+     Solution solution = new Solution([1, 2, 3]);
+     solution.shuffle();    // Shuffle the array [1,2,3] and return its result.
+                            // Any permutation of [1,2,3] must be equally likely to be returned.
+                            // Example: return [3, 1, 2]
+     solution.reset();      // Resets the array back to its original configuration [1,2,3]. Return [1, 2, 3]
+     solution.shuffle();    // Returns the random shuffling of array [1,2,3]. Example: return [1, 3, 2]
+     Constraints:
+     1 <= nums.length <= 50
+     -106 <= nums[i] <= 106
+     All the elements of nums are unique.
+     At most 104 calls in total will be made to reset and shuffle.
+     */
+    // 384. Shuffle an Array
+    // Fisher-Yates Shuffle
+    // Time: O(n)
+    // Space: O(1)
+
+    enum Leet384 {
+        
+        class Solution {
+            
+            private var original: [Int]
+            private var array: [Int]
+            
+            init(_ nums: [Int]) {
+                self.original = nums
+                self.array = nums
+            }
+            
+            // Reset to original configuration
+            func reset() -> [Int] {
+                array = original
+                return array
+            }
+            
+            // Fisher-Yates shuffle
+            func shuffle() -> [Int] {
+                for i in stride(from: array.count - 1, through: 1, by: -1) {
+                    let j = Int.random(in: 0...i)
+                    array.swapAt(i, j)
+                }
+                return array
+            }
+            
+            static func runDemo() {
+                let solution = Solution([1,2,3])
+                
+                print(solution.shuffle()) // random permutation
+                print(solution.reset())   // [1,2,3]
+                print(solution.shuffle()) // random permutation
+            }
+        }
+    }
+    /*
+     382. Linked List Random Node
+     Given a singly linked list, return a random node's value from the linked list. Each node must have the same probability of being chosen.
+     Implement the Solution class:
+     Solution(ListNode head) Initializes the object with the head of the singly-linked list head.
+     int getRandom() Chooses a node randomly from the list and returns its value. All the nodes of the list should be equally likely to be chosen.
+     Example 1:
+     Input
+     ["Solution", "getRandom", "getRandom", "getRandom", "getRandom", "getRandom"]
+     [[[1, 2, 3]], [], [], [], [], []]
+     Output
+     [null, 1, 3, 2, 2, 3]
+     Explanation
+     Solution solution = new Solution([1, 2, 3]);
+     solution.getRandom(); // return 1
+     solution.getRandom(); // return 3
+     solution.getRandom(); // return 2
+     solution.getRandom(); // return 2
+     solution.getRandom(); // return 3
+     // getRandom() should return either 1, 2, or 3 randomly. Each element should have equal probability of returning.
+     Constraints:
+     The number of nodes in the linked list will be in the range [1, 104].
+     -104 <= Node.val <= 104
+     At most 104 calls will be made to getRandom.
+     Follow up:
+     What if the linked list is extremely large and its length is unknown to you?
+     Could you solve this efficiently without using extra space?
+     */
+    
+    /*
      381. Insert Delete GetRandom O(1) - Duplicates allowed     Hard
      RandomizedCollection is a data structure that contains a collection of numbers, possibly duplicates (i.e., a multiset). It should support inserting and removing specific elements and also reporting a random element.
      Implement the RandomizedCollection class:
