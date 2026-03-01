@@ -27,6 +27,125 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     385. Mini Parser
+     Given a string s represents the serialization of a nested list, implement a parser to deserialize it and return the deserialized NestedInteger.
+     Each element is either an integer or a list whose elements may also be integers or other lists.
+     Example 1:
+     Input: s = "324"
+     Output: 324
+     Explanation: You should return a NestedInteger object which contains a single integer 324.
+     Example 2:
+     Input: s = "[123,[456,[789]]]"
+     Output: [123,[456,[789]]]
+     Explanation: Return a NestedInteger object containing a nested list with 2 elements:
+     1. An integer containing value 123.
+     2. A nested list containing two elements:
+         i.  An integer containing value 456.
+         ii. A nested list with one element:
+              a. An integer containing value 789
+     Constraints:
+     1 <= s.length <= 5 * 104
+     s consists of digits, square brackets "[]", negative sign '-', and commas ','.
+     s is the serialization of valid NestedInteger.
+     All the values in the input are in the range [-106, 106].
+     */
+    // 385. Mini Parser
+    // Stack-based parsing
+    // Time: O(n)
+    // Space: O(n)
+
+    enum Leet385 {
+        
+        // Provided interface (simplified mock for demo)
+        class NestedInteger {
+            private var integer: Int?
+            private var list: [NestedInteger] = []
+            
+            init() {}
+            
+            init(_ value: Int) {
+                self.integer = value
+            }
+            
+            func isInteger() -> Bool {
+                return integer != nil
+            }
+            
+            func getInteger() -> Int? {
+                return integer
+            }
+            
+            func setInteger(_ value: Int) {
+                integer = value
+                list = []
+            }
+            
+            func add(_ elem: NestedInteger) {
+                list.append(elem)
+            }
+            
+            func getList() -> [NestedInteger] {
+                return list
+            }
+        }
+        
+        class MiniParser {
+            
+            static func deserialize(_ s: String) -> NestedInteger {
+                
+                // If no brackets → single integer
+                if !s.contains("[") {
+                    return NestedInteger(Int(s)!)
+                }
+                
+                var stack: [NestedInteger] = []
+                var number = 0
+                var negative = false
+                var hasNumber = false
+                
+                for char in s {
+                    
+                    if char == "-" {
+                        negative = true
+                        
+                    } else if char.isNumber {
+                        number = number * 10 + Int(String(char))!
+                        hasNumber = true
+                        
+                    } else if char == "[" {
+                        stack.append(NestedInteger())
+                        
+                    } else if char == "," || char == "]" {
+                        
+                        if hasNumber {
+                            let value = negative ? -number : number
+                            stack.last?.add(NestedInteger(value))
+                        }
+                        
+                        number = 0
+                        negative = false
+                        hasNumber = false
+                        
+                        if char == "]" && stack.count > 1 {
+                            let completed = stack.removeLast()
+                            stack.last?.add(completed)
+                        }
+                    }
+                }
+                
+                return stack.first!
+            }
+            
+            static func runDemo() {
+                let result1 = deserialize("324")
+                print(result1.getInteger() ?? "nil") // 324
+                
+                let result2 = deserialize("[123,[456,[789]]]")
+                print(result2.getList().count) // 2
+            }
+        }
+    }
+    /*
      384. Shuffle an Array
      Given an integer array nums, design an algorithm to randomly shuffle the array. All permutations of the array should be equally likely as a result of the shuffling.
      Implement the Solution class:
