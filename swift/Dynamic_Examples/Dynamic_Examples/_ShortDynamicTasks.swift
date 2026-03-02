@@ -27,6 +27,68 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     386. Lexicographical Numbers
+     Given an integer n, return all the numbers in the range [1, n] sorted in lexicographical order.
+
+     You must write an algorithm that runs in O(n) time and uses O(1) extra space.
+
+      
+
+     Example 1:
+
+     Input: n = 13
+     Output: [1,10,11,12,13,2,3,4,5,6,7,8,9]
+     Example 2:
+
+     Input: n = 2
+     Output: [1,2]
+      
+
+     Constraints:
+
+     1 <= n <= 5 * 104
+     */
+    // 386. Lexicographical Numbers
+    // Iterative DFS in lexicographical order
+    // Time: O(n)
+    // Space: O(1) extra (excluding result)
+
+    enum Leet386 {
+        
+        class LexicographicalNumbers {
+            
+            static func lexicalOrder(_ n: Int) -> [Int] {
+                var result: [Int] = []
+                var current = 1
+                
+                for _ in 0..<n {
+                    result.append(current)
+                    
+                    if current * 10 <= n {
+                        // go deeper (like DFS)
+                        current *= 10
+                    } else {
+                        // move to next sibling
+                        while current % 10 == 9 || current + 1 > n {
+                            current /= 10
+                        }
+                        current += 1
+                    }
+                }
+                
+                return result
+            }
+            
+            static func runDemo() {
+                print(lexicalOrder(13))
+                // [1,10,11,12,13,2,3,4,5,6,7,8,9]
+                
+                print(lexicalOrder(2))
+                // [1,2]
+            }
+        }
+    }
+    /*
      385. Mini Parser
      Given a string s represents the serialization of a nested list, implement a parser to deserialize it and return the deserialized NestedInteger.
      Each element is either an integer or a list whose elements may also be integers or other lists.
