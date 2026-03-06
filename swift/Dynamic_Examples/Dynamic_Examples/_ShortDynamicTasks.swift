@@ -27,6 +27,112 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     391. Perfect Rectangle Hard
+     Given an array rectangles where rectangles[i] = [xi, yi, ai, bi] represents an axis-aligned rectangle. The bottom-left point of the rectangle is (xi, yi) and the top-right point of it is (ai, bi).
+     Return true if all the rectangles together form an exact cover of a rectangular region.
+     Example 1:
+     Input: rectangles = [[1,1,3,3],[3,1,4,2],[3,2,4,4],[1,3,2,4],[2,3,3,4]]
+     Output: true
+     Explanation: All 5 rectangles together form an exact cover of a rectangular region.
+     Example 2:
+     Input: rectangles = [[1,1,2,3],[1,3,2,4],[3,1,4,2],[3,2,4,4]]
+     Output: false
+     Explanation: Because there is a gap between the two rectangular regions.
+     Example 3:
+     Input: rectangles = [[1,1,3,3],[3,1,4,2],[1,3,2,4],[2,2,4,4]]
+     Output: false
+     Explanation: Because two of the rectangles overlap with each other.
+     Constraints:
+     1 <= rectangles.length <= 2 * 104
+     rectangles[i].length == 4
+     -105 <= xi < ai <= 105
+     -105 <= yi < bi <= 105
+     */
+    // 391. Perfect Rectangle
+    // Geometry + Set
+    // Time: O(n)
+    // Space: O(n)
+
+    enum Leet391 {
+        
+        class PerfectRectangle {
+            
+            static func isRectangleCover(_ rectangles: [[Int]]) -> Bool {
+                
+                var minX = Int.max
+                var minY = Int.max
+                var maxX = Int.min
+                var maxY = Int.min
+                
+                var area = 0
+                
+                var corners = Set<String>()
+                
+                for r in rectangles {
+                    
+                    let x1 = r[0]
+                    let y1 = r[1]
+                    let x2 = r[2]
+                    let y2 = r[3]
+                    
+                    minX = min(minX, x1)
+                    minY = min(minY, y1)
+                    maxX = max(maxX, x2)
+                    maxY = max(maxY, y2)
+                    
+                    area += (x2 - x1) * (y2 - y1)
+                    
+                    let points = [
+                        "\(x1),\(y1)",
+                        "\(x1),\(y2)",
+                        "\(x2),\(y1)",
+                        "\(x2),\(y2)"
+                    ]
+                    
+                    for p in points {
+                        if corners.contains(p) {
+                            corners.remove(p)
+                        } else {
+                            corners.insert(p)
+                        }
+                    }
+                }
+                
+                let bigArea = (maxX - minX) * (maxY - minY)
+                
+                if area != bigArea {
+                    return false
+                }
+                
+                if corners.count != 4 {
+                    return false
+                }
+                
+                let expected: Set<String> = [
+                    "\(minX),\(minY)",
+                    "\(minX),\(maxY)",
+                    "\(maxX),\(minY)",
+                    "\(maxX),\(maxY)"
+                ]
+                
+                return corners == expected
+            }
+            
+            static func runDemo() {
+                
+                let rects = [
+                    [1,1,3,3],
+                    [3,1,4,2],
+                    [3,2,4,4],
+                    [1,3,2,4],
+                    [2,3,3,4]
+                ]
+                
+                print(isRectangleCover(rects)) // true
+            }
+        }
+    }
+    /*
      390. Elimination Game
      You have a list arr of all integers in the range [1, n] sorted in a strictly increasing order. Apply the following algorithm on arr:
 
