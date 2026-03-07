@@ -27,6 +27,58 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     392. Is Subsequence
+     Given two strings s and t, return true if s is a subsequence of t, or false otherwise.
+     A subsequence of a string is a new string that is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (i.e., "ace" is a subsequence of "abcde" while "aec" is not).
+     Example 1:
+     Input: s = "abc", t = "ahbgdc"
+     Output: true
+     Example 2:
+     Input: s = "axc", t = "ahbgdc"
+     Output: false
+     Constraints:
+     0 <= s.length <= 100
+     0 <= t.length <= 104
+     s and t consist only of lowercase English letters.
+     Follow up: Suppose there are lots of incoming s, say s1, s2, ..., sk where k >= 109, and you want to check one by one to see if t has its subsequence. In this scenario, how would you change your code?
+     */
+    // 392. Is Subsequence
+    // Two Pointers
+    // Time: O(n)
+
+    enum Leet392 {
+        
+        class IsSubsequence {
+            
+            static func isSubsequence(_ s: String, _ t: String) -> Bool {
+                
+                let sArr = Array(s)
+                let tArr = Array(t)
+                
+                var i = 0
+                var j = 0
+                
+                while i < sArr.count && j < tArr.count {
+                    
+                    if sArr[i] == tArr[j] {
+                        i += 1
+                    }
+                    
+                    j += 1
+                }
+                
+                return i == sArr.count
+            }
+            
+            static func runDemo() {
+                
+                print(isSubsequence("abc", "ahbgdc")) // true
+                print(isSubsequence("axc", "ahbgdc")) // false
+                
+            }
+        }
+    }
+    /*
      391. Perfect Rectangle Hard
      Given an array rectangles where rectangles[i] = [xi, yi, ai, bi] represents an axis-aligned rectangle. The bottom-left point of the rectangle is (xi, yi) and the top-right point of it is (ai, bi).
      Return true if all the rectangles together form an exact cover of a rectangular region.
