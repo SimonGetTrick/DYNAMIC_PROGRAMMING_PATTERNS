@@ -27,6 +27,88 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     394. Decode String
+     Given an encoded string, return its decoded string.
+     The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly k times. Note that k is guaranteed to be a positive integer.
+     You may assume that the input string is always valid; there are no extra white spaces, square brackets are well-formed, etc. Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, k. For example, there will not be input like 3a or 2[4].
+     The test cases are generated so that the length of the output will never exceed 105.
+     Example 1:
+     Input: s = "3[a]2[bc]"
+     Output: "aaabcbc"
+     Example 2:
+     Input: s = "3[a2[c]]"
+     Output: "accaccacc"
+     Example 3:
+     Input: s = "2[abc]3[cd]ef"
+     Output: "abcabccdcdcdef"
+     Constraints:
+     1 <= s.length <= 30
+     s consists of lowercase English letters, digits, and square brackets '[]'.
+     s is guaranteed to be a valid input.
+     All the integers in s are in the range [1, 300].
+     */
+    // 394. Decode String
+    // Stack
+    // Time: O(n)
+
+    enum Leet394 {
+        
+        class DecodeString {
+            
+            static func decodeString(_ s: String) -> String {
+                
+                var countStack: [Int] = []
+                var stringStack: [String] = []
+                
+                var current = ""
+                var num = 0
+                
+                for ch in s {
+                    
+                    if ch.isNumber {
+                        
+                        num = num * 10 + Int(String(ch))!
+                        
+                    } else if ch == "[" {
+                        
+                        countStack.append(num)
+                        stringStack.append(current)
+                        
+                        num = 0
+                        current = ""
+                        
+                    } else if ch == "]" {
+                        
+                        let k = countStack.removeLast()
+                        let prev = stringStack.removeLast()
+                        
+                        current = prev + String(repeating: current, count: k)
+                        
+                    } else {
+                        
+                        current.append(ch)
+                        
+                    }
+                }
+                
+                return current
+            }
+            
+            static func runDemo() {
+                
+                print(decodeString("3[a]2[bc]"))
+                // aaabcbc
+                
+                print(decodeString("3[a2[c]]"))
+                // accaccacc
+                
+                print(decodeString("2[abc]3[cd]ef"))
+                // abcabccdcdcdef
+                
+            }
+        }
+    }
+    /*
      393. UTF-8 Validation
      Given an integer array data representing the data, return whether it is a valid UTF-8 encoding (i.e. it translates to a sequence of valid UTF-8 encoded characters).
 
