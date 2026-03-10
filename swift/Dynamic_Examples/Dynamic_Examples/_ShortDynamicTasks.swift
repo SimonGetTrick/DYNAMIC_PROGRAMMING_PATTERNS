@@ -27,6 +27,84 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     395. Longest Substring with At Least K Repeating Characters
+     Given a string s and an integer k, return the length of the longest substring of s such that the frequency of each character in this substring is greater than or equal to k.
+     if no such substring exists, return 0.
+     Example 1:
+     Input: s = "aaabb", k = 3
+     Output: 3
+     Explanation: The longest substring is "aaa", as 'a' is repeated 3 times.
+     Example 2:
+     Input: s = "ababbc", k = 2
+     Output: 5
+     Explanation: The longest substring is "ababb", as 'a' is repeated 2 times and 'b' is repeated 3 times.
+     Constraints:
+     1 <= s.length <= 104
+     s consists of only lowercase English letters.
+     1 <= k <= 105
+     */
+    // 395. Longest Substring with At Least K Repeating Characters
+    // Divide and Conquer
+    // Time: O(26 * n)
+    // Space: O(log n)
+
+    enum Leet395 {
+        
+        class LongestSubstringKRepeating {
+            
+            static func longestSubstring(_ s: String, _ k: Int) -> Int {
+                let arr = Array(s)
+                return helper(arr, 0, arr.count, k)
+            }
+            
+            static func helper(_ arr: [Character], _ start: Int, _ end: Int, _ k: Int) -> Int {
+                
+                if end - start < k {
+                    return 0
+                }
+                
+                var freq = [Int](repeating: 0, count: 26)
+                
+                for i in start..<end {
+                    let index = Int(arr[i].asciiValue! - Character("a").asciiValue!)
+                    freq[index] += 1
+                }
+                
+                for mid in start..<end {
+                    
+                    let index = Int(arr[mid].asciiValue! - Character("a").asciiValue!)
+                    
+                    if freq[index] < k {
+                        
+                        var midNext = mid + 1
+                        
+                        while midNext < end {
+                            let nextIndex = Int(arr[midNext].asciiValue! - Character("a").asciiValue!)
+                            if freq[nextIndex] >= k {
+                                break
+                            }
+                            midNext += 1
+                        }
+                        
+                        let left = helper(arr, start, mid, k)
+                        let right = helper(arr, midNext, end, k)
+                        
+                        return max(left, right)
+                    }
+                }
+                
+                return end - start
+            }
+            
+            static func runDemo() {
+                
+                print(longestSubstring("aaabb", 3)) // 3
+                print(longestSubstring("ababbc", 2)) // 5
+                
+            }
+        }
+    }
+    /*
      394. Decode String
      Given an encoded string, return its decoded string.
      The encoding rule is: k[encoded_string], where the encoded_string inside the square brackets is being repeated exactly k times. Note that k is guaranteed to be a positive integer.
