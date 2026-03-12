@@ -27,6 +27,69 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     397. Integer Replacement
+     Given a positive integer n, you can apply one of the following operations:
+     If n is even, replace n with n / 2.
+     If n is odd, replace n with either n + 1 or n - 1.
+     Return the minimum number of operations needed for n to become 1.
+     Example 1:
+     Input: n = 8
+     Output: 3
+     Explanation: 8 -> 4 -> 2 -> 1
+     Example 2:
+     Input: n = 7
+     Output: 4
+     Explanation: 7 -> 8 -> 4 -> 2 -> 1
+     or 7 -> 6 -> 3 -> 2 -> 1
+     Example 3:
+     Input: n = 4
+     Output: 2
+     Constraints:
+     1 <= n <= 231 - 1
+     */
+    // 397. Integer Replacement
+    // Greedy + Bit manipulation
+    // Time: O(log n)
+    // Space: O(1)
+
+    enum Leet397 {
+        
+        class IntegerReplacement {
+            
+            static func integerReplacement(_ n: Int) -> Int {
+                
+                var num = n
+                var steps = 0
+                
+                while num != 1 {
+                    
+                    if num % 2 == 0 {
+                        num /= 2
+                    } else {
+                        
+                        if num == 3 || num % 4 == 1 {
+                            num -= 1
+                        } else {
+                            num += 1
+                        }
+                    }
+                    
+                    steps += 1
+                }
+                
+                return steps
+            }
+            
+            static func runDemo() {
+                
+                print(integerReplacement(8)) // 3
+                print(integerReplacement(7)) // 4
+                print(integerReplacement(4)) // 2
+                
+            }
+        }
+    }
+    /*
      396. Rotate Function
      You are given an integer array nums of length n.
      Assume arrk to be an array obtained by rotating nums by k positions clock-wise. We define the rotation function F on nums as follow:
