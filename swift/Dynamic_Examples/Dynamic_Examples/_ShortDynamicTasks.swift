@@ -27,6 +27,75 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     398. Random Pick Index
+     Given an integer array nums with possible duplicates, randomly output the index of a given target number. You can assume that the given target number must exist in the array.
+     Implement the Solution class:
+     Solution(int[] nums) Initializes the object with the array nums.
+     int pick(int target) Picks a random index i from nums where nums[i] == target. If there are multiple valid i's, then each index should have an equal probability of returning.
+     Example 1:
+     Input
+     ["Solution", "pick", "pick", "pick"]
+     [[[1, 2, 3, 3, 3]], [3], [1], [3]]
+     Output
+     [null, 4, 0, 2]
+     Explanation
+     Solution solution = new Solution([1, 2, 3, 3, 3]);
+     solution.pick(3); // It should return either index 2, 3, or 4 randomly. Each index should have equal probability of returning.
+     solution.pick(1); // It should return 0. Since in the array only nums[0] is equal to 1.
+     solution.pick(3); // It should return either index 2, 3, or 4 randomly. Each index should have equal probability of returning.
+     Constraints:
+     1 <= nums.length <= 2 * 104
+     -231 <= nums[i] <= 231 - 1
+     target is an integer from nums.
+     At most 104 calls will be made to pick.
+     */
+    // 398. Random Pick Index
+    // Reservoir Sampling
+    // Time: O(n) per pick
+    // Space: O(1)
+
+    enum Leet398 {
+        
+        class Solution {
+            
+            var nums: [Int]
+            
+            init(_ nums: [Int]) {
+                self.nums = nums
+            }
+            
+            func pick(_ target: Int) -> Int {
+                
+                var count = 0
+                var result = 0
+                
+                for i in 0..<nums.count {
+                    
+                    if nums[i] == target {
+                        
+                        count += 1
+                        
+                        if Int.random(in: 0..<count) == 0 {
+                            result = i
+                        }
+                    }
+                }
+                
+                return result
+            }
+            
+            static func runDemo() {
+                
+                let solution = Solution([1,2,3,3,3])
+                
+                print(solution.pick(3))
+                print(solution.pick(1))
+                print(solution.pick(3))
+                
+            }
+        }
+    }
+    /*
      397. Integer Replacement
      Given a positive integer n, you can apply one of the following operations:
      If n is even, replace n with n / 2.
