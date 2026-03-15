@@ -26,6 +26,57 @@ extension Array where Element == Int {
 }
 
 class Solution {
+    /*400. Nth Digit
+     Given an integer n, return the nth digit of the infinite integer sequence [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...].
+     Example 1:
+     Input: n = 3
+     Output: 3
+     Example 2:
+     Input: n = 11
+     Output: 0
+     Explanation: The 11th digit of the sequence 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ... is a 0, which is part of the number 10.
+     Constraints:
+     1 <= n <= 231 - 1
+     */
+    // 400. Nth Digit
+    // Math
+    // Time O(log n)
+
+    enum Leet400 {
+        
+        class NthDigit {
+            
+            static func findNthDigit(_ n: Int) -> Int {
+                
+                var n = n
+                var digits = 1
+                var count = 9
+                var start = 1
+                
+                while n > digits * count {
+                    n -= digits * count
+                    digits += 1
+                    count *= 10
+                    start *= 10
+                }
+                
+                let number = start + (n - 1) / digits
+                let index = (n - 1) % digits
+                
+                let s = String(number)
+                let char = s[s.index(s.startIndex, offsetBy: index)]
+                
+                return Int(String(char))!
+            }
+            
+            static func runDemo() {
+                
+                print(findNthDigit(3))   // 3
+                print(findNthDigit(11))  // 0
+                
+            }
+        }
+    }
     /*
      399. Evaluate Division
      You are given an array of variable pairs equations and an array of real numbers values, where equations[i] = [Ai, Bi] and values[i] represent the equation Ai / Bi = values[i]. Each Ai or Bi is a string that represents a single variable.
