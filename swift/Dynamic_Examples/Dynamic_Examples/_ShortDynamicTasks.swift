@@ -27,6 +27,152 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     403. Frog Jump Hard
+     A frog is crossing a river. The river is divided into some number of units, and at each unit, there may or may not exist a stone. The frog can jump on a stone, but it must not jump into the water.
+     Given a list of stones positions (in units) in sorted ascending order, determine if the frog can cross the river by landing on the last stone. Initially, the frog is on the first stone and assumes the first jump must be 1 unit.
+     If the frog's last jump was k units, its next jump must be either k - 1, k, or k + 1 units. The frog can only jump in the forward direction.
+     Example 1:
+     Input: stones = [0,1,3,5,6,8,12,17]
+     Output: true
+     Explanation: The frog can jump to the last stone by jumping 1 unit to the 2nd stone, then 2 units to the 3rd stone, then 2 units to the 4th stone, then 3 units to the 6th stone, 4 units to the 7th stone, and 5 units to the 8th stone.
+     Example 2:
+     Input: stones = [0,1,2,3,4,8,9,11]
+     Output: false
+     Explanation: There is no way to jump to the last stone as the gap between the 5th and 6th stone is too large.
+     Constraints:
+     2 <= stones.length <= 2000
+     0 <= stones[i] <= 231 - 1
+     stones[0] == 0
+     stones is sorted in a strictly increasing order.
+     */
+    // 403. Frog Jump
+    // https://leetcode.com/problems/frog-jump/
+    //
+    // Comparison of two solutions (iterative DP vs recursive DFS + memo)
+    //
+    // | Criterion                  | Iterative DP with Set per position                  | Recursive DFS + Memoization                        | Winner / Notes                                                                 |
+    // |----------------------------|------------------------------------------------------|----------------------------------------------------|--------------------------------------------------------------------------------|
+    // | Approach                   | Iterative (bottom-up style)                          | Recursive top-down with memo                       | Both correct, iterative usually more reliable                                  |
+    // | Time Complexity            | O(n × k) where k = avg number of distinct jumps      | O(n × k) average, worse in highly branching cases  | Almost equal, iterative more predictable                                       |
+    // | Space Complexity           | O(n × k) — array of n sets                           | O(n × k) — memo dictionary entries                 | Comparable, DFS often slightly lighter in practice                             |
+    // | Constants / Runtime        | Usually faster (no recursion, linear pass)           | Slower due to recursion + string key hashing       | Iterative wins (often 2–10× faster on LeetCode)                                |
+    // | Code Readability           | Medium–good                                          | Good, but recursion + string keys slightly heavier | Roughly equal, iterative easier for beginners                                  |
+    // | Risk of TLE / Stack Overflow | Very low (n ≤ 2000)                                | Low, but higher than iterative in Swift            | Iterative is safer in recursion-expensive languages                            |
+    // | Early exit optimization    | Yes — returns true as soon as last stone is reached  | No — explores all paths until end                  | Iterative can finish significantly earlier                                     |
+    // | stones[1] == 1 check       | Explicit early return                                | Implicit (will be discovered)                      | Iterative slightly better on trivial false cases                               |
+    // | Memo / State key           | Array indices (fast)                                 | String "\(pos),\(jump)" — slower                   | Iterative wins (no string conversion)                                          |
+    //
+    // Recommendation for LeetCode / interviews 2025–2026:
+    // → Prefer the iterative version (faster, more stable, earlier termination)
+
+    class Solution403 {
+        func canCross(_ stones: [Int]) -> Bool {
+            let n = stones.count
+            if n < 2 { return true }
+            if stones[1] != 1 { return false }
+            
+            // dp[i] = set of possible last jump lengths to reach stone i
+            var dp = Array(repeating: Set<Int>(), count: n)
+            dp[0].insert(0)
+            
+            // Map from position value → index in stones array (for O(1) lookup)
+            var posToIndex: [Int: Int] = [:]
+            for (i, pos) in stones.enumerated() {
+                posToIndex[pos] = i
+            }
+            
+            for i in 0..<n {
+                // If we cannot reach this stone at all — skip
+                if dp[i].isEmpty { continue }
+                
+                let currentPos = stones[i]
+                
+                for lastJump in dp[i] {
+                    // Try next possible jumps: k-1, k, k+1
+                    for delta in [-1, 0, 1] {
+                        let nextJump = lastJump + delta
+                        if nextJump <= 0 { continue }
+                        
+                        let nextPos = currentPos + nextJump
+                        
+                        // Check if there is a stone at nextPos
+                        if let nextIndex = posToIndex[nextPos], nextIndex > i {
+                            dp[nextIndex].insert(nextJump)
+                            
+                            // Early exit — we reached the last stone
+                            if nextIndex == n - 1 {
+                                return true
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Check if we can reach the last stone with any jump length
+            return !dp[n - 1].isEmpty
+        }
+    }    // 403. Frog Jump
+    // DFS + Memo
+    // Time: ~O(n^2)
+
+    enum Leet403 {
+        
+        class FrogJump {
+            
+            static func canCross(_ stones: [Int]) -> Bool {
+                
+                let stoneSet = Set(stones)
+                var memo: [String: Bool] = [:]
+                
+                return dfs(stones[0], 0, stones.last!, stoneSet, &memo)
+            }
+            
+            static func dfs(
+                _ position: Int,
+                _ lastJump: Int,
+                _ target: Int,
+                _ stones: Set<Int>,
+                _ memo: inout [String: Bool]
+            ) -> Bool {
+                
+                let key = "\(position),\(lastJump)"
+                
+                if let cached = memo[key] {
+                    return cached
+                }
+                
+                if position == target {
+                    return true
+                }
+                
+                for jump in [lastJump - 1, lastJump, lastJump + 1] {
+                    
+                    if jump <= 0 { continue }
+                    
+                    let next = position + jump
+                    
+                    if stones.contains(next) {
+                        
+                        if dfs(next, jump, target, stones, &memo) {
+                            memo[key] = true
+                            return true
+                        }
+                    }
+                }
+                
+                memo[key] = false
+                return false
+            }
+            
+            static func runDemo() {
+                
+                print(canCross([0,1,3,5,6,8,12,17])) // true
+                print(canCross([0,1,2,3,4,8,9,11]))  // false
+                
+            }
+        }
+    }
+    /*
      401. Binary Watch
      A binary watch has 4 LEDs on the top to represent the hours (0-11), and 6 LEDs on the bottom to represent the minutes (0-59). Each LED represents a zero or one, with the least significant bit on the right.
 
