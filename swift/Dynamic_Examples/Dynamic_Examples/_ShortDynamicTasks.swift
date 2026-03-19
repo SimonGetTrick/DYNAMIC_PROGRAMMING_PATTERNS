@@ -27,6 +27,160 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     407. Trapping Rain Water II Hard
+     Given an m x n integer matrix heightMap representing the height of each unit cell in a 2D elevation map, return the volume of water it can trap after raining.
+     Example 1:
+     Input: heightMap = [[1,4,3,1,3,2],[3,2,1,3,2,4],[2,3,3,2,3,1]]
+     Output: 4
+     Explanation: After the rain, water is trapped between the blocks.
+     We have two small ponds 1 and 3 units trapped.
+     The total volume of water trapped is 4.
+     Example 2:
+     Input: heightMap = [[3,3,3,3,3],[3,2,2,2,3],[3,2,1,2,3],[3,2,2,2,3],[3,3,3,3,3]]
+     Output: 10
+     Constraints:
+
+     m == heightMap.length
+     n == heightMap[i].length
+     1 <= m, n <= 200
+     0 <= heightMap[i][j] <= 2 * 104
+     */
+    // 407. Trapping Rain Water II
+    // BFS + Min Heap
+    // Time O(m * n * log(mn))
+
+    enum Leet407 {
+        
+        class TrappingRainWaterII {
+            
+            struct Cell {
+                let x: Int
+                let y: Int
+                let h: Int
+            }
+            
+            class MinHeap {
+                private var heap: [Cell] = []
+                
+                func push(_ val: Cell) {
+                    heap.append(val)
+                    siftUp(heap.count - 1)
+                }
+                
+                func pop() -> Cell? {
+                    if heap.isEmpty { return nil }
+                    if heap.count == 1 { return heap.removeLast() }
+                    
+                    let top = heap[0]
+                    heap[0] = heap.removeLast()
+                    siftDown(0)
+                    return top
+                }
+                
+                var isEmpty: Bool {
+                    return heap.isEmpty
+                }
+                
+                private func siftUp(_ i: Int) {
+                    var i = i
+                    while i > 0 {
+                        let p = (i - 1) / 2
+                        if heap[p].h <= heap[i].h { break }
+                        heap.swapAt(p, i)
+                        i = p
+                    }
+                }
+                
+                private func siftDown(_ i: Int) {
+                    var i = i
+                    let n = heap.count
+                    
+                    while true {
+                        var smallest = i
+                        let l = 2 * i + 1
+                        let r = 2 * i + 2
+                        
+                        if l < n && heap[l].h < heap[smallest].h {
+                            smallest = l
+                        }
+                        if r < n && heap[r].h < heap[smallest].h {
+                            smallest = r
+                        }
+                        
+                        if smallest == i { break }
+                        heap.swapAt(i, smallest)
+                        i = smallest
+                    }
+                }
+            }
+            
+            static func trapRainWater(_ heightMap: [[Int]]) -> Int {
+                
+                let m = heightMap.count
+                let n = heightMap[0].count
+                
+                var visited = Array(
+                    repeating: Array(repeating: false, count: n),
+                    count: m
+                )
+                
+                let heap = MinHeap()
+                
+                // add borders
+                for i in 0..<m {
+                    for j in 0..<n {
+                        if i == 0 || i == m - 1 || j == 0 || j == n - 1 {
+                            heap.push(Cell(x: i, y: j, h: heightMap[i][j]))
+                            visited[i][j] = true
+                        }
+                    }
+                }
+                
+                let dirs = [[1,0],[-1,0],[0,1],[0,-1]]
+                var water = 0
+                
+                while !heap.isEmpty {
+                    
+                    guard let cell = heap.pop() else { break }
+                    
+                    for d in dirs {
+                        let nx = cell.x + d[0]
+                        let ny = cell.y + d[1]
+                        
+                        if nx < 0 || ny < 0 || nx >= m || ny >= n { continue }
+                        if visited[nx][ny] { continue }
+                        
+                        visited[nx][ny] = true
+                        
+                        let h = heightMap[nx][ny]
+                        
+                        if h < cell.h {
+                            water += cell.h - h
+                        }
+                        
+                        heap.push(Cell(
+                            x: nx,
+                            y: ny,
+                            h: max(h, cell.h)
+                        ))
+                    }
+                }
+                
+                return water
+            }
+            
+            static func runDemo() {
+                
+                let map = [
+                    [1,4,3,1,3,2],
+                    [3,2,1,3,2,4],
+                    [2,3,3,2,3,1]
+                ]
+                
+                print(trapRainWater(map)) // 4
+            }
+        }
+    }    /*
      406. Queue Reconstruction by Height
      You are given an array of people, people, which are the attributes of some people in a queue (not necessarily in order). Each people[i] = [hi, ki] represents the ith person of height hi with exactly ki other people in front who have a height greater than or equal to hi.
 
