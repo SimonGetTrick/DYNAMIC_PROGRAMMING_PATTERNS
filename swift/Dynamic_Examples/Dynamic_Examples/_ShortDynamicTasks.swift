@@ -27,6 +27,56 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     416. Partition Equal Subset Sum
+     Given an integer array nums, return true if you can partition the array into two subsets such that the sum of the elements in both subsets is equal or false otherwise.
+     Example 1:
+     Input: nums = [1,5,11,5]
+     Output: true
+     Explanation: The array can be partitioned as [1, 5, 5] and [11].
+     Example 2:
+     Input: nums = [1,2,3,5]
+     Output: false
+     Explanation: The array cannot be partitioned into equal sum subsets.
+
+     */
+    enum LC416_PartitionEqualSubsetSum {
+        
+        static func runDemo() {
+            let nums1 = [1, 5, 11, 5]
+            print(canPartition(nums1)) // true
+            
+            let nums2 = [1, 2, 3, 5]
+            print(canPartition(nums2)) // false
+        }
+        
+        // Main solution using DP (subset sum)
+        static func canPartition(_ nums: [Int]) -> Bool {
+            let totalSum = nums.reduce(0, +)
+            
+            // If total sum is odd, cannot split equally
+            if totalSum % 2 != 0 {
+                return false
+            }
+            
+            let target = totalSum / 2
+            
+            // dp[i] means: can we form sum i
+            var dp = Array(repeating: false, count: target + 1)
+            dp[0] = true
+            
+            for num in nums {
+                // iterate backwards to avoid reuse of same element
+                for i in stride(from: target, through: num, by: -1) {
+                    if dp[i - num] {
+                        dp[i] = true
+                    }
+                }
+            }
+            
+            return dp[target]
+        }
+    }
+    /*
      413. Arithmetic Slices
      An integer array is called arithmetic if it consists of at least three elements and if the difference between any two consecutive elements is the same.
      For example, [1,3,5,7,9], [7,7,7,7], and [3,-1,-5,-9] are arithmetic sequences.
