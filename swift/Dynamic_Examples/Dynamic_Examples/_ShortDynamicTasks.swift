@@ -27,6 +27,50 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     419. Battleships in a Board
+     Given an m x n matrix board where each cell is a battleship 'X' or empty '.', return the number of the battleships on board.
+     Battleships can only be placed horizontally or vertically on board. In other words, they can only be made of the shape 1 x k (1 row, k columns) or k x 1 (k rows, 1 column), where k can be of any size. At least one horizontal or vertical cell separates between two battleships (i.e., there are no adjacent battleships).
+     Example 1:
+     Input: board = [["X",".",".","X"],[".",".",".","X"],[".",".",".","X"]]
+     Output: 2
+     Example 2:
+     Input: board = [["."]]
+     Output: 0
+     Constraints:
+     m == board.length
+     n == board[i].length
+     1 <= m, n <= 200
+     board[i][j] is either '.' or 'X'.
+     Follow up: Could you do it in one-pass, using only O(1) extra memory and without modifying the values board?
+     */
+    // 419. Battleships in a Board
+    class Solution419 {
+        func countBattleships(_ board: [[Character]]) -> Int {
+            let m = board.count
+            let n = board[0].count
+            
+            var count = 0
+            
+            for i in 0..<m {
+                for j in 0..<n {
+                    // If current cell is empty — skip
+                    if board[i][j] == "." { continue }
+                    
+                    // If top cell is 'X' — not a start
+                    if i > 0 && board[i - 1][j] == "X" { continue }
+                    
+                    // If left cell is 'X' — not a start
+                    if j > 0 && board[i][j - 1] == "X" { continue }
+                    
+                    // This is the start of a battleship
+                    count += 1
+                }
+            }
+            
+            return count
+        }
+    }
+    /*
      417. Pacific Atlantic Water Flow
      There is an m x n rectangular island that borders both the Pacific Ocean and Atlantic Ocean. The Pacific Ocean touches the island's left and top edges, and the Atlantic Ocean touches the island's right and bottom edges.
 
