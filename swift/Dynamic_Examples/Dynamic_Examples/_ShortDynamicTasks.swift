@@ -27,6 +27,112 @@ extension Array where Element == Int {
 
 class Solution {
     /*
+     421. Maximum XOR of Two Numbers in an Array
+     Medium
+     Topics
+     premium lock icon
+     Companies
+     Given an integer array nums, return the maximum result of nums[i] XOR nums[j], where 0 <= i <= j < n.
+
+      
+
+     Example 1:
+
+     Input: nums = [3,10,5,25,2,8]
+     Output: 28
+     Explanation: The maximum result is 5 XOR 25 = 28.
+     Example 2:
+
+     Input: nums = [14,70,53,83,49,91,36,80,92,51,66,70]
+     Output: 127
+      
+
+     Constraints:
+
+     1 <= nums.length <= 2 * 105
+     0 <= nums[i] <= 231 - 1
+
+     */
+    class Solution421 {
+        
+        class TrieNode {
+            var zero: TrieNode?
+            var one: TrieNode?
+        }
+        
+        class Trie {
+            let root = TrieNode()
+            
+            func insert(_ num: Int) {
+                var node = root
+                for i in stride(from: 31, through: 0, by: -1) {
+                    let bit = (num >> i) & 1
+                    if bit == 0 {
+                        if node.zero == nil {
+                            node.zero = TrieNode()
+                        }
+                        node = node.zero!
+                    } else {
+                        if node.one == nil {
+                            node.one = TrieNode()
+                        }
+                        node = node.one!
+                    }
+                }
+            }
+            
+            func maxXor(_ num: Int) -> Int {
+                var node = root
+                var result = 0
+                
+                for i in stride(from: 31, through: 0, by: -1) {
+                    let bit = (num >> i) & 1
+                    
+                    if bit == 0 {
+                        if let next = node.one {
+                            result |= (1 << i)
+                            node = next
+                        } else {
+                            node = node.zero!
+                        }
+                    } else {
+                        if let next = node.zero {
+                            result |= (1 << i)
+                            node = next
+                        } else {
+                            node = node.one!
+                        }
+                    }
+                }
+                
+                return result
+            }
+        }
+        
+        static func findMaximumXOR(_ nums: [Int]) -> Int {
+            let trie = Trie()
+            
+            for num in nums {
+                trie.insert(num)
+            }
+            
+            var maxVal = 0
+            
+            for num in nums {
+                maxVal = max(maxVal, trie.maxXor(num))
+            }
+            
+            return maxVal
+        }
+        
+        // Demo method
+        static func runDemo() {
+            let nums = [3,10,5,25,2,8]
+            let result = findMaximumXOR(nums)
+            print("Result:", result) // Expected: 28
+        }
+    }
+    /*
      420. Strong Password Checker Hard
      A password is considered strong if the below conditions are all met:
      It has at least 6 characters and at most 20 characters.
